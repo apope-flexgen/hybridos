@@ -1,0 +1,517 @@
+{
+    "/assets/pcs/##PCS_ID##": {
+        "active_power": {
+            "value": 0
+        },
+        "active_power_setpoint": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "LogInfo"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "uri": "/controls/##PCS_ID##:ActivePowerSetpoint"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": false,
+            "ifChanged": false,
+            "note": "UI control variable used to set the active power setpoint",
+            "value": 0
+        },
+        "active_power_setpoint_feedback": {
+            "value": 0
+        },
+        "alarms": {
+            "options": [],
+            "value": 0
+        },
+        "ambient_temperature": {
+            "value": 0
+        },
+        "apparent_power": {
+            "value": 0
+        },
+        "clear_faults": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "LogInfo"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": true,
+                                "outValue": true,
+                                "uri": "/controls/##PCS_ID##:ClearFaults@triggerCmd"
+                            },
+                            {
+                                "inValue": true,
+                                "outValue": 0,
+                                "uri": "/controls/##PCS_ID##:ClearFaults"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": false,
+            "ifChanged": false,
+            "note": "UI control variable used to initiate clear faults command routine",
+            "options": [
+                {
+                    "name": "No",
+                    "return_value": false
+                },
+                {
+                    "name": "Yes",
+                    "return_value": true
+                }
+            ],
+            "value": false
+        },
+        "comms_ok": {
+            "value": false
+        },
+        "dc_current": {
+            "value": 0
+        },
+        "dc_power": {
+            "value": 0
+        },
+        "dc_voltage": {
+            "value": 0
+        },
+        "faults": {
+            "options": [],
+            "value": 0
+        },
+        "frequency": {
+            "value": 0
+        },
+        "l1_current": {
+            "value": 0
+        },
+        "l1_l2_voltage": {
+            "value": 0
+        },
+        "l2_current": {
+            "value": 0
+        },
+        "l2_l3_voltage": {
+            "value": 0
+        },
+        "l3_current": {
+            "value": 0
+        },
+        "l3_l1_voltage": {
+            "value": 0
+        },
+        "maint_mode": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "LogInfo"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "uri": "/assets/pcs/##PCS_ID##:clear_faults@enabled"
+                            },
+                            {
+                                "uri": "/assets/pcs/##PCS_ID##:active_power_ramp_rate@enabled"
+                            },
+                            {
+                                "uri": "/assets/pcs/##PCS_ID##:reactive_power_ramp_rate@enabled"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "ifChanged": false,
+            "note": "UI control variable used to set the current asset in maintenance mode",
+            "options": [
+                {
+                    "name": "No",
+                    "return_value": false
+                },
+                {
+                    "name": "Yes",
+                    "return_value": true
+                }
+            ],
+            "value": false
+        },
+        "max_charge_power": {
+            "value": 0
+        },
+        "max_discharge_power": {
+            "value": 0
+        },
+        "module_temperature_1": {
+            "value": 0
+        },
+        "module_temperature_2": {
+            "value": 0
+        },
+        "module_temperature_3": {
+            "value": 0
+        },
+        "power_factor": {
+            "value": 0
+        },
+        "rated_active_power": {
+            "value": 0
+        },
+        "rated_power_factor": {
+            "value": 0
+        },
+        "rated_reactive_power": {
+            "value": 0
+        },
+        "reactive_power": {
+            "value": 0
+        },
+        "reactive_power_setpoint": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "LogInfo"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "uri": "/controls/##PCS_ID##:ReactivePowerSetpoint"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": false,
+            "ifChanged": false,
+            "note": "UI control variable used to set the reactive power setpoint",
+            "value": 0
+        },
+        "reactive_power_setpoint_feedback": {
+            "value": 0
+        },
+        "standby": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "LogInfo"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": true,
+                                "outValue": 0,
+                                "uri": "/controls/##PCS_ID##:ActivePowerSetpoint"
+                            },
+                            {
+                                "inValue": true,
+                                "outValue": 0,
+                                "uri": "/controls/##PCS_ID##:ReactivePowerSetpoint"
+                            },
+                            {
+                                "inValue": true,
+                                "outValue": true,
+                                "uri": "/controls/##PCS_ID##:Standby@triggerCmd"
+                            },
+                            {
+                                "inValue": true,
+                                "outValue": 205,
+                                "uri": "/controls/##PCS_ID##:Standby"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": false,
+            "ifChanged": false,
+            "note": "UI control variable used to initiate the standby command routine",
+            "options": [
+                {
+                    "name": "No",
+                    "return_value": false
+                },
+                {
+                    "name": "Yes",
+                    "return_value": true
+                }
+            ],
+            "value": false
+        },
+        "start": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "LogInfo"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": true,
+                                "outValue": true,
+                                "uri": "/controls/##PCS_ID##:Start@triggerCmd"
+                            },
+                            {
+                                "inValue": true,
+                                "outValue": 207,
+                                "uri": "/controls/##PCS_ID##:Start"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": false,
+            "ifChanged": false,
+            "note": "UI control variable used to initiate the start command routine",
+            "options": [
+                {
+                    "name": "No",
+                    "return_value": false
+                },
+                {
+                    "name": "Yes",
+                    "return_value": true
+                }
+            ],
+            "value": false
+        },
+        "status": {
+            "value": "INIT"
+        },
+        "stop": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "LogInfo"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": true,
+                                "outValue": 0,
+                                "uri": "/controls/##PCS_ID##:ActivePowerSetpoint"
+                            },
+                            {
+                                "inValue": true,
+                                "outValue": 0,
+                                "uri": "/controls/##PCS_ID##:ReactivePowerSetpoint"
+                            },
+                            {
+                                "inValue": true,
+                                "outValue": true,
+                                "uri": "/controls/##PCS_ID##:Stop@triggerCmd"
+                            },
+                            {
+                                "inValue": true,
+                                "outValue": 206,
+                                "uri": "/controls/##PCS_ID##:Stop"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": false,
+            "ifChanged": false,
+            "note": "UI control variable used to initiate the stop command routine",
+            "options": [
+                {
+                    "name": "No",
+                    "return_value": false
+                },
+                {
+                    "name": "Yes",
+                    "return_value": true
+                }
+            ],
+            "value": false
+        },
+        "system_state": {
+            "value": "INIT"
+        }
+    },
+    "/vlinks/##PCS_ID##": {
+        "ui_active_power": {
+            "default": 0,
+            "value": "/assets/pcs/##PCS_ID##:active_power",
+            "vlink": "/status/##PCS_ID##:ActivePower"
+        },
+        "ui_active_power_setpoint_feedback": {
+            "default": 0,
+            "value": "/assets/pcs/##PCS_ID##:active_power_setpoint_feedback",
+            "vlink": "/status/##PCS_ID##:ActivePowerSetpointFeedback"
+        },
+        "ui_ambient_temperature": {
+            "default": 0,
+            "value": "/assets/pcs/##PCS_ID##:ambient_temperature",
+            "vlink": "/status/##PCS_ID##:AmbientTemperature"
+        },
+        "ui_apparent_power": {
+            "default": 0,
+            "value": "/assets/pcs/##PCS_ID##:apparent_power",
+            "vlink": "/status/##PCS_ID##:ApparentPower"
+        },
+        "ui_comms_ok": {
+            "default": false,
+            "value": "/assets/pcs/##PCS_ID##:comms_ok",
+            "vlink": "/status/##PCS_ID##:CommsOK"
+        },
+        "ui_dc_current": {
+            "default": 0,
+            "value": "/assets/pcs/##PCS_ID##:dc_current",
+            "vlink": "/status/##PCS_ID##:DCCurrent"
+        },
+        "ui_dc_power": {
+            "default": 0,
+            "value": "/assets/pcs/##PCS_ID##:dc_power",
+            "vlink": "/status/##PCS_ID##:DCPower"
+        },
+        "ui_dc_voltage": {
+            "default": 0,
+            "value": "/assets/pcs/##PCS_ID##:dc_voltage",
+            "vlink": "/status/##PCS_ID##:DCVoltage"
+        },
+        "ui_frequency": {
+            "default": 0,
+            "value": "/assets/pcs/##PCS_ID##:frequency",
+            "vlink": "/status/##PCS_ID##:Frequency"
+        },
+        "ui_l1_current": {
+            "default": 0,
+            "value": "/assets/pcs/##PCS_ID##:l1_current",
+            "vlink": "/status/##PCS_ID##:L1Current"
+        },
+        "ui_l1_l2_voltage": {
+            "default": 0,
+            "value": "/assets/pcs/##PCS_ID##:l1_l2_voltage",
+            "vlink": "/status/##PCS_ID##:L1L2Voltage"
+        },
+        "ui_l2_current": {
+            "default": 0,
+            "value": "/assets/pcs/##PCS_ID##:l2_current",
+            "vlink": "/status/##PCS_ID##:L2Current"
+        },
+        "ui_l2_l3_voltage": {
+            "default": 0,
+            "value": "/assets/pcs/##PCS_ID##:l2_l3_voltage",
+            "vlink": "/status/##PCS_ID##:L2L3Voltage"
+        },
+        "ui_l3_current": {
+            "default": 0,
+            "value": "/assets/pcs/##PCS_ID##:l3_current",
+            "vlink": "/status/##PCS_ID##:L3Current"
+        },
+        "ui_l3_l1_voltage": {
+            "default": 0,
+            "value": "/assets/pcs/##PCS_ID##:l3_l1_voltage",
+            "vlink": "/status/##PCS_ID##:L3L1Voltage"
+        },
+        "ui_max_charge_power": {
+            "default": 0,
+            "value": "/assets/pcs/##PCS_ID##:max_charge_power",
+            "vlink": "/limits/##PCS_ID##:MaxPCSChargePower"
+        },
+        "ui_max_discharge_power": {
+            "default": 0,
+            "value": "/assets/pcs/##PCS_ID##:max_discharge_power",
+            "vlink": "/limits/##PCS_ID##:MaxPCSDischargePower"
+        },
+        "ui_module_temperature_1": {
+            "default": 0,
+            "value": "/assets/pcs/##PCS_ID##:module_temperature_1",
+            "vlink": "/status/##PCS_ID##:ModuleTemperature1"
+        },
+        "ui_module_temperature_2": {
+            "default": 0,
+            "value": "/assets/pcs/##PCS_ID##:module_temperature_2",
+            "vlink": "/status/##PCS_ID##:ModuleTemperature2"
+        },
+        "ui_module_temperature_3": {
+            "default": 0,
+            "value": "/assets/pcs/##PCS_ID##:module_temperature_3",
+            "vlink": "/status/##PCS_ID##:ModuleTemperature3"
+        },
+        "ui_power_factor": {
+            "default": 0,
+            "value": "/assets/pcs/##PCS_ID##:power_factor",
+            "vlink": "/status/##PCS_ID##:PowerFactor"
+        },
+        "ui_rated_active_power": {
+            "default": 0,
+            "value": "/assets/pcs/##PCS_ID##:rated_active_power",
+            "vlink": "/limits/##PCS_ID##:RatedActivePower"
+        },
+        "ui_rated_power_factor": {
+            "default": 0,
+            "value": "/assets/pcs/##PCS_ID##:rated_power_factor",
+            "vlink": "/config/##PCS_ID##:RatedPowerFactor"
+        },
+        "ui_rated_reactive_power": {
+            "default": 0,
+            "value": "/assets/pcs/##PCS_ID##:rated_reactive_power",
+            "vlink": "/limits/##PCS_ID##:RatedReactivePower"
+        },
+        "ui_reactive_power": {
+            "default": 0,
+            "value": "/assets/pcs/##PCS_ID##:reactive_power",
+            "vlink": "/status/##PCS_ID##:ReactivePower"
+        },
+        "ui_reactive_power_setpoint_feedback": {
+            "default": 0,
+            "value": "/assets/pcs/##PCS_ID##:reactive_power_setpoint_feedback",
+            "vlink": "/status/##PCS_ID##:ReactivePowerSetpointFeedback"
+        },
+        "ui_status": {
+            "default": "INIT",
+            "value": "/assets/pcs/##PCS_ID##:status",
+            "vlink": "/status/##PCS_ID##:Status"
+        },
+        "ui_system_state": {
+            "default": "INIT",
+            "value": "/assets/pcs/##PCS_ID##:system_state",
+            "vlink": "/status/##PCS_ID##:SystemState"
+        }
+    }
+}

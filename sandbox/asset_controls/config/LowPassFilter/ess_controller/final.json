@@ -1,0 +1,9 @@
+{
+    "/config/ess": {
+        "enable": true
+    },
+    "/new/config": {
+        "lpf": 10,
+        "note_trigger": "a value is set to this av to trigger it running its function after it has been enabled"
+    }
+}

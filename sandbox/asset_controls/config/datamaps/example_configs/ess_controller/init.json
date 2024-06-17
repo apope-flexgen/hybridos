@@ -14,8 +14,8 @@
                     "to": 1,
                     "reps": [
                         {
-                            "replace": "##AV_NAME##",
-                            "with": "Controller_EX"
+                            "replace": "##URI##",
+                            "with": "x_uri_Controller_EX"
                         },
                         {
                             "replace": "##HLC_ID##",

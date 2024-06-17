@@ -40,21 +40,34 @@ void FunctionResultHandler(int returnValue, varsmap& vmap, varmap& amap, const c
     std::string status = "";
     bool event = false;
 
+    // create an assetVar to store our return value so that BRB datamaps can remap it
+    int iVal = 1;
+    std::string comp = aV->comp + ":" + aV->name + "_result";
+    assetVar* retAV = aV->am->vm->getVar(vmap, (char*)comp.c_str(), nullptr);
+    if (!retAV)
+    {
+        // if this av doesnt exist already, make it
+        retAV = aV->am->vm->makeVar(vmap, comp.c_str(), nullptr, iVal);
+    }
+
     switch (returnValue)
     {
         case SUCCESS:
             status = "SUCCESS";
             event = true;
+            retAV->setVal(0);
             break;
         case IN_PROGRESS:
             status = "IN PROGRESS";
             if (1)
                 FPS_PRINT_INFO(
                     "{}", (InfoMessageUtility::handlerEventMessage(status, scheduledFuncName, infoMessage)).c_str());
+            retAV->setVal(1);
             break;
         case FAILURE:
             status = "FAILURE";
             event = true;
+            retAV->setVal(-1);
             break;
     }
 

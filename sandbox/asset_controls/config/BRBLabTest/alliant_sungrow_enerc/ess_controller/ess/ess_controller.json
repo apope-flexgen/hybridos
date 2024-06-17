@@ -1,0 +1,310 @@
+{
+    "/control/actions_ess_BatteryRackBalancing_bms_1/BatteryBalancing": {
+        "PCmd": {
+            "value": 0,
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/controls/pcs:ActivePowerSetpointMangled"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    },
+    "/controls/ess/##BMS_ID##": {
+        "BatteryBalancingStartCmd": {
+            "value": false,
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/control/actions_ess_BatteryRackBalancing_##BMS_ID##/BatteryBalancing:StartCmd"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "BatteryBalancingStopCmd": {
+            "value": false,
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/control/actions_ess_BatteryRackBalancing_##BMS_ID##/BatteryBalancing:StopCmd"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    },
+    "/config/ess": {
+        "AlarmDestination": "/assets/ess/ess_1:alarms",
+        "EventSourceFormat": {
+            "value": "assetName"
+        },
+        "FaultDestination": "/assets/ess/ess_1:faults",
+        "LogDir": "/var/log/ess_controller",
+        "NoAlarmMsg": "Normal",
+        "NoFaultMsg": "Normal",
+        "ZeroValue": 0,
+        "enable": false,
+        "remote_control_enable": false
+    },
+    "/limits/ess": {
+        "MaxChargePower": {
+            "enable": "/config/ess:enable",
+            "note": "Calculates the maximum of the max charge powers reported by the BMS and PCS managers",
+            "numVars": 2,
+            "operation": "max",
+            "value": 0,
+            "variable1": "/limits/bms:ChargePowerLimit",
+            "variable2": "/limits/pcs:MaxPCSChargePower"
+        },
+        "MaxDischargePower": {
+            "enable": "/config/ess:enable",
+            "note": "Calculates the minimum of the max discharge powers reported by the BMS and PCS managers",
+            "numVars": 2,
+            "operation": "min",
+            "value": 0,
+            "variable1": "/limits/bms:DischargePowerLimit",
+            "variable2": "/limits/pcs:MaxPCSDischargePower"
+        }
+    },
+    "/sched/ess": {
+        "every1000ms_ess": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "ess",
+                                "func": "Every1000mS"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/ess:enable",
+            "note1": "Periodically runs Every1000mS, which is useful for reporting CPU statistics",
+            "note2": "Also useful for writing currently loaded ESS Controller variables to /var/log/ess_controller/run_configs folder",
+            "value": 1
+        },
+        "pubAssets_ess": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "ess",
+                                "func": "RunPub"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/ess:enable",
+            "mode": "ui",
+            "note": "Publishes UI asset data (/assets/ess/ess_1)",
+            "table": "/assets/ess/ess_1",
+            "value": 1
+        },
+        "pubESS": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "ess",
+                                "func": "RunPub"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/ess:enable",
+            "mode": "naked",
+            "note": "Publishes ESS Controller data (/site/ess)",
+            "table": "/site/ess",
+            "value": 1
+        },
+        "runMonitor_ess": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "ess",
+                                "func": "RunMonitor"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "aname": "ess",
+            "enable": "/config/ess:enable",
+            "monitor": "wake_monitor",
+            "note": "Periodically runs functions for variables defined in /schedule/wake_monitor/ess",
+            "value": 1
+        },
+        "updateHeartbeatWrite_ess": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "ess",
+                                "func": "CalculateVar",
+                                "inAv": "/status/ess:HeartbeatWrite"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/ess:enable",
+            "note": "Periodically updates the heartbeat write variable defined in /status/ess:HeartbeatWrite",
+            "value": 1
+        }
+    },
+    "/schedule/wake_monitor/ess": {
+        "/limits/ess:MaxChargePower": {
+            "amap": "ess",
+            "func": "CalculateVar"
+        },
+        "/limits/ess:MaxDischargePower": {
+            "amap": "ess",
+            "func": "CalculateVar"
+        },
+        "/status/ess:InLocalMode": {
+            "amap": "ess",
+            "func": "CalculateVar"
+        }
+    },
+    "/status/ess": {
+        "CommsOK": false,
+        "HeartbeatWrite": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/site/ess:heartbeat_from_ess"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/ess:enable",
+            "excludeFromDefaultSched": true,
+            "expression": "if (({1} >= 59), 0, ({1} + 1))",
+            "note": "Updates and then sends the heartbeat write value",
+            "numVars": 1,
+            "useExpr": true,
+            "value": 0,
+            "variable1": "/status/ess:HeartbeatWrite"
+        },
+        "InLocalMode": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "ess",
+                                "func": "LogInfo"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": true,
+                                "outValue": false,
+                                "uri": "/config/ess:remote_control_enable"
+                            },
+                            {
+                                "inValue": false,
+                                "outValue": true,
+                                "uri": "/config/ess:remote_control_enable"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/ess:enable",
+            "note1": "Determines whether the ESS Controller is in remote or local mode",
+            "note2": "If in local mode, then remote controls are disabled, meaning that commands sent to the ESS Controller are ignored",
+            "numVars": 9,
+            "operation": "or",
+            "value": false,
+            "variable1": "/assets/bms/summary:maint_mode",
+            "variable2": "/assets/bms/bms_1:maint_mode",
+            "variable3": "/assets/bms_1/rack_1:maint_mode",
+            "variable4": "/assets/bms_1/rack_2:maint_mode",
+            "variable5": "/assets/bms_1/rack_3:maint_mode",
+            "variable6": "/assets/bms_1/rack_4:maint_mode",
+            "variable7": "/assets/bms_1/rack_5:maint_mode",
+            "variable8": "/assets/pcs/summary:maint_mode",
+            "variable9": "/assets/pcs/pcs_1:maint_mode"
+        }
+    },
+    "/system/commands": {
+        "runOpts_ess": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "ess",
+                                "func": "SchedItemOpts"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": false,
+            "note1": "Sets schedule variables (defined in /sched/ess) to /system/commands:run",
+            "note2": "This allows the ESS Controller to kick off scheduled tasks based on the provided variables",
+            "options": [
+                {
+                    "aname": "ess",
+                    "every": 1,
+                    "uri": "/sched/ess:pubAssets_ess",
+                    "value": 1
+                },
+                {
+                    "aname": "ess",
+                    "every": 0.1,
+                    "uri": "/sched/ess:runMonitor_ess",
+                    "value": 1
+                },
+                {
+                    "aname": "ess",
+                    "every": 1,
+                    "uri": "/sched/ess:updateHeartbeatWrite_ess",
+                    "value": 1
+                },
+                {
+                    "aname": "ess",
+                    "every": 0.1,
+                    "uri": "/sched/ess:pubESS",
+                    "value": 1
+                },
+                {
+                    "aname": "ess",
+                    "every": 1,
+                    "uri": "/sched/ess:every1000ms_ess",
+                    "value": 1
+                }
+            ],
+            "targav": "/system/commands:run",
+            "value": false
+        }
+    }
+}

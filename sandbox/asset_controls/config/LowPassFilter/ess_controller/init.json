@@ -1,0 +1,16 @@
+{
+    "/config/load": {
+        "LowPassFilter": {
+            "value": false,
+            "file": "init",
+            "aname": "ess",
+            "final": "final",
+            "new_options": [
+                {
+                    "file": "av",
+                    "aname": "my_am"
+                }
+            ]
+        }
+    }
+}

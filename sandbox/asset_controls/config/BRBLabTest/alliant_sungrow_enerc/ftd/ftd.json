@@ -1,0 +1,133 @@
+{
+    "db_name": "alliant_lab_ess-controller",
+    "period": 300,
+    "num_archive_workers": 1,
+    "archive": "/home/hybridos/powercloud/archives",
+    "uris": [
+        {
+            "uri": "/components",
+            "sources": [
+                "bms_1"
+            ],
+            "measurement": "components_bms_1",
+            "destination": "influx"
+        },
+        {
+            "uri": "/components",
+            "sources": [
+                "bms_1_rack_1",
+                "bms_1_rack_10",
+                "bms_1_rack_2",
+                "bms_1_rack_3",
+                "bms_1_rack_4",
+                "bms_1_rack_5",
+                "bms_1_rack_6",
+                "bms_1_rack_7",
+                "bms_1_rack_8",
+                "bms_1_rack_9"
+            ],
+            "group": "components_bms_1_racks_group",
+            "measurement": "components_bms_1_racks",
+            "destination": "influx"
+        },
+        {
+            "uri": "/components",
+            "sources": [
+                "ess"
+            ],
+            "measurement": "components_ess",
+            "destination": "influx"
+        },
+        {
+            "uri": "/components",
+            "sources": [
+                "pcs_1"
+            ],
+            "measurement": "components_pcs_1",
+            "destination": "influx"
+        },
+        {
+            "uri": "/site",
+            "sources": [
+                "ess"
+            ],
+            "measurement": "site_ess",
+            "destination": "influx"
+        },
+        {
+            "uri": "/assets/bms",
+            "sources": [
+                "bms_1"
+            ],
+            "measurement": "assets_bms_bms_1",
+            "destination": "influx"
+        },
+        {
+            "uri": "/assets/bms_1",
+            "sources": [
+                "rack_1",
+                "rack_2",
+                "rack_3",
+                "rack_4",
+                "rack_5"
+            ],
+            "group": "assets_bms_1_racks_group",
+            "measurement": "assets_bms_1_racks",
+            "destination": "influx"
+        },
+        {
+            "uri": "/assets/bms",
+            "sources": [
+                "summary"
+            ],
+            "measurement": "assets_bms_summary",
+            "destination": "influx"
+        },
+        {
+            "uri": "/assets/pcs",
+            "sources": [
+                "pcs_1"
+            ],
+            "measurement": "assets_pcs_pcs_1",
+            "destination": "influx"
+        },
+        {
+            "uri": "/assets/pcs",
+            "sources": [
+                "summary"
+            ],
+            "measurement": "assets_pcs_summary",
+            "destination": "influx"
+        },
+        {
+            "uri": "/events",
+            "measurement": "events",
+            "destination": "mongo"
+        },
+        {
+            "uri": "/systemstats/cpu",
+            "measurement": "cpustats",
+            "destination": "influx"
+        },
+        {
+            "uri": "/systemstats/mem",
+            "measurement": "memstats",
+            "destination": "influx"
+        },
+        {
+            "uri": "/systemstats/net",
+            "measurement": "netstats",
+            "destination": "influx"
+        },
+        {
+            "uri": "/systemstats/disk",
+            "measurement": "diskstats",
+            "destination": "influx"
+        },
+        {
+            "uri": "/systemstats/process",
+            "measurement": "processstats",
+            "destination": "influx"
+        }
+    ]
+}

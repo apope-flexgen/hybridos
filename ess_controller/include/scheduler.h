@@ -21,6 +21,7 @@ public:
     int reSched(double tNow = 0.0);
     void setUp(const char* _id, const char* _aname, const char* _uri, const char* _func, double _refTime,
                double _runTime, double _repTime, double _endTime, char* _targAv);
+    void putOnScheduler(std::string func, double _refTime, double _runTime, double _repTime, std::string targURI, assetVar* aV);
 
     void setFromAv(assetVar* inav);
     cJSON* getCj();

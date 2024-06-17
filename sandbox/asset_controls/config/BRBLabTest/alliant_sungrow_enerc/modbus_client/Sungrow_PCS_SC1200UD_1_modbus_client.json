@@ -1,0 +1,1697 @@
+{
+    "fileInfo": {
+        "sourceFileName": "Sungrow_PCS_SC1200UD.xlsx",
+        "sourceFileCreatedBy": "Jimmy Nguyen",
+        "sourceFileCreated": "2021-10-19T14:03:27Z",
+        "sourceFileLastModifiedBy": "Joseph Howard",
+        "sourceFileLastModified": "2024-04-17T18:37:22Z",
+        "outputFileName": "Sungrow_PCS_SC1200UD_modbus_client.json",
+        "outputFileType": "modbus_client",
+        "outputFileCreated": "2024-05-14T20:05:46Z"
+    },
+    "connection": {
+        "name": "sungrow-sc1200ud-pcs",
+        "ip_address": "192.168.112.13",
+        "port": 502,
+        "max_num_connections": 1,
+        "connection_timeout": 10,
+        "frequency": 1000,
+        "device_id": 1,
+        "off_by_one": true,
+        "byte_swap": true
+    },
+    "components": [
+        {
+            "id": "pcs_1",
+            "heartbeat_enabled": true,
+            "component_heartbeat_read_uri": "heartbeat_read",
+            "component_heartbeat_timeout_ms": 2000,
+            "frequency": 1000,
+            "device_id": 1,
+            "registers": [
+                {
+                    "type": "Input Registers",
+                    "starting_offset": 3200,
+                    "number_of_registers": 125,
+                    "map": [
+                        {
+                            "id": "protocol_number",
+                            "offset": 3200,
+                            "size": 2,
+                            "name": "Protocol Number"
+                        },
+                        {
+                            "id": "protocol_version",
+                            "offset": 3202,
+                            "size": 2,
+                            "name": "Protocol Version"
+                        },
+                        {
+                            "id": "serial_number_word_1",
+                            "offset": 3204,
+                            "size": 1,
+                            "name": "Serial Number Word 1"
+                        },
+                        {
+                            "id": "serial_number_word_2",
+                            "offset": 3205,
+                            "size": 1,
+                            "name": "Serial Number Word 2"
+                        },
+                        {
+                            "id": "serial_number_word_3",
+                            "offset": 3206,
+                            "size": 1,
+                            "name": "Serial Number Word 3"
+                        },
+                        {
+                            "id": "serial_number_word_4",
+                            "offset": 3207,
+                            "size": 1,
+                            "name": "Serial Number Word 4"
+                        },
+                        {
+                            "id": "serial_number_word_5",
+                            "offset": 3208,
+                            "size": 1,
+                            "name": "Serial Number Word 5"
+                        },
+                        {
+                            "id": "serial_number_word_6",
+                            "offset": 3209,
+                            "size": 1,
+                            "name": "Serial Number Word 6"
+                        },
+                        {
+                            "id": "serial_number_word_7",
+                            "offset": 3210,
+                            "size": 1,
+                            "scale": 1,
+                            "name": "Serial Number Word 7"
+                        },
+                        {
+                            "id": "serial_number_word_8",
+                            "offset": 3211,
+                            "size": 1,
+                            "name": "Serial Number Word 8"
+                        },
+                        {
+                            "id": "device_type_code",
+                            "offset": 3250,
+                            "size": 1,
+                            "name": "Device Type Code"
+                        },
+                        {
+                            "id": "overall_fault_state",
+                            "offset": 3288,
+                            "size": 1,
+                            "name": "Overall Fault State"
+                        },
+                        {
+                            "id": "overall_alarm_state",
+                            "offset": 3289,
+                            "size": 2,
+                            "name": "Overall Alarm State"
+                        },
+                        {
+                            "id": "mv_node_state",
+                            "offset": 3291,
+                            "size": 2,
+                            "name": "MV Node State"
+                        },
+                        {
+                            "id": "transformer_oil_temperature",
+                            "offset": 3293,
+                            "size": 1,
+                            "scale": 10,
+                            "name": "Transformer Oil Temperature",
+                            "signed": true
+                        },
+                        {
+                            "id": "heartbeat_read",
+                            "offset": 3294,
+                            "size": 1,
+                            "name": "Heartbeat Read"
+                        },
+                        {
+                            "id": "leakage_current",
+                            "offset": 3297,
+                            "size": 1,
+                            "scale": 100,
+                            "name": "Leakage Current"
+                        },
+                        {
+                            "id": "mv_node_state_1",
+                            "offset": 3298,
+                            "size": 2,
+                            "name": "MV Node State 1"
+                        },
+                        {
+                            "id": "mv_node_state_2",
+                            "offset": 3300,
+                            "size": 2,
+                            "name": "MV Node State 2"
+                        },
+                        {
+                            "id": "winding_temperature",
+                            "offset": 3302,
+                            "size": 1,
+                            "scale": 10,
+                            "name": "Winding Temperature",
+                            "signed": true
+                        },
+                        {
+                            "id": "module_temperature_1",
+                            "offset": 3304,
+                            "size": 1,
+                            "scale": 10,
+                            "name": "Module Temperature 1",
+                            "signed": true
+                        },
+                        {
+                            "id": "module_temperature_2",
+                            "offset": 3305,
+                            "size": 1,
+                            "scale": 10,
+                            "name": "Module Temperature 2",
+                            "signed": true
+                        },
+                        {
+                            "id": "module_temperature_3",
+                            "offset": 3306,
+                            "size": 1,
+                            "scale": 10,
+                            "name": "Module Temperature 3",
+                            "signed": true
+                        },
+                        {
+                            "id": "dc_voltage",
+                            "offset": 3310,
+                            "size": 1,
+                            "scale": 10,
+                            "name": "DC Voltage",
+                            "signed": true
+                        },
+                        {
+                            "id": "dc_current",
+                            "offset": 3311,
+                            "size": 1,
+                            "scale": 10,
+                            "name": "DC Current",
+                            "signed": true
+                        },
+                        {
+                            "id": "dc_power",
+                            "offset": 3312,
+                            "size": 1,
+                            "scale": 10,
+                            "name": "DC Power",
+                            "signed": true
+                        },
+                        {
+                            "id": "grid_voltage_vab",
+                            "offset": 3313,
+                            "size": 1,
+                            "scale": 10,
+                            "name": "Grid Voltage Vab"
+                        },
+                        {
+                            "id": "grid_voltage_vbc",
+                            "offset": 3314,
+                            "size": 1,
+                            "scale": 10,
+                            "name": "Grid Voltage Vbc"
+                        },
+                        {
+                            "id": "grid_voltage_vca",
+                            "offset": 3315,
+                            "size": 1,
+                            "scale": 10,
+                            "name": "Grid Voltage Vca"
+                        },
+                        {
+                            "id": "phase_a_current",
+                            "offset": 3316,
+                            "size": 1,
+                            "scale": 10,
+                            "name": "Phase A Current"
+                        },
+                        {
+                            "id": "phase_b_current",
+                            "offset": 3317,
+                            "size": 1,
+                            "scale": 10,
+                            "name": "Phase B Current"
+                        },
+                        {
+                            "id": "phase_c_current",
+                            "offset": 3318,
+                            "size": 1,
+                            "scale": 10,
+                            "name": "Phase C Current"
+                        },
+                        {
+                            "id": "active_power",
+                            "offset": 3319,
+                            "size": 2,
+                            "scale": 10,
+                            "name": "Active Power",
+                            "signed": true
+                        },
+                        {
+                            "id": "reactive_power",
+                            "offset": 3321,
+                            "size": 2,
+                            "scale": 10,
+                            "name": "Reactive Power",
+                            "signed": true
+                        },
+                        {
+                            "id": "positive_impedance_to_ground",
+                            "offset": 3323,
+                            "size": 2,
+                            "scale": 100,
+                            "name": "Positive Impedance to Ground"
+                        }
+                    ]
+                },
+                {
+                    "type": "Input Registers",
+                    "starting_offset": 3325,
+                    "number_of_registers": 45,
+                    "map": [
+                        {
+                            "id": "negative_impedance_to_ground",
+                            "offset": 3325,
+                            "size": 2,
+                            "scale": 100,
+                            "name": "Negative Impedance to Ground"
+                        },
+                        {
+                            "id": "alarm_running_state_1",
+                            "offset": 3327,
+                            "size": 1,
+                            "name": "Alarm Running State 1"
+                        },
+                        {
+                            "id": "alarm_running_state_2",
+                            "offset": 3328,
+                            "size": 1,
+                            "name": "Alarm Running State 2"
+                        },
+                        {
+                            "id": "fault_state_1",
+                            "offset": 3329,
+                            "size": 2,
+                            "name": "Fault State 1"
+                        },
+                        {
+                            "id": "fault_state_2",
+                            "offset": 3331,
+                            "size": 2,
+                            "name": "Fault State 2"
+                        },
+                        {
+                            "id": "charging_or_discharging_state",
+                            "offset": 3333,
+                            "size": 1,
+                            "name": "Charging or Discharging State"
+                        },
+                        {
+                            "id": "daily_charging",
+                            "offset": 3334,
+                            "size": 2,
+                            "scale": 10,
+                            "name": "Daily Charging"
+                        },
+                        {
+                            "id": "daily_discharging",
+                            "offset": 3336,
+                            "size": 2,
+                            "scale": 10,
+                            "name": "Daily Discharging"
+                        },
+                        {
+                            "id": "total_charging",
+                            "offset": 3338,
+                            "size": 2,
+                            "name": "Total Charging"
+                        },
+                        {
+                            "id": "total_discharging",
+                            "offset": 3340,
+                            "size": 2,
+                            "name": "Total Discharging"
+                        },
+                        {
+                            "id": "work_state",
+                            "offset": 3342,
+                            "size": 2,
+                            "name": "Work State"
+                        },
+                        {
+                            "id": "operating_mode",
+                            "offset": 3344,
+                            "size": 2,
+                            "name": "Operating Mode"
+                        },
+                        {
+                            "id": "nominal_output_power",
+                            "offset": 3348,
+                            "size": 1,
+                            "scale": 10,
+                            "name": "Nominal Output Power"
+                        },
+                        {
+                            "id": "nominal_reactive_output_power",
+                            "offset": 3349,
+                            "size": 1,
+                            "scale": 10,
+                            "name": "Nominal Reactive Output Power"
+                        },
+                        {
+                            "id": "grid_status",
+                            "offset": 3351,
+                            "size": 1,
+                            "name": "Grid Status"
+                        },
+                        {
+                            "id": "grid_frequency",
+                            "offset": 3352,
+                            "size": 1,
+                            "scale": 100,
+                            "name": "Grid Frequency"
+                        },
+                        {
+                            "id": "power_factor",
+                            "offset": 3353,
+                            "size": 1,
+                            "scale": 1000,
+                            "name": "Power Factor"
+                        },
+                        {
+                            "id": "ambient_temperature",
+                            "offset": 3354,
+                            "size": 1,
+                            "scale": 10,
+                            "name": "Ambient Temperature",
+                            "signed": true
+                        },
+                        {
+                            "id": "node_state",
+                            "offset": 3355,
+                            "size": 2,
+                            "name": "Node State"
+                        },
+                        {
+                            "id": "daily_charging_hours",
+                            "offset": 3357,
+                            "size": 1,
+                            "name": "Daily Charging Hours"
+                        },
+                        {
+                            "id": "daily_discharging_hours",
+                            "offset": 3358,
+                            "size": 1,
+                            "name": "Daily Discharging Hours"
+                        },
+                        {
+                            "id": "total_charging_hours",
+                            "offset": 3359,
+                            "size": 2,
+                            "name": "Total Charging Hours"
+                        },
+                        {
+                            "id": "total_discharging_hours",
+                            "offset": 3361,
+                            "size": 2,
+                            "name": "Total Discharging Hours"
+                        },
+                        {
+                            "id": "max_charging_power",
+                            "offset": 3363,
+                            "size": 1,
+                            "scale": 10,
+                            "name": "Max Charging Power",
+                            "signed": true
+                        },
+                        {
+                            "id": "max_discharging_power",
+                            "offset": 3364,
+                            "size": 1,
+                            "scale": 10,
+                            "name": "Max Discharging Power",
+                            "signed": true
+                        },
+                        {
+                            "id": "max_inductive_reactive_power",
+                            "offset": 3365,
+                            "size": 1,
+                            "scale": 10,
+                            "name": "Max Inductive Reactive Power",
+                            "signed": true
+                        },
+                        {
+                            "id": "max_capacitive_reactive_power",
+                            "offset": 3366,
+                            "size": 1,
+                            "scale": 10,
+                            "name": "Max Capacitive Reactive Power",
+                            "signed": true
+                        },
+                        {
+                            "id": "current_number_of_black_start_beats",
+                            "offset": 3369,
+                            "size": 1,
+                            "name": "Current Number of Black Start Beats"
+                        }
+                    ]
+                },
+                {
+                    "type": "Input Registers",
+                    "starting_offset": 4000,
+                    "number_of_registers": 15,
+                    "map": [
+                        {
+                            "id": "branch_current_1",
+                            "offset": 4000,
+                            "size": 1,
+                            "scale": 10,
+                            "name": "Branch Current 1",
+                            "signed": true
+                        },
+                        {
+                            "id": "branch_current_2",
+                            "offset": 4001,
+                            "size": 1,
+                            "scale": 10,
+                            "name": "Branch Current 2",
+                            "signed": true
+                        },
+                        {
+                            "id": "branch_current_3",
+                            "offset": 4002,
+                            "size": 1,
+                            "scale": 10,
+                            "name": "Branch Current 3",
+                            "signed": true
+                        },
+                        {
+                            "id": "branch_current_4",
+                            "offset": 4003,
+                            "size": 1,
+                            "scale": 10,
+                            "name": "Branch Current 4",
+                            "signed": true
+                        },
+                        {
+                            "id": "branch_current_5",
+                            "offset": 4004,
+                            "size": 1,
+                            "scale": 10,
+                            "name": "Branch Current 5",
+                            "signed": true
+                        },
+                        {
+                            "id": "branch_current_6",
+                            "offset": 4005,
+                            "size": 1,
+                            "scale": 10,
+                            "name": "Branch Current 6",
+                            "signed": true
+                        },
+                        {
+                            "id": "branch_current_7",
+                            "offset": 4006,
+                            "size": 1,
+                            "scale": 10,
+                            "name": "Branch Current 7",
+                            "signed": true
+                        },
+                        {
+                            "id": "branch_current_8",
+                            "offset": 4007,
+                            "size": 1,
+                            "scale": 10,
+                            "name": "Branch Current 8",
+                            "signed": true
+                        },
+                        {
+                            "id": "branch_current_9",
+                            "offset": 4008,
+                            "size": 1,
+                            "scale": 10,
+                            "name": "Branch Current 9",
+                            "signed": true
+                        },
+                        {
+                            "id": "branch_current_10",
+                            "offset": 4009,
+                            "size": 1,
+                            "scale": 10,
+                            "name": "Branch Current 10",
+                            "signed": true
+                        },
+                        {
+                            "id": "branch_current_11",
+                            "offset": 4010,
+                            "size": 1,
+                            "scale": 10,
+                            "name": "Branch Current 11",
+                            "signed": true
+                        },
+                        {
+                            "id": "branch_current_12",
+                            "offset": 4011,
+                            "size": 1,
+                            "scale": 10,
+                            "name": "Branch Current 12",
+                            "signed": true
+                        },
+                        {
+                            "id": "branch_current_13",
+                            "offset": 4012,
+                            "size": 1,
+                            "scale": 10,
+                            "name": "Branch Current 13",
+                            "signed": true
+                        },
+                        {
+                            "id": "branch_current_14",
+                            "offset": 4013,
+                            "size": 1,
+                            "scale": 10,
+                            "name": "Branch Current 14",
+                            "signed": true
+                        },
+                        {
+                            "id": "branch_current_15",
+                            "offset": 4014,
+                            "size": 1,
+                            "scale": 10,
+                            "name": "Branch Current 15",
+                            "signed": true
+                        }
+                    ]
+                },
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 3250,
+                    "number_of_registers": 122,
+                    "map": [
+                        {
+                            "id": "system_time_year",
+                            "offset": 3250,
+                            "size": 1,
+                            "name": "System Time Year"
+                        },
+                        {
+                            "id": "system_time_month",
+                            "offset": 3251,
+                            "size": 1,
+                            "name": "System Time Month"
+                        },
+                        {
+                            "id": "system_time_day",
+                            "offset": 3252,
+                            "size": 1,
+                            "name": "System Time Day"
+                        },
+                        {
+                            "id": "system_time_hour",
+                            "offset": 3253,
+                            "size": 1,
+                            "name": "System Time Hour"
+                        },
+                        {
+                            "id": "system_time_minute",
+                            "offset": 3254,
+                            "size": 1,
+                            "name": "System Time Minute"
+                        },
+                        {
+                            "id": "system_time_second",
+                            "offset": 3255,
+                            "size": 1,
+                            "name": "System Time Second"
+                        },
+                        {
+                            "id": "start_or_stop_or_standby",
+                            "offset": 3256,
+                            "size": 1,
+                            "name": "Start or Stop or Standby"
+                        },
+                        {
+                            "id": "on_or_off_grid_mode_setting",
+                            "offset": 3257,
+                            "size": 1,
+                            "name": "On or Off Grid Mode Setting"
+                        },
+                        {
+                            "id": "reactive_power_adjustment_switch",
+                            "offset": 3258,
+                            "size": 1,
+                            "name": "Reactive Power Adjustment Switch"
+                        },
+                        {
+                            "id": "remote_or_local",
+                            "offset": 3259,
+                            "size": 1,
+                            "name": "Remote or Local"
+                        },
+                        {
+                            "id": "active_or_reactive_priority",
+                            "offset": 3260,
+                            "size": 1,
+                            "name": "Active or Reactive Priority"
+                        },
+                        {
+                            "id": "power_soft_start_enabling",
+                            "offset": 3261,
+                            "size": 1,
+                            "name": "Power Soft Start Enabling"
+                        },
+                        {
+                            "id": "ac_precharging_enabling",
+                            "offset": 3270,
+                            "size": 1,
+                            "name": "AC Precharging Enabling"
+                        },
+                        {
+                            "id": "quick_dispatch",
+                            "offset": 3271,
+                            "size": 1,
+                            "name": "Quick Dispatch"
+                        },
+                        {
+                            "id": "zero_power_standby",
+                            "offset": 3272,
+                            "size": 1,
+                            "name": "Zero Power Standby"
+                        },
+                        {
+                            "id": "on_grid_charging_or_discharging_mode",
+                            "offset": 3300,
+                            "size": 1,
+                            "name": "On Grid Charging or Discharging Mode"
+                        },
+                        {
+                            "id": "on_grid_constant_current_value",
+                            "offset": 3301,
+                            "size": 1,
+                            "name": "On Grid Constant Current Value",
+                            "signed": true
+                        },
+                        {
+                            "id": "on_grid_constant_voltage_value",
+                            "offset": 3302,
+                            "size": 1,
+                            "scale": 10,
+                            "name": "On Grid Constant Voltage Value"
+                        },
+                        {
+                            "id": "on_grid_constant_voltage_limit_current",
+                            "offset": 3303,
+                            "size": 1,
+                            "name": "On Grid Constant Voltage Limit Current"
+                        },
+                        {
+                            "id": "on_grid_constant_ac_power",
+                            "offset": 3304,
+                            "size": 1,
+                            "scale": 10,
+                            "name": "On Grid Constant AC Power",
+                            "signed": true
+                        },
+                        {
+                            "id": "on_grid_constant_dc_power",
+                            "offset": 3305,
+                            "size": 1,
+                            "scale": 10,
+                            "name": "On Grid Constant DC Power",
+                            "signed": true
+                        },
+                        {
+                            "id": "independent_converter_voltage",
+                            "offset": 3306,
+                            "size": 1,
+                            "scale": 10,
+                            "name": "Independent Converter Voltage"
+                        },
+                        {
+                            "id": "independent_converter_frequency",
+                            "offset": 3307,
+                            "size": 1,
+                            "scale": 100,
+                            "name": "Independent Converter Frequency"
+                        },
+                        {
+                            "id": "max_battery_charging_voltage",
+                            "offset": 3310,
+                            "size": 1,
+                            "scale": 10,
+                            "name": "Max Battery Charging Voltage"
+                        },
+                        {
+                            "id": "min_battery_discharging_voltage",
+                            "offset": 3311,
+                            "size": 1,
+                            "scale": 10,
+                            "name": "Min Battery Discharging Voltage"
+                        },
+                        {
+                            "id": "max_battery_charging_current",
+                            "offset": 3312,
+                            "size": 1,
+                            "name": "Max Battery Charging Current",
+                            "signed": true
+                        },
+                        {
+                            "id": "max_battery_discharging_current",
+                            "offset": 3313,
+                            "size": 1,
+                            "name": "Max Battery Discharging Current"
+                        },
+                        {
+                            "id": "frequency_ride_through_enabling",
+                            "offset": 3314,
+                            "size": 1,
+                            "name": "Frequency Ride Through Enabling"
+                        },
+                        {
+                            "id": "frequency_ride_through_compensation_factor",
+                            "offset": 3315,
+                            "size": 1,
+                            "scale": 10,
+                            "name": "Frequency Ride Through Compensation Factor"
+                        },
+                        {
+                            "id": "heartbeat_write",
+                            "offset": 3316,
+                            "size": 1,
+                            "name": "Heartbeat Write"
+                        },
+                        {
+                            "id": "heartbeat_timeout_interval",
+                            "offset": 3317,
+                            "size": 1,
+                            "name": "Heartbeat Timeout Interval"
+                        },
+                        {
+                            "id": "reactive_power_percentage_setting",
+                            "offset": 3319,
+                            "size": 1,
+                            "scale": 10,
+                            "name": "Reactive Power Percentage Setting",
+                            "signed": true
+                        },
+                        {
+                            "id": "power_factor_setting",
+                            "offset": 3320,
+                            "size": 1,
+                            "scale": 1000,
+                            "name": "Power Factor Setting",
+                            "signed": true
+                        },
+                        {
+                            "id": "pf_frequency_regulation_control_enabling",
+                            "offset": 3321,
+                            "size": 1,
+                            "name": "Pf Frequency Regulation Control Enabling"
+                        },
+                        {
+                            "id": "pf_deadband_frequency",
+                            "offset": 3322,
+                            "size": 1,
+                            "scale": 100,
+                            "name": "Pf Deadband Frequency"
+                        },
+                        {
+                            "id": "max_charging_frequency_regulation_power",
+                            "offset": 3325,
+                            "size": 1,
+                            "scale": 10,
+                            "name": "Max Charging Frequency Regulation Power"
+                        },
+                        {
+                            "id": "max_discharging_frequency_regulation_power",
+                            "offset": 3326,
+                            "size": 1,
+                            "scale": 10,
+                            "name": "Max Discharging Frequency Regulation Power"
+                        },
+                        {
+                            "id": "vsg_rated_output_voltage",
+                            "offset": 3330,
+                            "size": 1,
+                            "scale": 10,
+                            "name": "VSG Rated Output Voltage"
+                        },
+                        {
+                            "id": "vsg_rated_output_frequency",
+                            "offset": 3331,
+                            "size": 1,
+                            "scale": 100,
+                            "name": "VSG Rated Output Frequency"
+                        },
+                        {
+                            "id": "vsg_frequency_droop_slope",
+                            "offset": 3332,
+                            "size": 1,
+                            "scale": 10,
+                            "name": "VSG Frequency Droop Slope"
+                        },
+                        {
+                            "id": "vsg_voltage_droop_slope",
+                            "offset": 3333,
+                            "size": 1,
+                            "scale": 10,
+                            "name": "VSG Voltage Droop Slope"
+                        },
+                        {
+                            "id": "vsg_active_setting_value",
+                            "offset": 3334,
+                            "size": 1,
+                            "scale": 10,
+                            "name": "VSG Active Setting Value",
+                            "signed": true
+                        },
+                        {
+                            "id": "vsg_reactive_setting_value",
+                            "offset": 3335,
+                            "size": 1,
+                            "scale": 10,
+                            "name": "VSG Reactive Setting Value",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_communication_exception_switch",
+                            "offset": 3370,
+                            "size": 1,
+                            "name": "BMS Communication Exception Switch"
+                        },
+                        {
+                            "id": "bms_communication_exception_time",
+                            "offset": 3371,
+                            "size": 1,
+                            "name": "BMS Communication Exception Time"
+                        }
+                    ]
+                },
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 3387,
+                    "number_of_registers": 119,
+                    "map": [
+                        {
+                            "id": "active_power_rising_slope",
+                            "offset": 3387,
+                            "size": 1,
+                            "name": "Active Power Rising Slope"
+                        },
+                        {
+                            "id": "active_power_droop_slope",
+                            "offset": 3388,
+                            "size": 1,
+                            "name": "Active Power Droop Slope"
+                        },
+                        {
+                            "id": "reactive_power_rising_slope",
+                            "offset": 3390,
+                            "size": 1,
+                            "name": "Reactive Power Rising Slope"
+                        },
+                        {
+                            "id": "reactive_power_droop_slope",
+                            "offset": 3391,
+                            "size": 1,
+                            "name": "Reactive Power Droop Slope"
+                        },
+                        {
+                            "id": "qu_voltage_rising_start_point",
+                            "offset": 3392,
+                            "size": 1,
+                            "name": "QU Voltage Rising Start Point"
+                        },
+                        {
+                            "id": "qu_voltage_rising_end_point",
+                            "offset": 3393,
+                            "size": 1,
+                            "name": "QU Voltage Rising End Point"
+                        },
+                        {
+                            "id": "qu_voltage_droop_start_point",
+                            "offset": 3394,
+                            "size": 1,
+                            "name": "QU Voltage Droop Start Point"
+                        },
+                        {
+                            "id": "qu_voltage_droop_end_point",
+                            "offset": 3395,
+                            "size": 1,
+                            "name": "QU Voltage Droop End Point"
+                        },
+                        {
+                            "id": "qu_working_mode",
+                            "offset": 3396,
+                            "size": 1,
+                            "name": "QU Working Mode"
+                        },
+                        {
+                            "id": "max_qu_reactive_power",
+                            "offset": 3397,
+                            "size": 1,
+                            "name": "Max QU Reactive Power"
+                        },
+                        {
+                            "id": "max_qu_pf",
+                            "offset": 3398,
+                            "size": 1,
+                            "name": "Max QU PF"
+                        },
+                        {
+                            "id": "qu_enabling_power",
+                            "offset": 3399,
+                            "size": 1,
+                            "name": "QU Enabling Power"
+                        },
+                        {
+                            "id": "stop_delay_time_t",
+                            "offset": 3404,
+                            "size": 1,
+                            "name": "Stop Delay Time T"
+                        },
+                        {
+                            "id": "stop_slope_l",
+                            "offset": 3405,
+                            "size": 1,
+                            "name": "Stop Slope L"
+                        },
+                        {
+                            "id": "dc_mode",
+                            "offset": 3406,
+                            "size": 1,
+                            "name": "DC Mode"
+                        },
+                        {
+                            "id": "auto_recovery_time",
+                            "offset": 3407,
+                            "size": 1,
+                            "name": "Auto Recovery Time"
+                        },
+                        {
+                            "id": "battery_charging_soc_upper_limit",
+                            "offset": 3411,
+                            "size": 1,
+                            "name": "Battery Charging SOC Upper limit"
+                        },
+                        {
+                            "id": "battery_discharging_soc_lower_limit",
+                            "offset": 3412,
+                            "size": 1,
+                            "name": "Battery Discharging SOC Lower Limit"
+                        },
+                        {
+                            "id": "leakage_current_protection_value",
+                            "offset": 3415,
+                            "size": 1,
+                            "name": "Leakage Current Protection Value"
+                        },
+                        {
+                            "id": "active_islanding_enabling",
+                            "offset": 3416,
+                            "size": 1,
+                            "name": "Active Islanding Enabling"
+                        },
+                        {
+                            "id": "lvrt_switch",
+                            "offset": 3417,
+                            "size": 1,
+                            "name": "LVRT Switch"
+                        },
+                        {
+                            "id": "lvrt_voltage_1",
+                            "offset": 3418,
+                            "size": 1,
+                            "name": "LVRT Voltage 1"
+                        },
+                        {
+                            "id": "lvrt_voltage_2",
+                            "offset": 3419,
+                            "size": 1,
+                            "name": "LVRT Voltage 2"
+                        },
+                        {
+                            "id": "lvrt_voltage_3",
+                            "offset": 3420,
+                            "size": 1,
+                            "name": "LVRT Voltage 3"
+                        },
+                        {
+                            "id": "lvrt_voltage_4",
+                            "offset": 3421,
+                            "size": 1,
+                            "name": "LVRT Voltage 4"
+                        },
+                        {
+                            "id": "lvrt_voltage_5",
+                            "offset": 3422,
+                            "size": 1,
+                            "name": "LVRT Voltage 5"
+                        },
+                        {
+                            "id": "lvrt_dynamic_kf_factor",
+                            "offset": 3428,
+                            "size": 1,
+                            "name": "LVRT Dynamic Kf Factor"
+                        },
+                        {
+                            "id": "hvrt_switch",
+                            "offset": 3429,
+                            "size": 1,
+                            "name": "HVRT Switch"
+                        },
+                        {
+                            "id": "hvrt_voltage_1",
+                            "offset": 3430,
+                            "size": 1,
+                            "name": "HVRT Voltage 1"
+                        },
+                        {
+                            "id": "hvrt_voltage_2",
+                            "offset": 3431,
+                            "size": 1,
+                            "name": "HVRT Voltage 2"
+                        },
+                        {
+                            "id": "hvrt_voltage_3",
+                            "offset": 3432,
+                            "size": 1,
+                            "name": "HVRT Voltage 3"
+                        },
+                        {
+                            "id": "hvrt_voltage_4",
+                            "offset": 3433,
+                            "size": 1,
+                            "name": "HVRT Voltage 4"
+                        },
+                        {
+                            "id": "hvrt_voltage_5",
+                            "offset": 3434,
+                            "size": 1,
+                            "name": "HVRT Voltage 5"
+                        },
+                        {
+                            "id": "grid_voltage_unbalance_protection_value",
+                            "offset": 3440,
+                            "size": 1,
+                            "name": "Grid Voltage Unbalance Protection Value"
+                        },
+                        {
+                            "id": "grid_voltage_unbalance_protection_time",
+                            "offset": 3441,
+                            "size": 1,
+                            "name": "Grid Voltage Unbalance Protection Time"
+                        },
+                        {
+                            "id": "insulation_monitoring_enabling",
+                            "offset": 3442,
+                            "size": 1,
+                            "name": "Insulation Monitoring Enabling"
+                        },
+                        {
+                            "id": "insulation_monitoring_protection_threshold",
+                            "offset": 3443,
+                            "size": 1,
+                            "name": "Insulation Monitoring Protection Threshold"
+                        },
+                        {
+                            "id": "insulation_monitoring_measuring_time",
+                            "offset": 3444,
+                            "size": 1,
+                            "name": "Insulation Monitoring Measuring Time"
+                        },
+                        {
+                            "id": "fault_manual_start",
+                            "offset": 3445,
+                            "size": 1,
+                            "name": "Fault Manual Start"
+                        },
+                        {
+                            "id": "insulation_monitoring_switching_interval",
+                            "offset": 3446,
+                            "size": 1,
+                            "name": "Insulation Monitoring Switching Interval"
+                        },
+                        {
+                            "id": "dc_overvoltage_value",
+                            "offset": 3449,
+                            "size": 1,
+                            "name": "DC Overvoltage Value"
+                        },
+                        {
+                            "id": "dc_undervoltage_value",
+                            "offset": 3450,
+                            "size": 1,
+                            "name": "DC Undervoltage Value"
+                        },
+                        {
+                            "id": "hvrt_dynamic_kf_factor",
+                            "offset": 3456,
+                            "size": 1,
+                            "name": "HVRT Dynamic Kf Factor"
+                        },
+                        {
+                            "id": "insulation_monitoring_alarm_threshold",
+                            "offset": 3457,
+                            "size": 1,
+                            "name": "Insulation Monitoring Alarm Threshold"
+                        },
+                        {
+                            "id": "grid_overvoltage_level_1_protection_value",
+                            "offset": 3462,
+                            "size": 1,
+                            "name": "Grid Overvoltage Level 1 Protection Value"
+                        },
+                        {
+                            "id": "grid_overvoltage_level_2_protection_value",
+                            "offset": 3463,
+                            "size": 1,
+                            "name": "Grid Overvoltage Level 2 Protection Value"
+                        },
+                        {
+                            "id": "grid_overvoltage_level_3_protection_value",
+                            "offset": 3464,
+                            "size": 1,
+                            "name": "Grid Overvoltage Level 3 Protection Value"
+                        },
+                        {
+                            "id": "grid_overvoltage_level_4_protection_value",
+                            "offset": 3465,
+                            "size": 1,
+                            "name": "Grid Overvoltage Level 4 Protection Value"
+                        },
+                        {
+                            "id": "grid_overvoltage_level_5_protection_value",
+                            "offset": 3466,
+                            "size": 1,
+                            "name": "Grid Overvoltage Level 5 Protection Value"
+                        },
+                        {
+                            "id": "grid_overvoltage_recovery_value",
+                            "offset": 3472,
+                            "size": 1,
+                            "name": "Grid Overvoltage Recovery Value"
+                        },
+                        {
+                            "id": "grid_undervoltage_level_1_protection_value",
+                            "offset": 3473,
+                            "size": 1,
+                            "name": "Grid Undervoltage Level 1 Protection Value"
+                        },
+                        {
+                            "id": "grid_undervoltage_level_2_protection_value",
+                            "offset": 3474,
+                            "size": 1,
+                            "name": "Grid Undervoltage Level 2 Protection Value"
+                        },
+                        {
+                            "id": "grid_undervoltage_level_3_protection_value",
+                            "offset": 3475,
+                            "size": 1,
+                            "name": "Grid Undervoltage Level 3 Protection Value"
+                        },
+                        {
+                            "id": "grid_undervoltage_level_4_protection_value",
+                            "offset": 3476,
+                            "size": 1,
+                            "name": "Grid Undervoltage Level 4 Protection Value"
+                        },
+                        {
+                            "id": "grid_undervoltage_level_5_protection_value",
+                            "offset": 3477,
+                            "size": 1,
+                            "name": "Grid Undervoltage Level 5 Protection Value"
+                        },
+                        {
+                            "id": "grid_undervoltage_recovery_value",
+                            "offset": 3483,
+                            "size": 1,
+                            "name": "Grid Undervoltage Recovery Value"
+                        },
+                        {
+                            "id": "grid_overfrequency_level_1_protection_value",
+                            "offset": 3484,
+                            "size": 1,
+                            "name": "Grid Overfrequency Level 1 Protection Value"
+                        },
+                        {
+                            "id": "grid_overfrequency_level_2_protection_value",
+                            "offset": 3485,
+                            "size": 1,
+                            "name": "Grid Overfrequency Level 2 Protection Value"
+                        },
+                        {
+                            "id": "grid_overfrequency_level_3_protection_value",
+                            "offset": 3486,
+                            "size": 1,
+                            "name": "Grid Overfrequency Level 3 Protection Value"
+                        },
+                        {
+                            "id": "grid_overfrequency_level_4_protection_value",
+                            "offset": 3487,
+                            "size": 1,
+                            "name": "Grid Overfrequency Level 4 Protection Value"
+                        },
+                        {
+                            "id": "grid_overfrequency_level_5_protection_value",
+                            "offset": 3488,
+                            "size": 1,
+                            "name": "Grid Overfrequency Level 5 Protection Value"
+                        },
+                        {
+                            "id": "grid_overfrequency_recovery_value",
+                            "offset": 3499,
+                            "size": 1,
+                            "name": "Grid Overfrequency Recovery Value"
+                        },
+                        {
+                            "id": "grid_underfrequency_level_1_protection_value",
+                            "offset": 3501,
+                            "size": 1,
+                            "name": "Grid Underfrequency Level 1 Protection Value"
+                        },
+                        {
+                            "id": "grid_underfrequency_level_2_protection_value",
+                            "offset": 3502,
+                            "size": 1,
+                            "name": "Grid Underfrequency Level 2 Protection Value"
+                        },
+                        {
+                            "id": "grid_underfrequency_level_3_protection_value",
+                            "offset": 3503,
+                            "size": 1,
+                            "name": "Grid Underfrequency Level 3 Protection Value"
+                        },
+                        {
+                            "id": "grid_underfrequency_level_4_protection_value",
+                            "offset": 3504,
+                            "size": 1,
+                            "name": "Grid Underfrequency Level 4 Protection Value"
+                        },
+                        {
+                            "id": "grid_underfrequency_level_5_protection_value",
+                            "offset": 3505,
+                            "size": 1,
+                            "name": "Grid Underfrequency Level 5 Protection Value"
+                        }
+                    ]
+                },
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 3516,
+                    "number_of_registers": 97,
+                    "map": [
+                        {
+                            "id": "grid_underfrequency_recovery_value",
+                            "offset": 3516,
+                            "size": 1,
+                            "name": "Grid Underfrequency Recovery Value"
+                        },
+                        {
+                            "id": "black_start_enabling",
+                            "offset": 3520,
+                            "size": 1,
+                            "name": "Black Start Enabling"
+                        },
+                        {
+                            "id": "black_start_beats",
+                            "offset": 3521,
+                            "size": 1,
+                            "name": "Black Start Beats"
+                        },
+                        {
+                            "id": "overfrequency_derating_start_point",
+                            "offset": 3522,
+                            "size": 1,
+                            "name": "Overfrequency Derating Start Point"
+                        },
+                        {
+                            "id": "underfrequency_rising_start_point",
+                            "offset": 3523,
+                            "size": 1,
+                            "name": "Underfrequency Rising Start Point"
+                        },
+                        {
+                            "id": "frequency_rising_slope",
+                            "offset": 3524,
+                            "size": 1,
+                            "name": "Frequency Rising Slope"
+                        },
+                        {
+                            "id": "frequency_derating_slope",
+                            "offset": 3525,
+                            "size": 1,
+                            "name": "Frequency Derating Slope"
+                        },
+                        {
+                            "id": "pu_characteristic_enabling",
+                            "offset": 3526,
+                            "size": 1,
+                            "name": "PU Characteristic Enabling"
+                        },
+                        {
+                            "id": "pu_voltage_rising_start_point",
+                            "offset": 3527,
+                            "size": 1,
+                            "name": "PU Voltage Rising Start Point"
+                        },
+                        {
+                            "id": "pu_voltage_rising_end_point",
+                            "offset": 3528,
+                            "size": 1,
+                            "name": "PU Voltage Rising End Point"
+                        },
+                        {
+                            "id": "pu_voltage_droop_start_point",
+                            "offset": 3529,
+                            "size": 1,
+                            "name": "PU Voltage Droop Start Point"
+                        },
+                        {
+                            "id": "pu_voltage_droop_end_point",
+                            "offset": 3530,
+                            "size": 1,
+                            "name": "PU Voltage Droop End Point"
+                        },
+                        {
+                            "id": "qp_power_rising_start_point",
+                            "offset": 3531,
+                            "size": 1,
+                            "name": "QP Power Rising Start Point",
+                            "signed": true
+                        },
+                        {
+                            "id": "qp_power_rising_end_point",
+                            "offset": 3532,
+                            "size": 1,
+                            "name": "QP Power Rising End Point",
+                            "signed": true
+                        },
+                        {
+                            "id": "qp_power_droop_start_point",
+                            "offset": 3533,
+                            "size": 1,
+                            "name": "QP Power Droop Start Point",
+                            "signed": true
+                        },
+                        {
+                            "id": "qp_power_droop_end_point",
+                            "offset": 3534,
+                            "size": 1,
+                            "name": "QP Power Droop End Point",
+                            "signed": true
+                        },
+                        {
+                            "id": "max_qp_pf",
+                            "offset": 3535,
+                            "size": 1,
+                            "name": "Max QP PF"
+                        },
+                        {
+                            "id": "off_grid_output_slope",
+                            "offset": 3536,
+                            "size": 1,
+                            "name": "Off Grid Output Slope"
+                        },
+                        {
+                            "id": "zero_export_mode",
+                            "offset": 3537,
+                            "size": 1,
+                            "name": "Zero Export Mode"
+                        },
+                        {
+                            "id": "dc_overcurrent_protection_value",
+                            "offset": 3538,
+                            "size": 1,
+                            "name": "DC Overcurrent Protection Value"
+                        },
+                        {
+                            "id": "dc_overcurrent_tripping_time",
+                            "offset": 3539,
+                            "size": 1,
+                            "name": "DC Overcurrent Tripping Time"
+                        },
+                        {
+                            "id": "parallel_role",
+                            "offset": 3540,
+                            "size": 1,
+                            "name": "Parallel Role"
+                        },
+                        {
+                            "id": "pcc_reference_voltage",
+                            "offset": 3542,
+                            "size": 1,
+                            "name": "PCC Reference Voltage"
+                        },
+                        {
+                            "id": "ac_voltage_compensation",
+                            "offset": 3543,
+                            "size": 1,
+                            "name": "AC Voltage Compensation",
+                            "signed": true
+                        },
+                        {
+                            "id": "parallel_address",
+                            "offset": 3544,
+                            "size": 1,
+                            "name": "Parallel Address"
+                        },
+                        {
+                            "id": "primary_frequency_modulation_control",
+                            "offset": 3545,
+                            "size": 1,
+                            "name": "Primary Frequency Modulation Control"
+                        },
+                        {
+                            "id": "lvrt_t1",
+                            "offset": 3546,
+                            "size": 2,
+                            "name": "LVRT T1"
+                        },
+                        {
+                            "id": "lvrt_t2",
+                            "offset": 3548,
+                            "size": 2,
+                            "name": "LVRT T2"
+                        },
+                        {
+                            "id": "lvrt_t3",
+                            "offset": 3550,
+                            "size": 2,
+                            "name": "LVRT T3"
+                        },
+                        {
+                            "id": "lvrt_t4",
+                            "offset": 3552,
+                            "size": 2,
+                            "name": "LVRT T4"
+                        },
+                        {
+                            "id": "lvrt_t5",
+                            "offset": 3554,
+                            "size": 2,
+                            "name": "LVRT T5"
+                        },
+                        {
+                            "id": "hvrt_t1",
+                            "offset": 3556,
+                            "size": 2,
+                            "name": "HVRT T1"
+                        },
+                        {
+                            "id": "hvrt_t2",
+                            "offset": 3558,
+                            "size": 2,
+                            "name": "HVRT T2"
+                        },
+                        {
+                            "id": "hvrt_t3",
+                            "offset": 3560,
+                            "size": 2,
+                            "name": "HVRT T3"
+                        },
+                        {
+                            "id": "hvrt_t4",
+                            "offset": 3562,
+                            "size": 2,
+                            "name": "HVRT T4"
+                        },
+                        {
+                            "id": "hvrt_t5",
+                            "offset": 3564,
+                            "size": 2,
+                            "name": "HVRT T5"
+                        },
+                        {
+                            "id": "grid_overvoltage_level_1_tripping_time",
+                            "offset": 3566,
+                            "size": 2,
+                            "name": "Grid Overvoltage Level 1 Tripping Time"
+                        },
+                        {
+                            "id": "grid_overvoltage_level_2_tripping_time",
+                            "offset": 3568,
+                            "size": 2,
+                            "name": "Grid Overvoltage Level 2 Tripping Time"
+                        },
+                        {
+                            "id": "grid_overvoltage_level_3_tripping_time",
+                            "offset": 3570,
+                            "size": 2,
+                            "name": "Grid Overvoltage Level 3 Tripping Time"
+                        },
+                        {
+                            "id": "grid_overvoltage_level_4_tripping_time",
+                            "offset": 3572,
+                            "size": 2,
+                            "name": "Grid Overvoltage Level 4 Tripping Time"
+                        },
+                        {
+                            "id": "grid_overvoltage_level_5_tripping_time",
+                            "offset": 3574,
+                            "size": 2,
+                            "name": "Grid Overvoltage Level 5 Tripping Time"
+                        },
+                        {
+                            "id": "grid_undervoltage_level_1_tripping_time",
+                            "offset": 3576,
+                            "size": 2,
+                            "name": "Grid Undervoltage Level 1 Tripping Time"
+                        },
+                        {
+                            "id": "grid_undervoltage_level_2_tripping_time",
+                            "offset": 3578,
+                            "size": 2,
+                            "name": "Grid Undervoltage Level 2 Tripping Time"
+                        },
+                        {
+                            "id": "grid_undervoltage_level_3_tripping_time",
+                            "offset": 3580,
+                            "size": 2,
+                            "name": "Grid Undervoltage Level 3 Tripping Time"
+                        },
+                        {
+                            "id": "grid_undervoltage_level_4_tripping_time",
+                            "offset": 3582,
+                            "size": 2,
+                            "name": "Grid Undervoltage Level 4 Tripping Time"
+                        },
+                        {
+                            "id": "grid_undervoltage_level_5_tripping_time",
+                            "offset": 3584,
+                            "size": 2,
+                            "name": "Grid Undervoltage Level 5 Tripping Time"
+                        },
+                        {
+                            "id": "grid_overfrequency_level_1_tripping_time",
+                            "offset": 3586,
+                            "size": 2,
+                            "name": "Grid Overfrequency Level 1 Tripping Time"
+                        },
+                        {
+                            "id": "grid_overfrequency_level_2_tripping_time",
+                            "offset": 3588,
+                            "size": 2,
+                            "name": "Grid Overfrequency Level 2 Tripping Time"
+                        },
+                        {
+                            "id": "grid_overfrequency_level_3_tripping_time",
+                            "offset": 3590,
+                            "size": 2,
+                            "name": "Grid Overfrequency Level 3 Tripping Time"
+                        },
+                        {
+                            "id": "grid_overfrequency_level_4_tripping_time",
+                            "offset": 3592,
+                            "size": 2,
+                            "name": "Grid Overfrequency Level 4 Tripping Time"
+                        },
+                        {
+                            "id": "grid_overfrequency_level_5_tripping_time",
+                            "offset": 3594,
+                            "size": 2,
+                            "name": "Grid Overfrequency Level 5 Tripping Time"
+                        },
+                        {
+                            "id": "grid_underfrequency_level_1_tripping_time",
+                            "offset": 3596,
+                            "size": 2,
+                            "name": "Grid Underfrequency Level 1 Tripping Time"
+                        },
+                        {
+                            "id": "grid_underfrequency_level_2_tripping_time",
+                            "offset": 3598,
+                            "size": 2,
+                            "name": "Grid Underfrequency Level 2 Tripping Time"
+                        },
+                        {
+                            "id": "grid_underfrequency_level_3_tripping_time",
+                            "offset": 3600,
+                            "size": 2,
+                            "name": "Grid Underfrequency Level 3 Tripping Time"
+                        },
+                        {
+                            "id": "grid_underfrequency_level_4_tripping_time",
+                            "offset": 3602,
+                            "size": 2,
+                            "name": "Grid Underfrequency Level 4 Tripping Time"
+                        },
+                        {
+                            "id": "grid_underfrequency_level_5_tripping_time",
+                            "offset": 3604,
+                            "size": 2,
+                            "name": "Grid Underfrequency Level 5 Tripping Time"
+                        },
+                        {
+                            "id": "grid_recovery_time",
+                            "offset": 3606,
+                            "size": 2,
+                            "name": "Grid Recovery Time"
+                        },
+                        {
+                            "id": "parallel_operation_control",
+                            "offset": 3608,
+                            "size": 1,
+                            "name": "Parallel Operation Control"
+                        },
+                        {
+                            "id": "weak_grid_mode",
+                            "offset": 3609,
+                            "size": 1,
+                            "name": "Weak Grid Mode"
+                        },
+                        {
+                            "id": "reactive_power_soft_start",
+                            "offset": 3610,
+                            "size": 1,
+                            "name": "Reactive Power Soft Start"
+                        },
+                        {
+                            "id": "hv_load_switch_remote_open",
+                            "offset": 3611,
+                            "size": 1,
+                            "name": "HV Load Switch Remote Open"
+                        },
+                        {
+                            "id": "hv_load_switch_remote_close",
+                            "offset": 3612,
+                            "size": 1,
+                            "name": "HV Load Switch Remote Close"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

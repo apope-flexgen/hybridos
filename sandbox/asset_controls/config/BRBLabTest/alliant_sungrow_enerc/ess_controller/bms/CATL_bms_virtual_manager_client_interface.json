@@ -1,0 +1,170 @@
+{
+    "/controls/bms": {
+        "CloseContactors": {
+            "value": 2,
+            "cmdVar": "/components/bms_1:ems_command_to_bms_relay",
+            "maxCmdTries": 2,
+            "checkCmdTimeout": 2,
+            "checkCmdHoldTimeout": 2
+        },
+        "OpenContactors": {
+            "value": 3,
+            "cmdVar": "/components/bms_1/ems_command_to_bms_relay",
+            "maxCmdTries": 2,
+            "checkCmdTimeout": 2,
+            "checkCmdHoldTimeout": 2
+        },
+        "VerifyCloseContactors": {
+            "value": 0,
+            "enableAlert": false,
+            "numVars": 1,
+            "variable1": "/status/bms:DCClosed",
+            "useExpr": true,
+            "expression": "{1}",
+            "sendCmdTimeout": 60
+        },
+        "VerifyOpenContactors": {
+            "value": 0,
+            "enableAlert": false,
+            "numVars": 1,
+            "variable1": "/status/bms:DCClosed",
+            "useExpr": true,
+            "expression": "not {1}",
+            "sendCmdTimeout": 60
+        }
+    },
+    "/test/bms/summary": {
+        "maint_mode": {
+            "value": false
+        },
+        "close_contactors": {
+            "name": "Close DC Contactor",
+            "value": false,
+            "unit": "",
+            "scaler": 0,
+            "enable": "/config/ess:enable",
+            "note": "Enabled conditions: ![/status/bms/DCClosed] && [/assets/bms/summary/maint_mode] && ![/status/bms/IsFaulted]",
+            "ui_type": "control",
+            "type": "enum_button",
+            "aname": "bms",
+            "uri": "/sched/bms:LocalStartBMS",
+            "every": 0.5,
+            "offset": 0,
+            "debug": 0,
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "bms",
+                                "inValue": true,
+                                "func": "RunSched"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "open_contactors": {
+            "name": "Open DC Contactor",
+            "value": false,
+            "unit": "",
+            "scaler": 0,
+            "enable": "/config/ess:enable",
+            "note": "Enabled conditions: [/status/bms/DCClosed] && ![/status/pcs/DCClosed] && [/assets/bms/summary/maint_mode]",
+            "ui_type": "control",
+            "type": "enum_button",
+            "aname": "bms",
+            "uri": "/sched/bms:LocalStopBMS",
+            "every": 0.5,
+            "offset": 0,
+            "debug": 0,
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "inValue": true,
+                                "func": "RunSched"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    },
+    "/components/bms": {},
+    "/sched/bms": {
+        "checkInputs_bms": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": []
+                    }
+                ]
+            },
+            "enable": "/config/bms:enable",
+            "note": "Sets ifChanged to false to process inputs for various interface variables with actions regardless of value change",
+            "value": 0
+        },
+        "LocalStartBMS": {
+            "every": 0.5,
+            "value": "LocalStartBMS",
+            "bms": "bms",
+            "retVal": 1,
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "bms",
+                                "func": "LocalStartBMS"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "LocalStartBMS_result": {
+            "value": 1,
+            "note": "this is the aV that BRB datamaps reads from to get the close contactor function result"
+        },
+        "LocalStopBMS": {
+            "every": 0.5,
+            "value": "LocalStopBMS",
+            "retVal": 1,
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "bms",
+                                "func": "LocalStopBMS"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "LocalStopBMS_result": {
+            "value": 1,
+            "note": "this is the aV that BRB datamaps reads from to get the open contactor function result"
+        },
+        "CloseContactorsEnable": {
+            "value":    "CloseContactorsEnable",
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "bms",
+                                "func": "CloseContactorsEnable"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    },
+    "/vlinks/bms": {}
+}

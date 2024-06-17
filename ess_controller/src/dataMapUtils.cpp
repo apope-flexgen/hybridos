@@ -5,18 +5,24 @@
 //     void dataMapThreadCleanup();
 // }
 
-std::unordered_map<std::string, DataMap*> dataMaps;
+std::unordered_map<std::string, std::unique_ptr<DataMap>> dataMaps;
 std::unordered_map<std::string, void*> modelFcnRef;
 std::unordered_map<std::string, ess_thread*> threadMaps;
 
-// used in interface files, contains information about where to put info gotten
-// from amap or where to get info to send to amap
+// used in interface files, contains information about where to put info gotten from amap or where to get info to send
+// to amap
 void DataMap::addDataItem(char* name, int offset, DataMapType type)
 {
     auto dataItem = new DataItem;
     dataItem->name = name;
     dataItem->offset = offset;
     dataItem->type = type;
+    // delete and replace dataItems with the same name
+    if (dataItems[std::string(name)])
+    {
+        // this dataItem already exists, we need to delete it
+        delete dataItems[std::string(name)];
+    }
     dataItems[std::string(name)] = dataItem;
 }
 
@@ -43,34 +49,29 @@ void DataMap::showTransferItems(std::string bname)
     }
 }
 
-// gets values from the amap and stores it in our model object for each element
-// in our transfer block
+// gets values from the amap and stores it in our model object for each element in our transfer block
 void DataMap::getFromAmap(std::string bname, asset_manager* am, uint8_t* dataArea)
 {
     if (transferBlocks.find(bname) != transferBlocks.end())
     {
-        // FPS_PRINT_INFO("Get values from Amap using Transfer Block name [{}] ",
-        // bname);
+        // FPS_PRINT_INFO("Get values from Amap using Transfer Block name [{}] ", bname);
         for (auto xx : transferBlocks[bname])
         {
-            // if this is our transfer block, do nothing. This block allows for
-            // functions to not have inputs from the amap
+            // if this is our transfer block, do nothing. This block allows for functions to not have inputs from the
+            // amap
             if (xx.first == "" && xx.second == "")
                 return;
 
             if (!getDataItemFromAmap(am, xx.first, xx.second, dataArea))
             {
-                // getting here means we cant find our amapname in the amap or cant find
-                // our dataItem name in the datamaps list of dataitems
+                // getting here means we cant find our amapname in the amap or cant find our dataItem name in the
+                // datamaps list of dataitems
                 FPS_PRINT_ERROR(
-                    "Amap name [{}] does not exist in amap or dataItem "
-                    "name [{}] does not exist in datamap [{}]'s list of "
-                    "dataItems. {} did not get values from amap. Check "
-                    "setupDatamap function for errors",
+                    "Amap name [{}] does not exist in amap or dataItem name [{}] does not exist in datamap [{}]'s list of dataItems. {} did not get values from amap. Check setupDatamap function for errors",
                     xx.first, xx.second, name, __func__);
-                std::string errMsg = "Amap name [" + xx.first + "] or dataItem name [" + xx.second +
-                                     "] were not found. Make sure amap name is set in setupAmap and "
-                                     "dataItem name is set using addDataItem";
+                std::string errMsg =
+                    "Amap name [" + xx.first + "] or dataItem name [" + xx.second +
+                    "] were not found. Make sure amap name is set in setupAmap and dataItem name is set using addDataItem";
                 throw std::logic_error(errMsg);
             }
         }
@@ -78,42 +79,36 @@ void DataMap::getFromAmap(std::string bname, asset_manager* am, uint8_t* dataAre
     else
     {
         FPS_PRINT_ERROR(
-            "Cannot find transfer block name: {}. Stopping {}. Check "
-            "datamap configs and addTransferItem for issues",
+            "Cannot find transfer block name: {}. Stopping {}. Check datamap configs and addTransferItem for issues",
             bname, __func__);
         std::string bnameError = "no transfer block [" + bname + "] found in datamap [" + name + "]";
         throw std::invalid_argument(bnameError);
     }
 }
 
-// sends values from our model object to the amap for each element in our
-// transfer block
+// sends values from our model object to the amap for each element in our transfer block
 void DataMap::sendToAmap(varsmap& vmap, std::string bname, asset_manager* am, uint8_t* dataArea)
 {
     if (transferBlocks.find(bname) != transferBlocks.end())
     {
-        // FPS_PRINT_INFO("Send values to Amap using Transfer Block name [{}] ",
-        // bname);
+        // FPS_PRINT_INFO("Send values to Amap using Transfer Block name [{}] ", bname);
         for (auto xx : transferBlocks[bname])
         {
-            // if this is our transfer block, do nothing. This block allows for
-            // functions to not have outputs to the amap
+            // if this is our transfer block, do nothing. This block allows for functions to not have outputs to the
+            // amap
             if (xx.first == "" && xx.second == "")
                 return;
 
             if (!setDataItemToAmap(vmap, am, xx.first, xx.second, dataArea))
             {
-                // getting here means we cant find our amapname in the amap ir cant find
-                // our dataItem name in the datamaps list of dataitems
+                // getting here means we cant find our amapname in the amap ir cant find our dataItem name in the
+                // datamaps list of dataitems
                 FPS_PRINT_ERROR(
-                    "Amap name [{}] does not exist in amap or dataItem "
-                    "name [{}] does not exist in datamap [{}]'s list of "
-                    "dataItems. {} did not send values to amap. Check "
-                    "setupDatamap function for errors",
+                    "Amap name [{}] does not exist in amap or dataItem name [{}] does not exist in datamap [{}]'s list of dataItems. {} did not send values to amap. Check setupDatamap function for errors",
                     xx.first, xx.second, name, __func__);
-                std::string errMsg = "Amap name [" + xx.first + "] or dataItem name [" + xx.second +
-                                     "] were not found. Make sure amap name is set in setupAmap and "
-                                     "dataItem name is set using addDataItem";
+                std::string errMsg =
+                    "Amap name [" + xx.first + "] or dataItem name [" + xx.second +
+                    "] were not found. Make sure amap name is set in setupAmap and dataItem name is set using addDataItem";
                 throw std::logic_error(errMsg);
             }
         }
@@ -121,8 +116,7 @@ void DataMap::sendToAmap(varsmap& vmap, std::string bname, asset_manager* am, ui
     else
     {
         FPS_PRINT_ERROR(
-            "Cannot find transfer block name: {}. Stopping {}. Check "
-            "datamap configs and addTransferItem for issues",
+            "Cannot find transfer block name: {}. Stopping {}. Check datamap configs and addTransferItem for issues",
             bname, __func__);
         std::string bnameError = "no transfer block [" + bname + "] found in datamap [" + name + "]";
         throw std::invalid_argument(bnameError);
@@ -219,6 +213,16 @@ bool DataMap::getDataItemFromAmap(asset_manager* am, const std::string& amapName
                 *(time_T*)(&dataArea[dataItem->offset]) = am->amap[amapName]->getdVal();
                 break;
 
+            case DataMapType::STRING:
+
+                *(std::string*)(&dataArea[dataItem->offset]) = am->amap[amapName]->getcVal();
+                break;
+
+            case DataMapType::CHAR_ARRAY:
+
+                *(char**)(&dataArea[dataItem->offset]) = am->amap[amapName]->getcVal();
+                break;
+
             default:
 
                 FPS_PRINT_ERROR("This dataItem has an unknown type [{}]", typeid(dataItem->type).name());
@@ -236,8 +240,8 @@ bool DataMap::getDataItemFromAmap(asset_manager* am, const std::string& amapName
     return true;
 }
 
-// Function to map data from the DataMap data area to the asset_manager. returns
-// false if not found currently only supports types in DataMapType enum
+// Function to map data from the DataMap data area to the asset_manager. returns false if not found
+// currently only supports types in DataMapType enum
 bool DataMap::setDataItemToAmap(varsmap& vmap, asset_manager* am, const std::string& amapName,
                                 const std::string& mapName, uint8_t* dataArea)
 {
@@ -266,6 +270,10 @@ bool DataMap::setDataItemToAmap(varsmap& vmap, asset_manager* am, const std::str
         {
             vm->setVal(vmap, av->comp.c_str(), av->name.c_str(), *(bool*)(&dataArea[dataItem->offset]));
         }
+        else if (dataItem->type == DataMapType::STRING || dataItem->type == DataMapType::CHAR_ARRAY)
+        {
+            vm->setVal(vmap, av->comp.c_str(), av->name.c_str(), *(char**)(&dataArea[dataItem->offset]));
+        }
         else
         {
             FPS_PRINT_ERROR("This dataItem has an unknown type [{}]", typeid(dataItem->type).name());
@@ -283,9 +291,8 @@ bool DataMap::setDataItemToAmap(varsmap& vmap, asset_manager* am, const std::str
     return true;
 }
 
-// given an amname, either find and return or create an asset manager with that
-// name. if we create an asset manager, the pname is its parent asset manager
-// (ess by default)
+// given an amname, either find and return or create an asset manager with that name. if we create an asset manager, the
+// pname is its parent asset manager (ess by default)
 asset_manager* getOrMakeAm(VarMapUtils* vm, varsmap& vmap, const char* pname, const char* amname)
 {
     char* essName = vm->getSysName(vmap);
@@ -334,28 +341,120 @@ asset_manager* getOrMakeAm(VarMapUtils* vm, varsmap& vmap, const char* pname, co
 }
 
 // Function to replace all slashes and colons with underscores for displaying in amap
-std::string replaceSlashAndColonWithUnderscore(const std::string& inputString) 
+std::string replaceSlashAndColonWithUnderscore(const std::string& inputString)
 {
     std::string modifiedString = inputString;
 
-    // Replace all instances of "/" except for the first one
+    // we dont want to replace the first slash, but we want to replace all subsequent slashes or colons
     size_t firstSlashPos = modifiedString.find("/");
     size_t slashPos = modifiedString.find("/", firstSlashPos + 1);
-    while (slashPos != std::string::npos) 
-	{
-        modifiedString.replace(slashPos, 1, "_");
-        slashPos = modifiedString.find("/", slashPos + 1);
-    }
-
-    // Replace all instances of ":"
     size_t colonPos = modifiedString.find(":");
-    while (colonPos != std::string::npos) 
-	{
-        modifiedString.replace(colonPos, 1, "_");
-        colonPos = modifiedString.find(":", colonPos + 1);
+
+    // iterate over string while looking for colons/slashes
+    while (slashPos != std::string::npos || colonPos != std::string::npos)
+    {
+        if (slashPos == colonPos && slashPos != std::string::npos)
+        {
+            slashPos = modifiedString.find("/", slashPos + 1);
+            colonPos = modifiedString.find(":", colonPos + 1);
+            continue;
+        }
+
+        if (slashPos < colonPos)
+        {
+            modifiedString.replace(slashPos, 1, "_");
+            slashPos = modifiedString.find("/", slashPos + 1);
+        }
+        else
+        {
+            modifiedString.replace(colonPos, 1, "_");
+            colonPos = modifiedString.find(":", colonPos + 1);
+        }
     }
 
     return modifiedString;
+}
+
+// Function to format a number according to the provided format specifier using regex
+std::string formatTemplateNumber(const std::string unformattedInput, int number)
+{
+    // Define the regex pattern to match the format specifier -> (any number of characters)('{')(some number)('d}')
+    std::regex pattern(R"(^(.*)\{([^}]*)d\}$)");
+    std::smatch match;
+
+    // Use regex to match the format specifier
+    if (std::regex_match(unformattedInput, match, pattern))
+    {
+        if (match.size() != 3)
+        {
+            // Expecting three parts: full match, prefix, and format inside braces
+            FPS_PRINT_ERROR(
+                "Attempting to parse [{}] but input is incorrect format. Be sure to include a prefix and your number surrounded by braces and ending with a lowercase d",
+                unformattedInput);
+            std::string err = fmt::format("Replacment specifier [{}] is incorrectly formatted", unformattedInput);
+            throw std::invalid_argument(err);
+        }
+
+        // Extract the actual format inside the braces
+        std::string prefix = match[1].str();
+        std::string formatted = match[2].str();
+
+        // Use fmt::format to format the number according to the extracted specifier
+        std::string formattedNum = fmt::format("{" + formatted + "}", number);
+
+        // prepend the perfix
+        return prefix + formattedNum;
+    }
+    else
+    {
+        FPS_PRINT_ERROR("Attempting to parse [{}] but input is incorrect format", unformattedInput);
+        std::string err = fmt::format("Replacment specifier [{}] is incorrectly formatted", unformattedInput);
+        throw std::invalid_argument(err);
+    }
+}
+
+// Function to replace occurrences of 'key' with 'rep' in the 'uri' string
+std::string replaceKeyInURI(const std::string& uri, const std::string& key, const std::string& rep)
+{
+    std::string result = uri;
+    size_t pos = 0;
+
+    // Loop to find and replace all occurrences of 'key' with 'rep'
+    while ((pos = result.find(key, pos)) != std::string::npos)
+    {
+        result.replace(pos, key.length(), rep);
+        pos += rep.length();  // Move past the last replaced position
+    }
+
+    return result;
+}
+
+// check if a given input string is a valid uri
+bool isValidURI(std::string input)
+{
+    if (input.empty())
+    {
+        return false;  // Early exit for empty strings
+    }
+
+    // Check if the string starts with '/'
+    if (input[0] != '/')
+    {
+        FPS_PRINT_ERROR("input string [{}] does not start with a '/' and is not a valid URI", input);
+
+        return false;
+    }
+
+    // Check if the string contains ':'
+    if (input.find(':') == std::string::npos)
+    {
+        FPS_PRINT_ERROR("input string [{}] does not contain a ':' and is not a valid URI", input);
+
+        return false;
+    }
+
+    // Both conditions are met
+    return true;
 }
 
 std::string global_template_uri;
@@ -375,18 +474,25 @@ assetVar* getOrMakeThreadAV(varsmap& vmap, VarMapUtils* vm, std::string name)
     bool bval = true;  // value is true or false based on if the thread is running or not
     aV = vm->makeVar(vmap, (char*)comp.c_str(), nullptr, bval);
 
-    // use the templateAV's comp and name (set from config)
-    assetVar* templateAV = vm->getVar(vmap, (char*)global_template_uri.c_str(), nullptr);
-
     // set all of our default values for the threadAV
     aV->setParam("overrunLimit", 50);
-    aV->setParam("decrementOverrun",
-                 1);  // every successful run, dec our overrunCounter by 1
-    aV->setParam("incrementOverrun",
-                 5);                      // every time we overrun, inc our overrunCounter by 5
-    aV->setParam("setupTimeLimit", 120);  // default setup time limit is 2 minutes
-    aV->setParam("heartbeatTimeout",
-                 10);  // default heartbeat timeout is 10 seconds
+    aV->setParam("decrementOverrun", 1);   // every successful run, dec our overrunCounter by 1
+    aV->setParam("incrementOverrun", 5);   // every time we overrun, inc our overrunCounter by 5
+    aV->setParam("setupTimeLimit", 120);   // default setup time limit is 2 minutes
+    aV->setParam("heartbeatTimeout", 10);  // default heartbeat timeout is 10 seconds
+
+    // check the global template uri. if it hasnt been set up, we dont have a template AV
+    if ((global_template_uri.c_str()[0] != '/') && (global_template_uri.c_str()[0] != '_'))
+    {
+        if (0)
+            FPS_PRINT_INFO(
+                " No template av found from global_template_uri: [{}]. Using system default values for dataMap operation",
+                global_template_uri);
+        return aV;
+    }
+
+    // if it has been set up, use the template AV
+    assetVar* templateAV = vm->getVar(vmap, (char*)global_template_uri.c_str(), nullptr);
 
     // if we have a value in our templateAV, use that instead of the hard coded
     if (templateAV)
@@ -416,20 +522,39 @@ assetVar* getOrMakeThreadAV(varsmap& vmap, VarMapUtils* vm, std::string name)
             aV->setParam("heartbeatTimeout", templateAV->getdParam("heartbeatTimeout"));
         }
     }
+    else
+    {
+        if (0)
+            FPS_PRINT_INFO("No template aV found from comp [{}]. Using system default values for dataMap operation",
+                           global_template_uri);
+    }
 
     return aV;
 }
 
-// this function runs once on the core scheduler and sets our thread template aV
-// to have whatever uri is set in config
+// this function runs once on the core scheduler and sets our thread template aV to have whatever uri is set in config
 int ThreadSetup(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV)
 {
+    UNUSED(vmap);
     UNUSED(amap);
+    UNUSED(aname);
     UNUSED(p_fims);
+
     global_template_uri = aV->comp + ":" + aV->name;
 
     if (0)
         FPS_PRINT_INFO("thread Template assetVar has uri: {}", global_template_uri);
+
+    return 0;
+}
+
+// this function gets called 1 time and it schedules our heartbeat timer
+bool heartbeatSetupDone = false;
+void heartbeatSetup(varsmap& vmap, assetVar* aV)
+{
+    // we only ever want this function to run one time
+    if (heartbeatSetupDone)
+        return;
 
     // create a heartbeat aV and schedule HeartbeatTimer
     asset_manager* am = aV->am;
@@ -437,7 +562,7 @@ int ThreadSetup(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, as
     bool debug = false;
 
     // get or make the AV we are running the heartbeat timer on
-    std::string comp = aV->comp + ":heartbeat";  // use the same comp that our templateAV is made on
+    std::string comp = "/control/thread:heartbeat";
     assetVar* heartbeatAV = vm->getVar(vmap, (char*)comp.c_str(), nullptr);
     if (!heartbeatAV)
     {
@@ -455,26 +580,34 @@ int ThreadSetup(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, as
     char* schedUri = (char*)comp.c_str();  // set to be the same as the schItem assetVar's comp
     char* schedFcn = (char*)"HeartbeatTimer";
     char* schedTarg = (char*)comp.c_str();  // same as our uri
-    if (!aV->gotParam("heartbeatTimeout"))
-    {
-        // set to default of 5.1 if param doesnt exist on template AV, heartbeat
-        // will speed up on its own
-        aV->setParam("heartbeatTimeout", 5.1);
-    }
-    double every = aV->getdParam("heartbeatTimeout") / 2;
 
-    schItem->setUp(myid, aname, schedUri, schedFcn, 0, vm->get_time_dbl(), every, 0, schedTarg);
+    // set our repTime (default of 5 seconds)
+    double every = 5;
+
+    // check if we have a valid comp for our global template uri
+    if ((global_template_uri.c_str()[0] == '/') && (global_template_uri.c_str()[0] == '_'))
+    {
+        // if we have a valid comp, get the templateAV
+        assetVar* templateAV = vm->getVar(vmap, (char*)global_template_uri.c_str(), nullptr);
+
+        // set our repTime from our template AV if it exists
+        if (templateAV)
+        {
+            if (templateAV->gotParam("heartbeatTimeout"))
+            {
+                every = templateAV->getdParam("heartbeatTimeout") / 2;
+            }
+        }
+    }
+
+    schItem->setUp(myid, "ess", schedUri, schedFcn, 0, vm->get_time_dbl(), every, 0, schedTarg);
 
     // set params of our schedItem's aV
-    schItem->av = heartbeatAV;  // set to run on the comp as our TEMPLATE AV
-    schItem->av->setParam("runTime",
-                          vm->get_time_dbl());  // tell scheduler to run asap
-    schItem->av->setParam("repTime", every);    // need to set the schedItem and the
-                                                // schedAV to have the proper rep and
-                                                // runTime
-    schItem->av->setParam("update", true);      // tell this schedItem to update so
-                                                // that it runs faster after the first
-                                                // run
+    schItem->av = heartbeatAV;                             // set to run on the comp as our TEMPLATE AV
+    schItem->av->setParam("runTime", vm->get_time_dbl());  // tell scheduler to run asap
+    schItem->av->setParam("repTime",
+                          every);  // need to set the schedItem and the schedAV to have the proper rep and runTime
+    schItem->av->setParam("update", true);  // tell this schedItem to update so that it runs faster after the first run
 
     if (debug)  // prints new schedItem
     {
@@ -491,5 +624,8 @@ int ThreadSetup(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, as
         am->wakeChan->put(0);
     }
 
-    return 0;
+    if (debug)
+        FPS_PRINT_INFO("HeartbeatTimer has been set up to run every [{}] seconds on aV [{}:{}]", every,
+                       schItem->av->comp, schItem->av->name);
+    heartbeatSetupDone = true;
 }

@@ -1,0 +1,28 @@
+{
+    "/config/ess": {
+        "enable": false,
+        "FaultDestination": "/faults/ess",
+        "AlarmDestination": "/alarms/ess"
+    },
+    "/new/config": {
+        "lpf": {
+            "value": 0,
+            "enable": "/config/ess:enable",
+            "every": 1,
+            "CutoffFrequency": 0.05,
+            "InputURI": "/some/uri:input",
+            "OutputURI": "/some/uri:output",
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "func": "LPFilter"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    }
+}

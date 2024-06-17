@@ -1,0 +1,12 @@
+{
+    "systemInformationRequsts": [
+        {
+            "name": "DISKSPACE",
+            "command": "df -h"
+        },
+        {
+            "name": "CPU USAGE",
+            "command": "ps -eo pcpu,pid,user,args | sort -k 1 -r | head -10"
+        }
+    ]
+}

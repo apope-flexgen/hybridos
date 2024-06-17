@@ -72,9 +72,11 @@ TEST_DIR = build/$(BUILD_MODE)_test/
 TSRC_DIR = $(PROJECT_ROOT)test
 
 FUNC_DIR = $(PROJECT_ROOT)funcs
+FUNC_DM_DIR = $(PROJECT_ROOT)funcs_datamaps
 SRC_DIR = $(PROJECT_ROOT)src
 INC_DIR = $(PROJECT_ROOT)include
-SL_FUNC_DIR = $(PROJECT_ROOT)SL_files
+SL_AUTO_FUNC_DIR = $(PROJECT_ROOT)SL_files/autogen
+SL_INT_FUNC_DIR = $(PROJECT_ROOT)SL_files/interface_files
 
 LIBS = -L$(OBJ_DIR)
 #LIBS += -L$(PROJECT_ROOT)lib64
@@ -135,19 +137,25 @@ FUNC_OBJECTS += BalancePower.o
 FUNC_OBJECTS += OutputHandler.o
 FUNC_OBJECTS += InputHandler.o
 FUNC_OBJECTS += ScheduledEnableFunctions.o
+FUNC_OBJECTS += BatteryBalancingUtility.o
+FUNC_OBJECTS += LowPassFilter.o
 
 #datamap simulink source code files. uncomment for testing
-# FUNC_OBJECTS += Reference.o
-# FUNC_OBJECTS += Reference_Interface.o
-# FUNC_OBJECTS += func1.o
-# FUNC_OBJECTS += func2.o
-# FUNC_OBJECTS += func3.o
-# FUNC_OBJECTS += DC_Augmentation.o
-# FUNC_OBJECTS += DC_Augmentation_Interface.o
-# FUNC_OBJECTS += HighLevelController.o
-# FUNC_OBJECTS += HighLevelController_Interface.o
-# FUNC_OBJECTS += LowLevelController.o
-# FUNC_OBJECTS += LowLevelController_Interface.o
+FUNC_OBJECTS += Reference.o
+FUNC_OBJECTS += Reference_Interface.o
+FUNC_OBJECTS += func1.o
+FUNC_OBJECTS += func2.o
+FUNC_OBJECTS += func3.o
+FUNC_OBJECTS += DC_Augmentation.o
+FUNC_OBJECTS += DC_Augmentation_Interface.o
+FUNC_OBJECTS += HighLevelController.o
+FUNC_OBJECTS += HighLevelController_Interface.o
+FUNC_OBJECTS += LowLevelController.o
+FUNC_OBJECTS += LowLevelController_Interface.o
+FUNC_OBJECTS += BatteryBalancing_Interface.o
+FUNC_OBJECTS += BatteryRack_Interface.o
+FUNC_OBJECTS += LowPassFilter_Interface.o
+FUNC_OBJECTS += LowPassFilterBRB_Interface.o
 #$(FUNC_LIST)
 
 
@@ -162,16 +170,14 @@ ESS_OBJECTS += i2cbusses.o
 ESS_OBJECTS += vmActions.o
 ESS_OBJECTS += vmConfig.o
 ESS_OBJECTS += dbi_funcs.o
-ESS_OBJECTS += dataMapCore.o
-ESS_OBJECTS += dataMapThread.o
-ESS_OBJECTS += dataMapUtils.o
 ESS_OBJECTS += AssetSetupUtility.o
 ESS_OBJECTS += FunctionUtility.o
 ESS_OBJECTS += InfoMessageUtility.o
 ESS_OBJECTS += DataUtility.o
 ESS_OBJECTS += SiteCommandUtility.o
-
-
+ESS_OBJECTS += dataMapCore.o
+ESS_OBJECTS += dataMapThread.o
+ESS_OBJECTS += dataMapUtils.o
 
 
 #ESS_OBJECTS += version.o git_build.o git_commit.o git_tag.o
@@ -332,6 +338,12 @@ $(OBJ_DIR)DataUtility.o: $(SRC_DIR)/DataUtility.cpp
 $(OBJ_DIR)SiteCommandUtility.o:	$(SRC_DIR)/SiteCommandUtility.cpp 
 	$(CXX) -c $(CPPFLAGS) -D_JUST_LIB -shared -fpic -o $@ $< $(INCLUDES_BUILD) -I$(INC_DIR)
 
+$(FUN_DIR)BatteryBalancingUtility.o: $(FUNC_DM_DIR)/BatteryBalancingUtility.cpp 
+	$(CXX) -c $(CPPFLAGS) -D_JUST_LIB -shared -fpic -o $@ $< $(INCLUDES_BUILD) -I$(INC_DIR)
+
+$(FUN_DIR)LowPassFilter.o: $(FUNC_DM_DIR)/LowPassFilter.cpp 
+	$(CXX) -c $(CPPFLAGS) -D_JUST_LIB -shared -fpic -o $@ $< $(INCLUDES_BUILD) -I$(INC_DIR)
+
 $(OBJ_DIR)ess_controller.o:	$(SRC_DIR)/ess_controller.cpp 
 	$(CXX) -c $(CPPFLAGS) -shared -fpic -o $@ $< $(INCLUDES_BUILD) -I$(INC_DIR)
 
@@ -372,38 +384,51 @@ $(FUN_DIR)%.so:	$(FUN_DIR)%.o
 	$(CXX)  $(CPPFLAGS) -shared -fpic -o $@ $< $(INCLUDES_BUILD) $(LIBS)
 
 
-$(FUN_DIR)Reference.o:	$(SL_FUNC_DIR)/Reference.cpp 
-	$(CXX) -c $(CPPFLAGS) -shared -fpic -o $@ $^ $(INCLUDES_BUILD) -I$(SL_FUNC_DIR)
+$(FUN_DIR)Reference.o:	$(SL_AUTO_FUNC_DIR)/Reference.cpp 
+	$(CXX) -c $(CPPFLAGS) -shared -fpic -o $@ $^ $(INCLUDES_BUILD) -I$(SL_AUTO_FUNC_DIR)
 
-$(FUN_DIR)Reference_Interface.o:	$(SL_FUNC_DIR)/Reference_Interface.cpp 
-	$(CXX) -c $(CPPFLAGS) -shared -fpic -o $@ $^ $(INCLUDES_BUILD) -I$(SL_FUNC_DIR)
+$(FUN_DIR)Reference_Interface.o:	$(SL_INT_FUNC_DIR)/Reference_Interface.cpp 
+	$(CXX) -c $(CPPFLAGS) -shared -fpic -o $@ $^ $(INCLUDES_BUILD) -I$(SL_AUTO_FUNC_DIR)
 
-$(FUN_DIR)func1.o:	$(SL_FUNC_DIR)/func1.cpp 
-	$(CXX) -c $(CPPFLAGS) -shared -fpic -o $@ $^ $(INCLUDES_BUILD) -I$(SL_FUNC_DIR)
+$(FUN_DIR)func1.o:	$(SL_AUTO_FUNC_DIR)/func1.cpp 
+	$(CXX) -c $(CPPFLAGS) -shared -fpic -o $@ $^ $(INCLUDES_BUILD) -I$(SL_AUTO_FUNC_DIR)
 
-$(FUN_DIR)func2.o:	$(SL_FUNC_DIR)/func2.cpp 
-	$(CXX) -c $(CPPFLAGS) -shared -fpic -o $@ $^ $(INCLUDES_BUILD) -I$(SL_FUNC_DIR)
+$(FUN_DIR)func2.o:	$(SL_AUTO_FUNC_DIR)/func2.cpp 
+	$(CXX) -c $(CPPFLAGS) -shared -fpic -o $@ $^ $(INCLUDES_BUILD) -I$(SL_AUTO_FUNC_DIR)
 
-$(FUN_DIR)func3.o:	$(SL_FUNC_DIR)/func3.cpp 
-	$(CXX) -c $(CPPFLAGS) -shared -fpic -o $@ $^ $(INCLUDES_BUILD) -I$(SL_FUNC_DIR)
+$(FUN_DIR)func3.o:	$(SL_AUTO_FUNC_DIR)/func3.cpp 
+	$(CXX) -c $(CPPFLAGS) -shared -fpic -o $@ $^ $(INCLUDES_BUILD) -I$(SL_AUTO_FUNC_DIR)
 
-$(FUN_DIR)DC_Augmentation.o:	$(SL_FUNC_DIR)/DC_Augmentation.cpp 
-	$(CXX) -c $(CPPFLAGS) -shared -fpic -o $@ $^ $(INCLUDES_BUILD) -I$(SL_FUNC_DIR)
+$(FUN_DIR)DC_Augmentation.o:	$(SL_AUTO_FUNC_DIR)/DC_Augmentation.cpp 
+	$(CXX) -c $(CPPFLAGS) -shared -fpic -o $@ $^ $(INCLUDES_BUILD) -I$(SL_AUTO_FUNC_DIR)
 
-$(FUN_DIR)DC_Augmentation_Interface.o:	$(SL_FUNC_DIR)/DC_Augmentation_Interface.cpp 
-	$(CXX) -c $(CPPFLAGS) -shared -fpic -o $@ $^ $(INCLUDES_BUILD) -I$(SL_FUNC_DIR)
+$(FUN_DIR)DC_Augmentation_Interface.o:	$(SL_INT_FUNC_DIR)/DC_Augmentation_Interface.cpp 
+	$(CXX) -c $(CPPFLAGS) -shared -fpic -o $@ $^ $(INCLUDES_BUILD) -I$(SL_AUTO_FUNC_DIR)
 
-$(FUN_DIR)HighLevelController.o:	$(SL_FUNC_DIR)/HighLevelController.cpp 
-	$(CXX) -c $(CPPFLAGS) -shared -fpic -o $@ $^ $(INCLUDES_BUILD) -I$(SL_FUNC_DIR)
+$(FUN_DIR)HighLevelController.o:	$(SL_AUTO_FUNC_DIR)/HighLevelController.cpp 
+	$(CXX) -c $(CPPFLAGS) -shared -fpic -o $@ $^ $(INCLUDES_BUILD) -I$(SL_AUTO_FUNC_DIR)
 
-$(FUN_DIR)HighLevelController_Interface.o:	$(SL_FUNC_DIR)/HighLevelController_Interface.cpp 
-	$(CXX) -c $(CPPFLAGS) -shared -fpic -o $@ $^ $(INCLUDES_BUILD) -I$(SL_FUNC_DIR)
+$(FUN_DIR)HighLevelController_Interface.o:	$(SL_INT_FUNC_DIR)/HighLevelController_Interface.cpp 
+	$(CXX) -c $(CPPFLAGS) -shared -fpic -o $@ $^ $(INCLUDES_BUILD) -I$(SL_AUTO_FUNC_DIR)
 
-$(FUN_DIR)LowLevelController.o:	$(SL_FUNC_DIR)/LowLevelController.cpp 
-	$(CXX) -c $(CPPFLAGS) -shared -fpic -o $@ $^ $(INCLUDES_BUILD) -I$(SL_FUNC_DIR)
+$(FUN_DIR)LowLevelController.o:	$(SL_AUTO_FUNC_DIR)/LowLevelController.cpp 
+	$(CXX) -c $(CPPFLAGS) -shared -fpic -o $@ $^ $(INCLUDES_BUILD) -I$(SL_AUTO_FUNC_DIR)
 
-$(FUN_DIR)LowLevelController_Interface.o:	$(SL_FUNC_DIR)/LowLevelController_Interface.cpp 
-	$(CXX) -c $(CPPFLAGS) -shared -fpic -o $@ $^ $(INCLUDES_BUILD) -I$(SL_FUNC_DIR)
+$(FUN_DIR)LowLevelController_Interface.o:	$(SL_INT_FUNC_DIR)/LowLevelController_Interface.cpp 
+	$(CXX) -c $(CPPFLAGS) -shared -fpic -o $@ $^ $(INCLUDES_BUILD) -I$(SL_AUTO_FUNC_DIR)
+
+$(FUN_DIR)BatteryBalancing_Interface.o:	$(SL_INT_FUNC_DIR)/BatteryBalancing_Interface.cpp 
+	$(CXX) -c $(CPPFLAGS) -shared -fpic -o $@ $^ $(INCLUDES_BUILD) -I$(SL_AUTO_FUNC_DIR)
+
+$(FUN_DIR)BatteryRack_Interface.o:	$(SL_INT_FUNC_DIR)/BatteryRack_Interface.cpp 
+	$(CXX) -c $(CPPFLAGS) -shared -fpic -o $@ $^ $(INCLUDES_BUILD) -I$(SL_AUTO_FUNC_DIR)
+
+$(FUN_DIR)LowPassFilter_Interface.o:	$(SL_INT_FUNC_DIR)/LowPassFilter_Interface.cpp 
+	$(CXX) -c $(CPPFLAGS) -shared -fpic -o $@ $^ $(INCLUDES_BUILD) -I$(SL_AUTO_FUNC_DIR)
+
+$(FUN_DIR)LowPassFilterBRB_Interface.o:	$(SL_INT_FUNC_DIR)/LowPassFilterBRB_Interface.cpp 
+	$(CXX) -c $(CPPFLAGS) -shared -fpic -o $@ $^ $(INCLUDES_BUILD) -I$(SL_AUTO_FUNC_DIR)
+
 
 .PHONY: build
 build:

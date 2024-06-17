@@ -662,7 +662,7 @@ int loadAssetManagers(varsmap& vmap, asset_manager* ess_man, std::vector<char*>*
 extern "C++" {
 
 int SetupEssSched(scheduler* sched, asset_manager* am);
-int SetupDatamapSched(scheduler* sched, asset_manager* am);
+int SetupDatamapSched(asset_manager* am);
 void dataMapThreadCleanup();
 }
 
@@ -1090,7 +1090,7 @@ int main_test_new_ess(int argc, char* argv[])
     vm.setFunc(vmap, essName, "SendDb", (void*)&SendDb);
     vm.setFunc(vmap, essName, "HandleCpuStats", (void*)&HandleCpuStats);
     vm.setFunc(vmap, essName, "runAllLocks", (void*)&runAllLocks);
-    SetupDatamapSched(&sched, ess_man);
+    SetupDatamapSched(ess_man);
 
     if (!useArgs)  // run "ess_controller" to get into this block (crashes bc of filepath rn)
     {

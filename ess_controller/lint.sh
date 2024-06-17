@@ -22,13 +22,13 @@ tidy() {
 
     if [ "$1" = "all" ]; then
         printf '\n=== Running clang-tidy on ALL .cpp and .h files ===\n'
-        cpp_files=$(find . -type f | grep "\.\(c\|cpp\)\b" | grep -v './doc/' | grep -v './i2c-tools/')
-        h_files=$(find . -type f | grep "\.\(h\|hpp\)\b" | grep -v './doc/' | grep -v './i2c-tools/')
+        cpp_files=$(find . -type f | grep "\.\(c\|cpp\)\b" | grep -v './doc/' | grep -v './i2c-tools/' | grep -v './SL_files/autogen/')
+        h_files=$(find . -type f | grep "\.\(h\|hpp\)\b" | grep -v './doc/' | grep -v './i2c-tools/' | grep -v './SL_files/autogen/')
     else
         printf '\n=== Running clang-tidy on all changed files ===\n'
         # Regexes designed to only find .ccp and .h files which exist inside of the hybridos/ess_controller directory and which contain changes compared to dev.
-        cpp_files=$(git diff --name-status dev | grep -oP '(?<=[AM]\tess_controller\/).*\.(c|cpp)\b' | grep -v './doc/')
-        h_files=$(git diff --name-status dev | grep -oP '(?<=[AM]\tess_controller\/).*\.(h|hpp)\b' | grep -v './doc/')
+        cpp_files=$(git diff --name-status dev | grep -oP '(?<=[AM]\tess_controller\/).*\.(c|cpp)\b' | grep -v './doc/' | grep -v './SL_files/autogen/')
+        h_files=$(git diff --name-status dev | grep -oP '(?<=[AM]\tess_controller\/).*\.(h|hpp)\b' | grep -v './doc/' | grep -v './SL_files/autogen/')
     fi
 
     failures=""
@@ -72,7 +72,10 @@ tidy() {
 # Run clang-format as well
 format () {
     echo "Running clang-format"
-    find . -regex '.*\.\(cpp\|hpp\|c\|h\)' -exec clang-format -i {} \;
+    find ./include -regex '.*\.\(cpp\|hpp\|c\|h\)' -exec clang-format -i {} \;
+    find ./src -regex '.*\.\(cpp\|hpp\|c\|h\)' -exec clang-format -i {} \;
+    find ./funcs -regex '.*\.\(cpp\|hpp\|c\|h\)' -exec clang-format -i {} \;
+    find ./SL_files/interface_files -regex '.*\.\(cpp\|hpp\|c\|h\)' -exec clang-format -i {} \;
 }
 
 tidy $1

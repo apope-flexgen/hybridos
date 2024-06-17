@@ -1,0 +1,1426 @@
+{
+    "/components/##PCS_ID##": {
+        "alarm_running_state_1": {
+            "actions": {
+                "onSet": [
+                    {
+                        "enum": [
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 0,
+                                "uri": "/alarms/##PCS_ID##:TemperatureAbnormal"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Alarm",
+                                "shift": 0,
+                                "uri": "/alarms/##PCS_ID##:TemperatureAbnormal"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 1,
+                                "uri": "/alarms/##PCS_ID##:LowInsulationResistance"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Alarm",
+                                "shift": 1,
+                                "uri": "/alarms/##PCS_ID##:LowInsulationResistance"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 2,
+                                "uri": "/alarms/##PCS_ID##:GFRTRunning"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Alarm",
+                                "shift": 2,
+                                "uri": "/alarms/##PCS_ID##:GFRTRunning"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 4,
+                                "uri": "/alarms/##PCS_ID##:DCFuseAbnormal"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Alarm",
+                                "shift": 4,
+                                "uri": "/alarms/##PCS_ID##:DCFuseAbnormal"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 6,
+                                "uri": "/alarms/##PCS_ID##:DCSensorAbnormal"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Alarm",
+                                "shift": 6,
+                                "uri": "/alarms/##PCS_ID##:DCSensorAbnormal"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 7,
+                                "uri": "/alarms/##PCS_ID##:DCSPD"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Alarm",
+                                "shift": 7,
+                                "uri": "/alarms/##PCS_ID##:DCSPD"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 8,
+                                "uri": "/alarms/##PCS_ID##:ACSPD"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Alarm",
+                                "shift": 8,
+                                "uri": "/alarms/##PCS_ID##:ACSPD"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 9,
+                                "uri": "/alarms/##PCS_ID##:BatteryVoltageHigh"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Alarm",
+                                "shift": 9,
+                                "uri": "/alarms/##PCS_ID##:BatteryVoltageHigh"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 10,
+                                "uri": "/alarms/##PCS_ID##:BatteryVoltageLow"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Alarm",
+                                "shift": 10,
+                                "uri": "/alarms/##PCS_ID##:BatteryVoltageLow"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 12,
+                                "uri": "/alarms/##PCS_ID##:DCSwitchAbnormal"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Alarm",
+                                "shift": 12,
+                                "uri": "/alarms/##PCS_ID##:DCSwitchAbnormal"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 13,
+                                "uri": "/alarms/##PCS_ID##:Fan1Abnormal"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Alarm",
+                                "shift": 13,
+                                "uri": "/alarms/##PCS_ID##:Fan1Abnormal"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "enable": "/config/##PCS_ID##:enum_opt",
+                                "outValue": true,
+                                "uri": "/components/##PCS_ID##:alarm_running_state_1@ifChanged",
+                                "useAv": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##PCS_ID##:enable",
+            "ifChanged": false,
+            "value": 0
+        },
+        "alarm_running_state_2": {
+            "actions": {
+                "onSet": [
+                    {
+                        "enum": [
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 0,
+                                "uri": "/alarms/##PCS_ID##:BranchCircuitBoardCommunicationError"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Alarm",
+                                "shift": 0,
+                                "uri": "/alarms/##PCS_ID##:BranchCircuitBoardCommunicationError"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 1,
+                                "uri": "/alarms/##PCS_ID##:ACSwitchAbnormal"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Alarm",
+                                "shift": 1,
+                                "uri": "/alarms/##PCS_ID##:ACSwitchAbnormal"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 2,
+                                "uri": "/alarms/##PCS_ID##:Fan2Abnormal"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Alarm",
+                                "shift": 2,
+                                "uri": "/alarms/##PCS_ID##:Fan2Abnormal"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 3,
+                                "uri": "/alarms/##PCS_ID##:ACMainContactorAbnormal"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Alarm",
+                                "shift": 3,
+                                "uri": "/alarms/##PCS_ID##:ACMainContactorAbnormal"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "enable": "/config/##PCS_ID##:enum_opt",
+                                "outValue": true,
+                                "uri": "/components/##PCS_ID##:alarm_running_state_2@ifChanged",
+                                "useAv": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##PCS_ID##:enable",
+            "ifChanged": false,
+            "value": 0
+        },
+        "fault_state_1": {
+            "actions": {
+                "onSet": [
+                    {
+                        "enum": [
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 0,
+                                "uri": "/faults/##PCS_ID##:DCUndervoltage"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Fault",
+                                "shift": 0,
+                                "uri": "/faults/##PCS_ID##:DCUndervoltage"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 1,
+                                "uri": "/faults/##PCS_ID##:DCOvervoltage"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Fault",
+                                "shift": 1,
+                                "uri": "/faults/##PCS_ID##:DCOvervoltage"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 2,
+                                "uri": "/faults/##PCS_ID##:ACUndervoltage"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Fault",
+                                "shift": 2,
+                                "uri": "/faults/##PCS_ID##:ACUndervoltage"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 3,
+                                "uri": "/faults/##PCS_ID##:ACOvervoltage"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Fault",
+                                "shift": 3,
+                                "uri": "/faults/##PCS_ID##:ACOvervoltage"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 4,
+                                "uri": "/faults/##PCS_ID##:ACUnderfrequency"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Fault",
+                                "shift": 4,
+                                "uri": "/faults/##PCS_ID##:ACUnderfrequency"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 5,
+                                "uri": "/faults/##PCS_ID##:ACOverfrequency"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Fault",
+                                "shift": 5,
+                                "uri": "/faults/##PCS_ID##:ACOverfrequency"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 6,
+                                "uri": "/faults/##PCS_ID##:ACContactor"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Fault",
+                                "shift": 6,
+                                "uri": "/faults/##PCS_ID##:ACContactor"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 7,
+                                "uri": "/faults/##PCS_ID##:IslandingProtection"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Fault",
+                                "shift": 7,
+                                "uri": "/faults/##PCS_ID##:IslandingProtection"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 9,
+                                "uri": "/faults/##PCS_ID##:PDPProtection"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Fault",
+                                "shift": 9,
+                                "uri": "/faults/##PCS_ID##:PDPProtection"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 10,
+                                "uri": "/faults/##PCS_ID##:ModuleOvertemperature"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Fault",
+                                "shift": 10,
+                                "uri": "/faults/##PCS_ID##:ModuleOvertemperature"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 11,
+                                "uri": "/faults/##PCS_ID##:ReactorOvertemperature"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Fault",
+                                "shift": 11,
+                                "uri": "/faults/##PCS_ID##:ReactorOvertemperature"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 12,
+                                "uri": "/faults/##PCS_ID##:TransformerOvertemperature"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Fault",
+                                "shift": 12,
+                                "uri": "/faults/##PCS_ID##:TransformerOvertemperature"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 13,
+                                "uri": "/faults/##PCS_ID##:LeakageCurrentProtection"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Fault",
+                                "shift": 13,
+                                "uri": "/faults/##PCS_ID##:LeakageCurrentProtection"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 15,
+                                "uri": "/faults/##PCS_ID##:OverloadProtection"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Fault",
+                                "shift": 15,
+                                "uri": "/faults/##PCS_ID##:OverloadProtection"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 17,
+                                "uri": "/faults/##PCS_ID##:Fan1"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Fault",
+                                "shift": 17,
+                                "uri": "/faults/##PCS_ID##:Fan1"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 18,
+                                "uri": "/faults/##PCS_ID##:DCFuse"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Fault",
+                                "shift": 18,
+                                "uri": "/faults/##PCS_ID##:DCFuse"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 20,
+                                "uri": "/faults/##PCS_ID##:DCOvercurrent"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Fault",
+                                "shift": 20,
+                                "uri": "/faults/##PCS_ID##:DCOvercurrent"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 21,
+                                "uri": "/faults/##PCS_ID##:ACOvercurrent"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Fault",
+                                "shift": 21,
+                                "uri": "/faults/##PCS_ID##:ACOvercurrent"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 23,
+                                "uri": "/faults/##PCS_ID##:AmbientTemperatureAbnormal"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Fault",
+                                "shift": 23,
+                                "uri": "/faults/##PCS_ID##:AmbientTemperatureAbnormal"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 24,
+                                "uri": "/faults/##PCS_ID##:Hardware"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Fault",
+                                "shift": 24,
+                                "uri": "/faults/##PCS_ID##:Hardware"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "enable": "/config/##PCS_ID##:enum_opt",
+                                "outValue": true,
+                                "uri": "/components/##PCS_ID##:fault_state_1@ifChanged",
+                                "useAv": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##PCS_ID##:enable",
+            "ifChanged": false,
+            "value": 0
+        },
+        "fault_state_2": {
+            "actions": {
+                "onSet": [
+                    {
+                        "enum": [
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 0,
+                                "uri": "/faults/##PCS_ID##:InsulationResistance"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Fault",
+                                "shift": 0,
+                                "uri": "/faults/##PCS_ID##:InsulationResistance"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 1,
+                                "uri": "/faults/##PCS_ID##:ACSPD"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Fault",
+                                "shift": 1,
+                                "uri": "/faults/##PCS_ID##:ACSPD"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 2,
+                                "uri": "/faults/##PCS_ID##:Sampling"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Fault",
+                                "shift": 2,
+                                "uri": "/faults/##PCS_ID##:Sampling"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 3,
+                                "uri": "/faults/##PCS_ID##:BatteryPolarityReversed"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Fault",
+                                "shift": 3,
+                                "uri": "/faults/##PCS_ID##:BatteryPolarityReversed"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 5,
+                                "uri": "/faults/##PCS_ID##:LCDDSPFault"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Fault",
+                                "shift": 5,
+                                "uri": "/faults/##PCS_ID##:LCDDSPFault"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 6,
+                                "uri": "/faults/##PCS_ID##:ACCurrentUnbalance1"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Fault",
+                                "shift": 6,
+                                "uri": "/faults/##PCS_ID##:ACCurrentUnbalance1"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 7,
+                                "uri": "/faults/##PCS_ID##:Host"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Fault",
+                                "shift": 7,
+                                "uri": "/faults/##PCS_ID##:Host"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 8,
+                                "uri": "/faults/##PCS_ID##:DCSPD"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Fault",
+                                "shift": 8,
+                                "uri": "/faults/##PCS_ID##:DCSPD"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 10,
+                                "uri": "/faults/##PCS_ID##:DCInjection"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Fault",
+                                "shift": 10,
+                                "uri": "/faults/##PCS_ID##:DCInjection"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 11,
+                                "uri": "/faults/##PCS_ID##:DCSwitch"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Fault",
+                                "shift": 11,
+                                "uri": "/faults/##PCS_ID##:DCSwitch"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 12,
+                                "uri": "/faults/##PCS_ID##:DeviceCodeRepeat"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Fault",
+                                "shift": 12,
+                                "uri": "/faults/##PCS_ID##:DeviceCodeRepeat"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 13,
+                                "uri": "/faults/##PCS_ID##:ParallelCommunicationError"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Fault",
+                                "shift": 13,
+                                "uri": "/faults/##PCS_ID##:ParallelCommunicationError"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 14,
+                                "uri": "/faults/##PCS_ID##:ControlCabinetTemperatureAbnormal"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Fault",
+                                "shift": 14,
+                                "uri": "/faults/##PCS_ID##:ControlCabinetTemperatureAbnormal"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 16,
+                                "uri": "/faults/##PCS_ID##:ACVoltageUnbalance"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Fault",
+                                "shift": 16,
+                                "uri": "/faults/##PCS_ID##:ACVoltageUnbalance"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 19,
+                                "uri": "/faults/##PCS_ID##:ACSwitch"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Fault",
+                                "shift": 19,
+                                "uri": "/faults/##PCS_ID##:ACSwitch"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 20,
+                                "uri": "/faults/##PCS_ID##:SoftStart"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Fault",
+                                "shift": 20,
+                                "uri": "/faults/##PCS_ID##:SoftStart"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 21,
+                                "uri": "/faults/##PCS_ID##:DCVoltageSampling"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Fault",
+                                "shift": 21,
+                                "uri": "/faults/##PCS_ID##:DCVoltageSampling"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 22,
+                                "uri": "/faults/##PCS_ID##:Fan2"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Fault",
+                                "shift": 22,
+                                "uri": "/faults/##PCS_ID##:Fan2"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 23,
+                                "uri": "/faults/##PCS_ID##:ACCurrentUnbalance2"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Fault",
+                                "shift": 23,
+                                "uri": "/faults/##PCS_ID##:ACCurrentUnbalance2"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 24,
+                                "uri": "/faults/##PCS_ID##:ACCurrentUnbalance3"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Fault",
+                                "shift": 24,
+                                "uri": "/faults/##PCS_ID##:ACCurrentUnbalance3"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 25,
+                                "uri": "/faults/##PCS_ID##:DriveBoard"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Fault",
+                                "shift": 25,
+                                "uri": "/faults/##PCS_ID##:DriveBoard"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 26,
+                                "uri": "/faults/##PCS_ID##:NeutralPointPotentialShift"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Fault",
+                                "shift": 26,
+                                "uri": "/faults/##PCS_ID##:NeutralPointPotentialShift"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 27,
+                                "uri": "/faults/##PCS_ID##:CarrierSync"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Fault",
+                                "shift": 27,
+                                "uri": "/faults/##PCS_ID##:CarrierSync"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "enable": "/config/##PCS_ID##:enum_opt",
+                                "outValue": true,
+                                "uri": "/components/##PCS_ID##:fault_state_2@ifChanged",
+                                "useAv": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##PCS_ID##:enable",
+            "ifChanged": false,
+            "value": 0
+        },
+        "operating_mode": {
+            "actions": {
+                "onSet": [
+                    {
+                        "enum": [
+                            {
+                                "inValue": 1,
+                                "mask": 4,
+                                "outValue": "On Grid Constant Current Mode",
+                                "shift": 0,
+                                "uri": "/status/##PCS_ID##:OnGridConstantMode"
+                            },
+                            {
+                                "inValue": 2,
+                                "mask": 4,
+                                "outValue": "On Grid Constant Voltage Mode",
+                                "shift": 0,
+                                "uri": "/status/##PCS_ID##:OnGridConstantMode"
+                            },
+                            {
+                                "inValue": 4,
+                                "mask": 4,
+                                "outValue": "On Grid Constant AC Power Mode",
+                                "shift": 0,
+                                "uri": "/status/##PCS_ID##:OnGridConstantMode"
+                            },
+                            {
+                                "inValue": 8,
+                                "mask": 4,
+                                "outValue": "On Grid Constant DC Power Mode",
+                                "shift": 0,
+                                "uri": "/status/##PCS_ID##:OnGridConstantMode"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 3,
+                                "outValue": "FollowPQ",
+                                "shift": 9,
+                                "uri": "/status/##PCS_ID##:GridMode"
+                            },
+                            {
+                                "inValue": 2,
+                                "mask": 3,
+                                "outValue": "FormVF",
+                                "shift": 9,
+                                "uri": "/status/##PCS_ID##:GridMode"
+                            },
+                            {
+                                "inValue": 4,
+                                "mask": 3,
+                                "outValue": "FormVSG",
+                                "shift": 9,
+                                "uri": "/status/##PCS_ID##:GridMode"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "enable": "/config/##PCS_ID##:enum_opt",
+                                "outValue": true,
+                                "uri": "/components/##PCS_ID##:operating_mode@ifChanged",
+                                "useAv": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##PCS_ID##:enable",
+            "ifChanged": false,
+            "note1": "TODO: if applicable, decode the variable's value to other variables using either remap (default) or enum action",
+            "note2": "Use enum if the variable's value contains bitfields. Otherwise, use remap",
+            "value": 0
+        },
+        "overall_alarm_state": {
+            "actions": {
+                "onSet": [
+                    {
+                        "enum": [
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 1,
+                                "uri": "/alarms/##PCS_ID##:HeartbeatStop"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Alarm",
+                                "shift": 1,
+                                "uri": "/alarms/##PCS_ID##:HeartbeatStop"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 2,
+                                "uri": "/alarms/##PCS_ID##:SCUMeteringBoardCommunicationError"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Alarm",
+                                "shift": 2,
+                                "uri": "/alarms/##PCS_ID##:SCUMeteringBoardCommunicationError"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "enable": "/config/##PCS_ID##:enum_opt",
+                                "outValue": true,
+                                "uri": "/components/##PCS_ID##:overall_alarm_state@ifChanged",
+                                "useAv": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##PCS_ID##:enable",
+            "ifChanged": false,
+            "value": 0
+        },
+        "overall_fault_state": {
+            "actions": {
+                "onSet": [
+                    {
+                        "enum": [
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 1,
+                                "uri": "/faults/##PCS_ID##:DoorOpeningProtection"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Fault",
+                                "shift": 1,
+                                "uri": "/faults/##PCS_ID##:DoorOpeningProtection"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 2,
+                                "uri": "/faults/##PCS_ID##:LocalEmergencyStop"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Fault",
+                                "shift": 2,
+                                "uri": "/faults/##PCS_ID##:LocalEmergencyStop"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 3,
+                                "uri": "/faults/##PCS_ID##:RemoteEmergencyStop"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Fault",
+                                "shift": 3,
+                                "uri": "/faults/##PCS_ID##:RemoteEmergencyStop"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "outValue": "Normal",
+                                "shift": 5,
+                                "uri": "/faults/##PCS_ID##:LVRoomSmokeSensor"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "outValue": "Fault",
+                                "shift": 5,
+                                "uri": "/faults/##PCS_ID##:LVRoomSmokeSensor"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "enable": "/config/##PCS_ID##:enum_opt",
+                                "outValue": true,
+                                "uri": "/components/##PCS_ID##:overall_fault_state@ifChanged",
+                                "useAv": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##PCS_ID##:enable",
+            "ifChanged": false,
+            "value": 0
+        },
+        "work_state": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": 5,
+                                "outValue": true,
+                                "uri": "/components/##PCS_ID##:status@ifChanged"
+                            },
+                            {
+                                "inValue": 1,
+                                "outValue": "Run",
+                                "uri": "/status/##PCS_ID##:SystemState"
+                            },
+                            {
+                                "inValue": 8,
+                                "outValue": "Stop",
+                                "uri": "/status/##PCS_ID##:SystemState"
+                            },
+                            {
+                                "inValue": 16,
+                                "outValue": "Standby",
+                                "uri": "/status/##PCS_ID##:SystemState"
+                            },
+                            {
+                                "inValue": 64,
+                                "outValue": "Standby",
+                                "uri": "/status/##PCS_ID##:SystemState"
+                            },
+                            {
+                                "inValue": 512,
+                                "outValue": "Fault",
+                                "uri": "/status/##PCS_ID##:SystemState"
+                            },
+                            {
+                                "inValue": 1024,
+                                "outValue": "Run",
+                                "uri": "/status/##PCS_ID##:SystemState"
+                            },
+                            {
+                                "inValue": 2048,
+                                "outValue": "Run",
+                                "uri": "/status/##PCS_ID##:SystemState"
+                            },
+                            {
+                                "inValue": 32768,
+                                "outValue": "Fault",
+                                "uri": "/status/##PCS_ID##:SystemState"
+                            },
+                            {
+                                "inValue": 1,
+                                "outValue": "Running",
+                                "uri": "/status/##PCS_ID##:Status"
+                            },
+                            {
+                                "inValue": 8,
+                                "outValue": "Key Stop",
+                                "uri": "/status/##PCS_ID##:Status"
+                            },
+                            {
+                                "inValue": 16,
+                                "outValue": "Standby",
+                                "uri": "/status/##PCS_ID##:Status"
+                            },
+                            {
+                                "inValue": 64,
+                                "outValue": "Start in Process",
+                                "uri": "/status/##PCS_ID##:Status"
+                            },
+                            {
+                                "inValue": 512,
+                                "outValue": "Fault Stop",
+                                "uri": "/status/##PCS_ID##:Status"
+                            },
+                            {
+                                "inValue": 1024,
+                                "outValue": "Alarm Running",
+                                "uri": "/status/##PCS_ID##:Status"
+                            },
+                            {
+                                "inValue": 2048,
+                                "outValue": "Derating Running",
+                                "uri": "/status/##PCS_ID##:Status"
+                            },
+                            {
+                                "inValue": 32768,
+                                "outValue": "DSP Communication Error",
+                                "uri": "/status/##PCS_ID##:Status"
+                            },
+                            {
+                                "enable": "/config/##PCS_ID##:enum_opt",
+                                "outValue": true,
+                                "uri": "/components/##PCS_ID##:work_state@ifChanged",
+                                "useAv": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##PCS_ID##:enable",
+            "ifChanged": false,
+            "note1": "TODO: if applicable, decode the variable's value to other variables using either remap (default) or enum action",
+            "note2": "Use enum if the variable's value contains bitfields. Otherwise, use remap",
+            "value": 0
+        }
+    },
+    "/sched/##PCS_ID##": {
+        "checkInputs_##PCS_ID##": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "outValue": false,
+                                "uri": "/components/##PCS_ID##:alarm_running_state_1@ifChanged"
+                            },
+                            {
+                                "outValue": false,
+                                "uri": "/components/##PCS_ID##:alarm_running_state_2@ifChanged"
+                            },
+                            {
+                                "outValue": false,
+                                "uri": "/components/##PCS_ID##:fault_state_1@ifChanged"
+                            },
+                            {
+                                "outValue": false,
+                                "uri": "/components/##PCS_ID##:fault_state_2@ifChanged"
+                            },
+                            {
+                                "outValue": false,
+                                "uri": "/components/##PCS_ID##:operating_mode@ifChanged"
+                            },
+                            {
+                                "outValue": false,
+                                "uri": "/components/##PCS_ID##:overall_alarm_state@ifChanged"
+                            },
+                            {
+                                "outValue": false,
+                                "uri": "/components/##PCS_ID##:overall_fault_state@ifChanged"
+                            },
+                            {
+                                "outValue": false,
+                                "uri": "/components/##PCS_ID##:work_state@ifChanged"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##PCS_ID##:enable",
+            "note": "Sets ifChanged to false to process inputs for various interface variables with actions regardless of value change",
+            "value": 0
+        }
+    },
+    "/vlinks/##PCS_ID##": {
+        "active_power": {
+            "default": 0,
+            "note": "TODO: If needed, modify value: <components_uri>:<variable_name> or remove entire vlink variable",
+            "value": "/components/##PCS_ID##:active_power",
+            "vlink": "/status/##PCS_ID##:ActivePower"
+        },
+        "active_power_droop_slope": {
+            "default": 0,
+            "value": "/components/##PCS_ID##:active_power_droop_slope",
+            "vlink": "/status/##PCS_ID##:ActivePowerDescendingRampRateFeedback"
+        },
+        "active_power_rising_slope": {
+            "default": 0,
+            "note1": "TODO: If needed, modify value: <components_uri>:<variable_name> or remove entire vlink variable",
+            "note2": "TODO: If the feedback variable is also used as the control variable, then remove the _feedback suffix from the ID",
+            "value": "/components/##PCS_ID##:active_power_rising_slope",
+            "vlink": "/status/##PCS_ID##:ActivePowerRisingRampRateFeedback"
+        },
+        "ambient_temperature": {
+            "default": 0,
+            "value": "/components/##PCS_ID##:ambient_temperature",
+            "vlink": "/status/##PCS_ID##:AmbientTemperature"
+        },
+        "dc_current": {
+            "default": 0,
+            "note": "TODO: If needed, modify value: <components_uri>:<variable_name> or remove entire vlink variable",
+            "value": "/components/##PCS_ID##:dc_current",
+            "vlink": "/status/##PCS_ID##:DCCurrent"
+        },
+        "dc_power": {
+            "default": 0,
+            "note": "TODO: If needed, modify value: <components_uri>:<variable_name> or remove entire vlink variable",
+            "value": "/components/##PCS_ID##:dc_power",
+            "vlink": "/status/##PCS_ID##:DCPower"
+        },
+        "dc_voltage": {
+            "default": 0,
+            "note": "TODO: If needed, modify value: <components_uri>:<variable_name> or remove entire vlink variable",
+            "value": "/components/##PCS_ID##:dc_voltage",
+            "vlink": "/status/##PCS_ID##:DCVoltage"
+        },
+        "grid_frequency": {
+            "default": 0,
+            "note": "TODO: If needed, modify value: <components_uri>:<variable_name> or remove entire vlink variable",
+            "value": "/components/##PCS_ID##:grid_frequency",
+            "vlink": "/status/##PCS_ID##:Frequency"
+        },
+        "grid_voltage_vab": {
+            "default": 0,
+            "note": "TODO: If needed, modify value: <components_uri>:<variable_name> or remove entire vlink variable",
+            "value": "/components/##PCS_ID##:grid_voltage_vab",
+            "vlink": "/status/##PCS_ID##:L1L2Voltage"
+        },
+        "grid_voltage_vbc": {
+            "default": 0,
+            "note": "TODO: If needed, modify value: <components_uri>:<variable_name> or remove entire vlink variable",
+            "value": "/components/##PCS_ID##:grid_voltage_vbc",
+            "vlink": "/status/##PCS_ID##:L2L3Voltage"
+        },
+        "grid_voltage_vca": {
+            "default": 0,
+            "note": "TODO: If needed, modify value: <components_uri>:<variable_name> or remove entire vlink variable",
+            "value": "/components/##PCS_ID##:grid_voltage_vca",
+            "vlink": "/status/##PCS_ID##:L3L1Voltage"
+        },
+        "heartbeat_read": {
+            "default": 0,
+            "value": "/components/##PCS_ID##:heartbeat_read",
+            "vlink": "/status/##PCS_ID##:HeartbeatRead"
+        },
+        "independent_converter_frequency": {
+            "default": 0,
+            "value": "/components/##PCS_ID##:independent_converter_frequency",
+            "vlink": "/status/##PCS_ID##:FrequencySetpointFeedback"
+        },
+        "max_charging_power": {
+            "default": 0,
+            "value": "/components/##PCS_ID##:max_charging_power",
+            "vlink": "/limits/##PCS_ID##:ChargePowerLimit"
+        },
+        "max_discharging_power": {
+            "default": 0,
+            "value": "/components/##PCS_ID##:max_discharging_power",
+            "vlink": "/limits/##PCS_ID##:DischargePowerLimit"
+        },
+        "module_temperature_1": {
+            "default": 0,
+            "value": "/components/##PCS_ID##:module_temperature_1",
+            "vlink": "/status/##PCS_ID##:ModuleTemperature1"
+        },
+        "module_temperature_2": {
+            "default": 0,
+            "value": "/components/##PCS_ID##:module_temperature_2",
+            "vlink": "/status/##PCS_ID##:ModuleTemperature2"
+        },
+        "module_temperature_3": {
+            "default": 0,
+            "value": "/components/##PCS_ID##:module_temperature_3",
+            "vlink": "/status/##PCS_ID##:ModuleTemperature3"
+        },
+        "on_grid_constant_ac_power": {
+            "default": 0,
+            "value": "/components/##PCS_ID##:on_grid_constant_ac_power",
+            "vlink": "/status/##PCS_ID##:ActivePowerSetpointFeedback"
+        },
+        "on_grid_constant_voltage_value": {
+            "default": 0,
+            "note1": "TODO: If needed, modify value: <components_uri>:<variable_name> or remove entire vlink variable",
+            "note2": "TODO: If the feedback variable is also used as the control variable, then remove the _feedback suffix from the ID",
+            "value": "/components/##PCS_ID##:on_grid_constant_voltage_value",
+            "vlink": "/status/##PCS_ID##:VoltageSetpointFeedback"
+        },
+        "phase_a_current": {
+            "default": 0,
+            "note": "TODO: If needed, modify value: <components_uri>:<variable_name> or remove entire vlink variable",
+            "value": "/components/##PCS_ID##:phase_a_current",
+            "vlink": "/status/##PCS_ID##:L1Current"
+        },
+        "phase_b_current": {
+            "default": 0,
+            "note": "TODO: If needed, modify value: <components_uri>:<variable_name> or remove entire vlink variable",
+            "value": "/components/##PCS_ID##:phase_b_current",
+            "vlink": "/status/##PCS_ID##:L2Current"
+        },
+        "phase_c_current": {
+            "default": 0,
+            "note": "TODO: If needed, modify value: <components_uri>:<variable_name> or remove entire vlink variable",
+            "value": "/components/##PCS_ID##:phase_c_current",
+            "vlink": "/status/##PCS_ID##:L3Current"
+        },
+        "power_factor": {
+            "default": 0,
+            "note": "TODO: If needed, modify value: <components_uri>:<variable_name> or remove entire vlink variable",
+            "value": "/components/##PCS_ID##:power_factor",
+            "vlink": "/status/##PCS_ID##:PowerFactor"
+        },
+        "reactive_power": {
+            "default": 0,
+            "note": "TODO: If needed, modify value: <components_uri>:<variable_name> or remove entire vlink variable",
+            "value": "/components/##PCS_ID##:reactive_power",
+            "vlink": "/status/##PCS_ID##:ReactivePower"
+        },
+        "reactive_power_droop_slope": {
+            "default": 0,
+            "value": "/components/##PCS_ID##:reactive_power_droop_slope",
+            "vlink": "/status/##PCS_ID##:ReactivePowerDescendingRampRateFeedback"
+        },
+        "reactive_power_percentage_setting": {
+            "default": 0,
+            "value": "/components/##PCS_ID##:reactive_power_percentage_setting",
+            "vlink": "/status/##PCS_ID##:ReactivePowerSetpointFeedback"
+        },
+        "reactive_power_rising_slope": {
+            "default": 0,
+            "note1": "TODO: If needed, modify value: <components_uri>:<variable_name> or remove entire vlink variable",
+            "note2": "TODO: If the feedback variable is also used as the control variable, then remove the _feedback suffix from the ID",
+            "value": "/components/##PCS_ID##:reactive_power_rising_slope",
+            "vlink": "/status/##PCS_ID##:ReactivePowerRisingRampRateFeedback"
+        }
+    }
+}

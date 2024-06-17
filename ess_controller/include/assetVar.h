@@ -21,6 +21,10 @@
 #include <unistd.h>
 #include <vector>
 
+#include <any>
+#include <typeinfo>
+#include <cxxabi.h>
+
 #include <cjson/cJSON.h>
 #include <fims/fps_utils.h>
 #include <fims/libfims.h>
@@ -656,6 +660,12 @@ public:
     // int logAlways(bool flag=true);
     int addSchedReq(schAvlist& rreq);
     int addSchedReq(schAvlist& rreq, double tshot, double trep);
+
+    // adds a remap action to this av using this uri. allows for any type of remap configuration
+    // the only required parameter is "uri", all other params are optional
+    void addRemap(std::string uri, int offset = 0, const std::any& inValue = std::any{},
+                  const std::any& outValue = std::any{}, const std::any& ifChanged = std::any{}, std::string fims = "",
+                  std::string replyto = "");
 
 };  // end if assetVar::
 

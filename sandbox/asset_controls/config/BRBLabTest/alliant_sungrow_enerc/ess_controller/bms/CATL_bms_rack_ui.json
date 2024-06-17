@@ -1,0 +1,210 @@
+{
+    "/assets/##BMS_ID##/##RACK_ID##": {
+        "alarms": {
+            "options": [],
+            "value": 0
+        },
+        "average_single_cell_temperature": {
+            "value": 0
+        },
+        "average_single_cell_voltage": {
+            "value": 0
+        },
+        "battery_subsystem_current": {
+            "value": 0
+        },
+        "battery_subsystem_inside_voltage": {
+            "value": 0
+        },
+        "battery_subsystem_outside_voltage": {
+            "value": 0
+        },
+        "battery_subsystem_power": {
+            "value": 0
+        },
+        "cell_temp_delta": {
+            "value": 0
+        },
+        "cell_voltage_delta": {
+            "value": 0
+        },
+        "dc_contactors_closed": {
+            "value": false
+        },
+        "faults": {
+            "options": [],
+            "value": 0
+        },
+        "maint_mode": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "LogInfo"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "ifChanged": false,
+            "note": "UI control variable used to set the current asset in maintenance mode",
+            "options": [
+                {
+                    "name": "No",
+                    "return_value": false
+                },
+                {
+                    "name": "Yes",
+                    "return_value": true
+                }
+            ],
+            "value": false
+        },
+        "max_allowed_charge_current": {
+            "value": 0
+        },
+        "max_allowed_discharge_current": {
+            "value": 0
+        },
+        "max_charge_power_allowed": {
+            "value": 0
+        },
+        "max_discharge_power_allowed": {
+            "value": 0
+        },
+        "max_single_cell_temperature": {
+            "value": 0
+        },
+        "max_single_cell_voltage": {
+            "value": 0
+        },
+        "min_single_cell_temperature": {
+            "value": 0
+        },
+        "min_single_cell_voltage": {
+            "value": 0
+        },
+        "soc": {
+            "value": 0
+        },
+        "state_of_health": {
+            "value": 0
+        },
+        "subsystem_remaining_charge_energy": {
+            "value": 0
+        },
+        "subsystem_remaining_discharge_energy": {
+            "value": 0
+        }
+    },
+    "/vlinks/##BMS_ID##_##RACK_ID##": {
+        "ui_average_single_cell_temperature": {
+            "default": 0,
+            "value": "/assets/##BMS_ID##/##RACK_ID##:average_single_cell_temperature",
+            "vlink": "/status/##BMS_ID##_##RACK_ID##:AvgCellTemp"
+        },
+        "ui_average_single_cell_voltage": {
+            "default": 0,
+            "value": "/assets/##BMS_ID##/##RACK_ID##:average_single_cell_voltage",
+            "vlink": "/status/##BMS_ID##_##RACK_ID##:AvgCellVoltage"
+        },
+        "ui_battery_subsystem_current": {
+            "default": 0,
+            "value": "/assets/##BMS_ID##/##RACK_ID##:battery_subsystem_current",
+            "vlink": "/status/##BMS_ID##_##RACK_ID##:DCCurrent"
+        },
+        "ui_battery_subsystem_inside_voltage": {
+            "default": 0,
+            "value": "/assets/##BMS_ID##/##RACK_ID##:battery_subsystem_inside_voltage",
+            "vlink": "/status/##BMS_ID##_##RACK_ID##:DCVoltageBeforeBusBar"
+        },
+        "ui_battery_subsystem_outside_voltage": {
+            "default": 0,
+            "value": "/assets/##BMS_ID##/##RACK_ID##:battery_subsystem_outside_voltage",
+            "vlink": "/status/##BMS_ID##_##RACK_ID##:DCVoltage"
+        },
+        "ui_battery_subsystem_power": {
+            "default": 0,
+            "value": "/assets/##BMS_ID##/##RACK_ID##:battery_subsystem_power",
+            "vlink": "/status/##BMS_ID##_##RACK_ID##:DCPower"
+        },
+        "ui_cell_temp_delta": {
+            "default": 0,
+            "value": "/assets/##BMS_ID##/##RACK_ID##:cell_temp_delta",
+            "vlink": "/status/##BMS_ID##_##RACK_ID##:CellTempDelta"
+        },
+        "ui_cell_voltage_delta": {
+            "default": 0,
+            "value": "/assets/##BMS_ID##/##RACK_ID##:cell_voltage_delta",
+            "vlink": "/status/##BMS_ID##_##RACK_ID##:CellVoltageDelta"
+        },
+        "ui_dc_contactors_closed": {
+            "default": false,
+            "value": "/assets/##BMS_ID##/##RACK_ID##:dc_contactors_closed",
+            "vlink": "/status/##BMS_ID##_##RACK_ID##:DCClosed"
+        },
+        "ui_max_allowed_charge_current": {
+            "default": 0,
+            "value": "/assets/##BMS_ID##/##RACK_ID##:max_allowed_charge_current",
+            "vlink": "/limits/##BMS_ID##_##RACK_ID##:ChargeCurrentLimit"
+        },
+        "ui_max_allowed_discharge_current": {
+            "default": 0,
+            "value": "/assets/##BMS_ID##/##RACK_ID##:max_allowed_discharge_current",
+            "vlink": "/limits/##BMS_ID##_##RACK_ID##:DischargeCurrentLimit"
+        },
+        "ui_max_charge_power_allowed": {
+            "default": 0,
+            "value": "/assets/##BMS_ID##/##RACK_ID##:max_charge_power_allowed",
+            "vlink": "/limits/##BMS_ID##_##RACK_ID##:ChargePowerLimit"
+        },
+        "ui_max_discharge_power_allowed": {
+            "default": 0,
+            "value": "/assets/##BMS_ID##/##RACK_ID##:max_discharge_power_allowed",
+            "vlink": "/limits/##BMS_ID##_##RACK_ID##:DischargePowerLimit"
+        },
+        "ui_max_single_cell_temperature": {
+            "default": 0,
+            "value": "/assets/##BMS_ID##/##RACK_ID##:max_single_cell_temperature",
+            "vlink": "/status/##BMS_ID##_##RACK_ID##:MaxCellTemp"
+        },
+        "ui_max_single_cell_voltage": {
+            "default": 0,
+            "value": "/assets/##BMS_ID##/##RACK_ID##:max_single_cell_voltage",
+            "vlink": "/status/##BMS_ID##_##RACK_ID##:MaxCellVoltage"
+        },
+        "ui_min_single_cell_temperature": {
+            "default": 0,
+            "value": "/assets/##BMS_ID##/##RACK_ID##:min_single_cell_temperature",
+            "vlink": "/status/##BMS_ID##_##RACK_ID##:MinCellTemp"
+        },
+        "ui_min_single_cell_voltage": {
+            "default": 0,
+            "value": "/assets/##BMS_ID##/##RACK_ID##:min_single_cell_voltage",
+            "vlink": "/status/##BMS_ID##_##RACK_ID##:MinCellVoltage"
+        },
+        "ui_soc": {
+            "default": 0,
+            "value": "/assets/##BMS_ID##/##RACK_ID##:soc",
+            "vlink": "/status/##BMS_ID##_##RACK_ID##:SOC"
+        },
+        "ui_state_of_health": {
+            "default": 0,
+            "value": "/assets/##BMS_ID##/##RACK_ID##:state_of_health",
+            "vlink": "/status/##BMS_ID##_##RACK_ID##:SOH"
+        },
+        "ui_subsystem_remaining_charge_energy": {
+            "default": 0,
+            "value": "/assets/##BMS_ID##/##RACK_ID##:subsystem_remaining_charge_energy",
+            "vlink": "/status/##BMS_ID##_##RACK_ID##:ChargeableEnergy"
+        },
+        "ui_subsystem_remaining_discharge_energy": {
+            "default": 0,
+            "value": "/assets/##BMS_ID##/##RACK_ID##:subsystem_remaining_discharge_energy",
+            "vlink": "/status/##BMS_ID##_##RACK_ID##:DischargeableEnergy"
+        }
+    }
+}

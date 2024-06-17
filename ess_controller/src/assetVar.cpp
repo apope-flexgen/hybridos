@@ -3783,6 +3783,376 @@ int assetVar::addSchedReq(schAvlist& rreq, double tshot, double trep)
     return addSchedReq(rreq);
 }
 
+// check if a string is a valid uri; it must start with a '/' and contain a ':'
+// this function is currently only used in addRemapURI - Zac 5/15/2024
+bool validURI(std::string input)
+{
+    if (input.empty())
+    {
+        return false;  // Early exit for empty strings
+    }
+
+    // Check if the string starts with '/'
+    if (input[0] != '/')
+    {
+        return false;
+    }
+
+    // Check if the string contains ':'
+    if (input.find(':') == std::string::npos)
+    {
+        return false;
+    }
+
+    // Both conditions are met
+    return true;
+}
+
+// s/o to our favorite director QT
+// this function returns true only if all values in leftFoot are the same as the values in rightFoot
+bool compareAssFeat(assFeat* leftFoot, assFeat* rightFoot)
+{
+    if (leftFoot->type != rightFoot->type)
+        return false;
+    if (leftFoot->valueint != rightFoot->valueint)
+        return false;
+    if (leftFoot->valuedouble != rightFoot->valuedouble)
+        return false;
+    if (leftFoot->valuebool != rightFoot->valuebool)
+        return false;
+    if (leftFoot->valuevoid != rightFoot->valuevoid)
+        return false;
+
+    // need to make sure we arent accessing nullptrs if assFeat->valuestring doesnt exist
+    if (leftFoot->valuestring != nullptr)
+    {
+        if (rightFoot->valuestring != nullptr)
+        {
+            // if both left string and right string exist, string compare them
+            if (strcmp(leftFoot->valuestring, rightFoot->valuestring) != 0)
+                return false;
+        }
+        else
+        {
+            // left exists but right does not
+            return false;
+        }
+    }
+    else
+    {
+        if (rightFoot->valuestring != nullptr)
+        {
+            // right exists but left does not
+            return false;
+        }
+    }
+
+    return true;
+}
+
+// this function returns true if all of the assetFeatures in the leftABF's featureDictionary are the same as all the
+// assetFeatures in the rightABF's featureDictionary
+bool sameAssetBitField(assetBitField* leftABF, assetBitField* rightABF)
+{
+    // iterate over left's featMap and for each key in left's featmap, compare that key in left to that key in right
+    for (const auto& str_assFeat_kvPair : leftABF->featDict->featMap)
+    {
+        // get the key that we will be checking both maps against
+        std::string key = str_assFeat_kvPair.first;
+
+        if (key == "aVal")
+        {
+            // we want to ingore the aVal field
+            continue;
+        }
+
+        // make sure rightABF has the same map key field before checking it
+        auto checkIfKeyExists = rightABF->featDict->featMap.find(key);
+        if (checkIfKeyExists == rightABF->featDict->featMap.end())
+        {
+            // a key exists in leftABF that does not exist in rightABF, so they must be different
+            return false;
+        }
+
+        // compare leftABF's key/assFeat to rightABF's key/assFeat
+        if (!compareAssFeat(leftABF->featDict->featMap[key], rightABF->featDict->featMap[key]))
+        {
+            // if this is false, the two assFeats are different
+            return false;
+        }
+    }
+
+    // we never returned false meaning we never found any differences meaning they are the same abf
+    return true;
+}
+
+// this function is only called in addRemap when an error occurs due to inValue or outValue being an unknown type
+std::string demangle(const char* mangledName)
+{
+    int status = 0;
+    char* demangled = abi::__cxa_demangle(mangledName, nullptr, nullptr, &status);
+    std::string result(demangled ? demangled : mangledName);
+    std::free(demangled);
+    return result;
+}
+
+// adds a remap bit field to this aV. this function must be called with at least the uri parameter
+// all the other params are optional and will use default values if not included in the function call
+// (default values are defined in .h file)
+void assetVar::addRemap(std::string uri, int offset, const std::any& inValue, const std::any& outValue,
+                        const std::any& ifChanged, std::string fims, std::string replyto)
+{
+    // make sure our uri param is valid
+    if (!validURI(uri))
+    {
+        FPS_PRINT_ERROR(
+            "The input string [{}] to the function [addRemap] is not a valid uri. No changes were made to aV [{}:{}]",
+            uri, comp, name);
+        return;
+    }
+
+    // create a new assetBitField aka ABF (this will be the "uri" field in the remap action)
+    assetBitField* newABF = new assetBitField(nullptr);
+
+    // add the "uri" feature to our new ABF
+    newABF->addFeat((char*)"uri", (char*)uri.c_str());
+
+    // if we have offset, add it as a feat
+    if (offset != 0)
+    {
+        newABF->addFeat((char*)"offset", offset);
+    }
+
+    // check if our fims param is valid, then add it
+    if (!fims.empty())
+    {
+        bool fimsErr = false;
+
+        // ensure that our fims param is either "get", "set", or "pub". if its get, we need a replyto
+        if (fims != "get" && fims != "set" && fims != "pub")
+        {
+            FPS_PRINT_ERROR(
+                "[{}] was called on aV [{}:{}] with fims options [{}]. fims options must only be \"get\", \"set\", or \"pub\"",
+                __func__, comp, name, fims);
+            fimsErr = true;
+        }
+
+        // if fims is a "get", we need a reply to
+        if (fims == "get")
+        {
+            if (!replyto.empty())
+            {
+                // make sure that our reply to is a valid uri
+                if (!validURI(replyto))
+                {
+                    FPS_PRINT_ERROR(
+                        "[{}] was called on aV [{}:{}] with fims option [{}] but \"replyto\" parameter [{}] is not a valid uri",
+                        __func__, comp, name, fims, replyto);
+                    fimsErr = true;
+                }
+                else
+                {
+                    // add a replyto feat if we have one and its valid
+                    newABF->addFeat((char*)"replyto", (char*)replyto.c_str());
+                }
+            }
+            else
+            {
+                // fims is a get and replyto is empty
+                FPS_PRINT_ERROR(
+                    "[{}] was called on aV [{}:{}] with fims option [{}] but does not contain a \"replyto\" parameter",
+                    __func__, comp, name, fims);
+                fimsErr = true;
+            }
+        }
+
+        if (fimsErr)
+        {
+            // delete the "new" call we made for our abf
+            delete newABF;
+
+            // if we arent valid, return
+            return;
+        }
+
+        newABF->addFeat((char*)"fims", (char*)fims.c_str());
+    }
+
+    // determine the type of our inValue and then add it
+    if (inValue.type() != typeid(void) && inValue.type() != typeid(void*))
+    {
+        if (inValue.type() == typeid(bool))  // bool
+        {
+            bool inValTyped = std::any_cast<bool>(inValue);
+            newABF->addFeat((char*)"inValue", inValTyped);
+        }
+        else if (inValue.type() == typeid(int))  // int
+        {
+            // NOTE!!! all aVal's in the ess controller are handled as doubles and cast to doubles. we need to cast any
+            // in coming ints to doubles otherwise remapping wont work
+            double inValTyped = (double)std::any_cast<int>(inValue);
+            newABF->addFeat((char*)"inValue", inValTyped);
+        }
+        else if (inValue.type() == typeid(double))  // double
+        {
+            double inValTyped = std::any_cast<double>(inValue);
+            newABF->addFeat((char*)"inValue", inValTyped);
+        }
+        else if (inValue.type() == typeid(std::string))  // string
+        {
+            std::string inValTyped = std::any_cast<std::string>(inValue);
+            newABF->addFeat((char*)"inValue", (char*)inValTyped.c_str());
+        }
+        else if (inValue.type() == typeid(char*))  // char*
+        {
+            char* inValTyped = std::any_cast<char*>(inValue);
+            newABF->addFeat((char*)"inValue", inValTyped);
+        }
+        else if (inValue.type() == typeid(const char*))  // const char*
+        {
+            char* inValTyped = std::any_cast<char*>(inValue);
+            newABF->addFeat((char*)"inValue", inValTyped);
+        }
+        else
+        {
+            FPS_PRINT_ERROR(
+                "[{}] function was called on aV [{}:{}] but \"inValue\" has unknown type [{}]. Please ensure inValue is a bool, int, double, string, or char*",
+                __func__, comp, name, demangle(outValue.type().name()));
+
+            // delete the "new" call we made for our abf
+            delete newABF;
+
+            // if we arent valid, return
+            return;
+        }
+    }
+
+    // determine the type of our outValue and then add it
+    if (outValue.type() != typeid(void) && inValue.type() != typeid(void*))
+    {
+        if (outValue.type() == typeid(bool))  // bool
+        {
+            bool outValTyped = std::any_cast<bool>(outValue);
+            newABF->addFeat((char*)"outValue", outValTyped);
+        }
+        else if (outValue.type() == typeid(int))  // int
+        {
+            // NOTE!!! all aVal's in the ess controller are handled as doubles and cast to doubles. we need to cast any
+            // outValue ints to doubles otherwise remapping wont work
+            double outValTyped = (double)std::any_cast<int>(outValue);
+            newABF->addFeat((char*)"outValue", outValTyped);
+        }
+        else if (outValue.type() == typeid(double))  // double
+        {
+            double outValTyped = std::any_cast<double>(outValue);
+            newABF->addFeat((char*)"outValue", outValTyped);
+        }
+        else if (outValue.type() == typeid(std::string))  // string
+        {
+            std::string outValTyped = std::any_cast<std::string>(outValue);
+            newABF->addFeat((char*)"outValue", (char*)outValTyped.c_str());
+        }
+        else if (outValue.type() == typeid(char*))  // char*
+        {
+            char* outValTyped = std::any_cast<char*>(outValue);
+            newABF->addFeat((char*)"outValue", outValTyped);
+        }
+        else if (outValue.type() == typeid(const char*))  // const char*
+        {
+            char* outValTyped = std::any_cast<char*>(outValue);
+            newABF->addFeat((char*)"outValue", outValTyped);
+        }
+        else
+        {
+            FPS_PRINT_ERROR(
+                "[{}] function was called on aV [{}:{}] but \"outValue\" has unknown type [{}]. Please ensure outValue is a bool, int, double, string, or char*",
+                __func__, comp, name, demangle(outValue.type().name()));
+
+            // delete the "new" call we made for our abf
+            delete newABF;
+
+            // if we arent valid, return
+            return;
+        }
+    }
+
+    // get our if changed value
+    // ifChanged is typed as a std::any so that a default value could be allowed (default cant be false or true since
+    // those are both valid fields)
+    if (ifChanged.type() != typeid(void) && ifChanged.type() != typeid(void*))
+    {
+        if (ifChanged.type() == typeid(bool))
+        {
+            bool bval = std::any_cast<bool>(ifChanged);
+            newABF->addFeat((char*)"ifChanged", bval);
+        }
+        else
+        {
+            FPS_PRINT_ERROR(
+                "[{}] function was called on aV [{}:{}] but \"ifChanged\" has unknown type [{}]. Please ensure ifChanged is a bool",
+                __func__, comp, name, demangle(ifChanged.type().name()));
+
+            // delete the "new" call we made for our abf
+            delete newABF;
+
+            // if we arent valid, return
+            return;
+        }
+    }
+
+    // determine what fields our aV currently has and create fields if need be
+    if (!extras)
+    {
+        // assetExtras clean up is handled by the assetVar
+        extras = new assetExtras;
+    }
+
+    // we have the aV and we need to get to that aV's remap assetAction
+    assetExtras* avExtras = extras;
+
+    // get aV's onSet actions vector
+    std::vector<assetAction*>* onSetActionsVec = &avExtras->actVec["onSet"];
+
+    // Use std::find_if lambda function to find the onSetAction with the name "remap"
+    auto it = std::find_if(onSetActionsVec->begin(), onSetActionsVec->end(),
+                           [](assetAction* action) { return action->name == "remap"; });
+
+    // get a pointer to our remapAction
+    assetAction* remapAction;
+    if (it != onSetActionsVec->end())
+    {
+        // if our map did not reach the end, we found our remap action
+        remapAction = *it;
+    }
+    else
+    {
+        // if our map did reach the end, we need to create a new remap action
+        remapAction = new assetAction((char*)"remap");
+
+        // insert our remapAction into our onSetActions vector
+        onSetActionsVec->push_back(remapAction);
+    }
+
+    // check if our new abf contains the exact same uri string as an abf that already exists in our remapAction's
+    // Abitmap
+    for (int i = 0; i < (int)remapAction->Abitmap.size(); i++)
+    {
+        assetBitField* existingABF = remapAction->Abitmap[i];
+
+        // ensure that our newABF is actually new
+        if (sameAssetBitField(existingABF, newABF))
+        {
+            // if our newABF is the exact same as an existing ABF, we dont need to add a duplicate to our Abitmap
+            delete newABF;
+            return;
+        }
+    }
+
+    // add our new ABF to our remapAction's Abitmap
+    int emptyIdx = remapAction->idx++;
+    remapAction->Abitmap[emptyIdx] = newABF;
+}
+
 /***********************************************
  *                 VarsMap
  ***********************************************/

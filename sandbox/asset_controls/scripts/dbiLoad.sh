@@ -3,6 +3,19 @@
 fims_send="/usr/local/bin/fims_send"
 # args=("$@")
 
+pgrep -x fims_server > /dev/null
+if [ $? -ne 0 ]; then
+    /usr/local/bin/fims_server &
+fi
+pgrep -x mongod > /dev/null
+if [ $? -ne 0 ]; then
+    mongod --config /etc/mongod.conf
+fi
+pgrep -x dbi > /dev/null
+if [ $? -ne 0 ]; then
+    /usr/local/bin/dbi &
+fi
+
 if [ "$#" -lt 1 ]; then
     echo -e "[dbi_load.sh] you have died of dysentery, try again."
     exit 1
@@ -24,7 +37,7 @@ folders=("ess_controller")
 for i in "${folders[@]}"; do
     echo $i
     if [ "$i" == "ess_controller" ]; then
-        FILES=$(find $path/asset_controlls/config/ess_controller -type f -name '*.json') # ! -name '*_file.json')
+        FILES=$(find $path/ess_controller -type f -name '*.json') # ! -name '*_file.json')
         for f in $FILES
         do
             fName=$(basename ${f})

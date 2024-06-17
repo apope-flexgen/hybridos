@@ -8,19 +8,24 @@ int HeartbeatTimer(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims,
 int ThreadSetup(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV);
 
 // model object setup functions
-// int setupReference(varsmap &vmap, varmap &amap, const char* aname, fims*
-// p_fims, assetVar* aV); int setupDC_Augmentation(varsmap &vmap, varmap &amap,
-// const char* aname, fims* p_fims, assetVar* aV); int
-// setupHighLevelController(varsmap &vmap, varmap &amap, const char* aname,
-// fims* p_fims, assetVar* aV); int setupLowLevelController(varsmap &vmap,
-// varmap &amap, const char* aname, fims* p_fims, assetVar* aV);
+int setupReference(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV);
+int setupDC_Augmentation(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV);
+int setupHighLevelController(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV);
+int setupLowLevelController(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV);
+int setupBatteryBalancing(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV);
+int setupRack(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV);
+int setupLowPassFilter(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV);
+int setupLPFDummy(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV);
+
+// ESS funcitonalization config wrappers
+int BatteryRackBalancingConfigWrapper(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV);
+int LowPassFilterConfigWrapper(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV);
 }
 
 // called in ess_controller.cpp
 // sets up all datamap functions that need to be run on the scheduler
-int SetupDatamapSched(scheduler* sched, asset_manager* am)
+int SetupDatamapSched(asset_manager* am)
 {
-    UNUSED(sched);
     const char* aname = am->name.c_str();
 
     am->vm->setFunc(*am->vmap, aname, "RunThread", (void*)&RunThread);
@@ -29,12 +34,16 @@ int SetupDatamapSched(scheduler* sched, asset_manager* am)
     am->vm->setFunc(*am->vmap, aname, "HeartbeatTimer", (void*)&HeartbeatTimer);
 
     // model object setup functions
-    // am->vm->setFunc(*am->vmap,  aname, "Reference", (void*)&setupReference);
-    // am->vm->setFunc(*am->vmap,  aname, "DC_Augmentation",
-    // (void*)&setupDC_Augmentation); am->vm->setFunc(*am->vmap,  aname,
-    // "HighLevelController",   (void*)&setupHighLevelController);
-    // am->vm->setFunc(*am->vmap,  aname, "LowLevelController",
-    // (void*)&setupLowLevelController);
+    am->vm->setFunc(*am->vmap, aname, "Reference", (void*)&setupReference);
+    am->vm->setFunc(*am->vmap, aname, "DC_Augmentation", (void*)&setupDC_Augmentation);
+    am->vm->setFunc(*am->vmap, aname, "HighLevelController", (void*)&setupHighLevelController);
+    am->vm->setFunc(*am->vmap, aname, "LowLevelController", (void*)&setupLowLevelController);
+    am->vm->setFunc(*am->vmap, aname, "BatteryBalancing", (void*)&setupBatteryBalancing);
+    am->vm->setFunc(*am->vmap, aname, "LowPassFilter", (void*)&setupLowPassFilter);
+    am->vm->setFunc(*am->vmap, aname, "LowPassFilterBRB", (void*)&setupLPFDummy);
+    am->vm->setFunc(*am->vmap, aname, "Rack", (void*)&setupRack);
+    am->vm->setFunc(*am->vmap, aname, "BRB", (void*)&BatteryRackBalancingConfigWrapper);
+    am->vm->setFunc(*am->vmap, aname, "LPFilter", (void*)&LowPassFilterConfigWrapper);
 
     return 0;
 }
@@ -61,17 +70,14 @@ bool checkParams(varsmap& vmap, assetVar* aV)
     {
         if (aV->getcParam("enable") != NULL)
         {
-            // if getcParam does not return null, the param is a string that is the
-            // uri of another aV
+            // if getcParam does not return null, the param is a string that is the uri of another aV
             std::string uri = aV->getcParam("enable");
 
             assetVar* enableAV = aV->am->vm->getVar(vmap, (char*)uri.c_str(), nullptr);
             if (!enableAV)
             {
-                FPS_PRINT_ERROR(
-                    "Could not find assetVar with \"enable\" param string "
-                    "[{}]. Defaulting enable to true",
-                    uri);
+                FPS_PRINT_ERROR("Could not find assetVar with \"enable\" param string [{}]. Defaulting enable to true",
+                                uri);
             }
             else
             {
@@ -98,17 +104,14 @@ bool checkParams(varsmap& vmap, assetVar* aV)
         aV->setParam("threadName", (char*)dflt.c_str());
 
         if (debug)
-            FPS_PRINT_ERROR(
-                "{} could not find \"thread_name\" parameter in assetVar "
-                "[{}]. Using default name [{}]",
-                __func__, aV->name, dflt);
+            FPS_PRINT_WARN("{} could not find \"threadName\" parameter in assetVar [{}]. Using default name [{}]",
+                           __func__, aV->name, dflt);
     }
 
     if (!aV->gotParam("datamapName"))  // no datamap name
     {
         // if no given datamap name, use default one
-        // default name is "Default_Datamap_X" where X is the number of current
-        // datamaps + 1
+        // default name is "Default_Datamap_X" where X is the number of current datamaps + 1
 
         int num_datamap = dataMaps.size() + 1;
         std::string num = std::to_string(num_datamap);
@@ -116,30 +119,41 @@ bool checkParams(varsmap& vmap, assetVar* aV)
         std::string dflt = "Default_Datamap_" + num;
         aV->setParam("datamapName", (char*)dflt.c_str());
 
-        // make new datamap here
-        DataMap* dm = dataMaps[dflt];
-        if (!dm)
+        // check if this default datamap already exists
+        auto it = dataMaps.find(dflt);
+        if (it == dataMaps.end())
         {
-            dm = new DataMap;
+            // make new datamap here
+            dataMaps[dflt] = std::make_unique<DataMap>();
+            dataMaps[dflt].get()->name = dflt;
         }
-        dm->name = dflt;
-        dataMaps[dm->name] = dm;
 
         if (debug)
-            FPS_PRINT_INFO(
-                "{} could not find \"datamap_name\" parameter in assetVar "
-                "[{}]. Creating new dataMap using default name [{}]",
+            FPS_PRINT_WARN(
+                "{} could not find \"datamapName\" parameter in assetVar [{}]. Creating new dataMap using default name [{}]",
                 __func__, aV->name, dflt);
     }
     else
     {
+        // make a new datamap if we need one
         std::string dmName = aV->getcParam("datamapName");
-        if (!dataMaps[dmName])
+        auto it = dataMaps.find(dmName);
+
+        if (it == dataMaps.end())
         {
-            DataMap* dm = new DataMap;
-            dm->name = aV->getcParam("datamapName");
-            dataMaps[dm->name] = dm;
+            // if it == .end, we have reached the end of our map and not found our key
+            dataMaps[dmName] = std::make_unique<DataMap>();
+            dataMaps[dmName].get()->name = dmName;
         }
+    }
+
+    // RunThread must have a "func1" parameter
+    if (!aV->gotParam("func1"))
+    {
+        FPS_PRINT_ERROR(
+            "AV [{}] has no \"func1\" parameter and RunThread does not know what function to run. Please configure aV [{}] to have a \"func1\" parameter",
+            aV->name, aV->name);
+        return false;
     }
 
     // used to reload assetVar on startup or when we encounter an error
@@ -154,8 +168,7 @@ bool checkParams(varsmap& vmap, assetVar* aV)
         aV->setParam("runStatus", SETUP_CONTEXT);
     }
 
-    // this is set true after our AV's function has get, run, and sent data back
-    // to amap, and is ready to run again
+    // this is set true after our AV's function has get, run, and sent data back to amap, and is ready to run again
     if (!aV->gotParam("done"))
     {
         aV->setParam("done", false);
@@ -164,8 +177,7 @@ bool checkParams(varsmap& vmap, assetVar* aV)
     return true;
 }
 
-// rewrite this aV so that functions that have instances are expanded out to
-// additional consecutive functions
+// rewrite this aV so that functions that have instances are expanded out to additional consecutive functions
 void reConfigure(assetVar* aV)
 {
     bool debug = aV->getbParam("debug");
@@ -193,12 +205,16 @@ void reConfigure(assetVar* aV)
         std::string funcX = "func" + numStr;
         if (aV->gotParam((char*)funcX.c_str()))
         {
+            // make sure that this is a real function name and hasnt been cleared
+            std::string fname = aV->getcParam((char*)funcX.c_str());
+            if (fname == "")
+                continue;
+
             // check if we have a "funcX_instances" parameter
             std::string funcX_instances = funcX + "_instances";
             if (aV->gotParam((char*)funcX_instances.c_str()))
             {
-                // funcX does have instances, so assign instances.at(X) = the number of
-                // instances for funcX
+                // funcX does have instances, so assign instances.at(X) = the number of instances for funcX
                 int num_instances_for_this_func = aV->getiParam((char*)funcX_instances.c_str());
                 instances.push_back(num_instances_for_this_func);
             }
@@ -228,8 +244,7 @@ void reConfigure(assetVar* aV)
         std::string funcX = "func" + std::to_string(element);
         std::string funcName = aV->getcParam((char*)funcX.c_str());
 
-        // for each instance of this function, push this funcName onto the
-        // funcNamesVector
+        // for each instance of this function, push this funcName onto the funcNamesVector
         for (int i = 1; i <= instances.at(element); i++)
         {
             // add which instance of the function this is to the end of the func name
@@ -242,8 +257,7 @@ void reConfigure(assetVar* aV)
                 FPS_PRINT_INFO("pushed [{}] to funcNamesVec.at({})", funcNameNum, (int)funcNamesVec.size() - 1);
         }
     }
-    // once we get here, the index of funcNamesVec is its function number and the
-    // value string is the function name
+    // once we get here, the index of funcNamesVec is its function number and the value string is the function name
 
     // loop over the funcNamesVector
     for (int x = 1; x < (int)funcNamesVec.size(); x++)
@@ -314,10 +328,10 @@ void addAVtoThread(assetVar* aV, ess_thread* ess, assetVar* threadAV)
             // check if we have a funcX param on our aV
             std::string numStr = std::to_string(num);
             std::string funcX = "func" + numStr;
-            if (!aV->gotParam((char*)funcX.c_str()))
+            if (!aV->gotParam((char*)funcX.c_str()) || std::string(aV->getcParam((char*)funcX.c_str())) == "")
             {
-                // we have set up all the funcs listed on our av and now we have found a
-                // func# that doesnt exist, break out of loop
+                // we have set up all the funcs listed on our av and now we have found a func# that doesnt exist, break
+                // out of loop
                 if (debug)
                     FPS_PRINT_INFO("Could not find [{}] param. Added all func params to threadAV", funcX);
 
@@ -341,13 +355,11 @@ void addAVtoThread(assetVar* aV, ess_thread* ess, assetVar* threadAV)
         }
     }
 
-    // store this assetVar in our threads list of all assetVars and given it an
-    // assigned number
+    // store this assetVar in our threads list of all assetVars and given it an assigned number
     ess->contexts[aV->name] = std::make_pair(aV, numberForThisAV);
 }
 
-// if RunThread runs successfully, we decrement this aV's overrun counter by a
-// configurable value (default 1)
+// if RunThread runs successfully, we decrement this aV's overrun counter by a configurable value (default 1)
 void decOverrun(assetVar* aV, assetVar* threadAV)
 {
     if (!aV->gotParam("decrementOverrun"))
@@ -367,8 +379,7 @@ void decOverrun(assetVar* aV, assetVar* threadAV)
     }
 }
 
-// set the transfer AV so that it can be access from anywhere and it can talk to
-// its parent
+// set the transfer AV so that it can be access from anywhere and it can talk to its parent
 void setTransferAV(assetVar* aV, assetVar* transferAV, std::string comp)
 {
     bool debug = aV->getbParam("debug");
@@ -396,8 +407,8 @@ void setTransferAV(assetVar* aV, assetVar* transferAV, std::string comp)
     aV->setParam("transfer_AV", (char*)comp.c_str());
 }
 
-// count and return the number of iterations we have been in SETUP_CHECK, return
-// failure if we have exceeded our setupTimeLimit (set in templateAV)
+// count and return the number of iterations we have been in SETUP_CHECK, return failure if we have exceeded our
+// setupTimeLimit (set in templateAV)
 int limitSetupTime(assetVar* aV, assetVar* threadAV)
 {
     bool debug = aV->getbParam("debug");
@@ -415,8 +426,8 @@ int limitSetupTime(assetVar* aV, assetVar* threadAV)
         // set a parameter for a setup timer
         if (!aV->gotParam("setupTimeLimit"))
         {
-            // if this aV does not have a setupTimeLimit parameter, default to the
-            // value on our threadAV (gotten from TEMPLATE AV)
+            // if this aV does not have a setupTimeLimit parameter, default to the value on our threadAV (gotten from
+            // TEMPLATE AV)
             aV->setParam("setupTimeLimit", threadAV->getdParam("setupTimeLimit"));
         }
         double setupTimeLimit = aV->getdParam("setupTimeLimit");
@@ -428,9 +439,8 @@ int limitSetupTime(assetVar* aV, assetVar* threadAV)
         if (debug)
             FPS_PRINT_INFO("    setupTimeLimit is [{}] and every is [{}]", setupTimeLimit, every);
 
-        // convert setupTimeLimit (in seconds) to # of iterations of RunThread by
-        // dividing our setupTimeLimit by the number of times we run per second
-        // (repTime). round up if there is a remainder
+        // convert setupTimeLimit (in seconds) to # of iterations of RunThread by dividing our setupTimeLimit by the
+        // number of times we run per second (repTime). round up if there is a remainder
         double iteration_limit = std::ceil(setupTimeLimit / every);
         aV->setParam("checkSetupLimit", iteration_limit);
 
@@ -439,21 +449,14 @@ int limitSetupTime(assetVar* aV, assetVar* threadAV)
     }
     int check_setup_limit = aV->getiParam("checkSetupLimit");
 
-    if (check_setup_iteration > check_setup_limit)  // check_setup_limit is
-                                                    // configurable in the
-                                                    // templateAV from the
-                                                    // setupTimeLimit
+    if (check_setup_iteration >
+        check_setup_limit)  // check_setup_limit is configurable in the templateAV from the setupTimeLimit
     {
-        // if we check set up X amount of times and it still isnt set up, signal an
-        // error
+        // if we check set up X amount of times and it still isnt set up, signal an error
         double setupTimeLimit = aV->getdParam("setupTimeLimit");
-        std::string errorMsg =
-            "The time it is taking to set up our functions has "
-            "exceeded our setupTimeLimit of " +
-            std::to_string(setupTimeLimit) +
-            " seconds. Ensure source files for aV [{}]'s setup "
-            "functions exist in Makefile and functions are "
-            "linked in SetupDatamapSched()";
+        std::string errorMsg = "The time it is taking to set up our functions has exceeded our setupTimeLimit of " +
+                               std::to_string(setupTimeLimit) + " seconds. Ensure source files for aV [" + aV->name +
+                               "]'s setup functions exist in Makefile and functions are linked in SetupDatamapSched()";
         aV->setParam("errorType", (char*)"fault");
         aV->setParam("errorMsg", (char*)errorMsg.c_str());
 
@@ -461,10 +464,7 @@ int limitSetupTime(assetVar* aV, assetVar* threadAV)
         aV->setParam("checkSetupCounter", 0);
 
         if (debug)
-            FPS_PRINT_ERROR(
-                "We did not get set up in the given limit of {} seconds, "
-                "signalingerror",
-                setupTimeLimit);
+            FPS_PRINT_ERROR("We did not get set up in the given limit of {} seconds, signalingerror", setupTimeLimit);
 
         signalThread(aV, ERROR);
         return EXCEEDED_TIME_LIMIT;
@@ -477,8 +477,7 @@ int limitSetupTime(assetVar* aV, assetVar* threadAV)
     // "checkSetupCounter" param is increased in the setupDone function
 }
 
-// loop over every setupX parameter and return true if its done; return false if
-// not done
+// loop over every setupX parameter and return true if its done; return false if not done
 bool setupDone(assetVar* aV, int setup_iteration)
 {
     bool debug = aV->getbParam("debug");
@@ -493,8 +492,7 @@ bool setupDone(assetVar* aV, int setup_iteration)
         {
             if (!aV->getbParam((char*)setupNum.c_str()))
             {
-                // this setup function is not done yet, we can stop checking setup
-                // params and return false
+                // this setup function is not done yet, we can stop checking setup params and return false
                 if (debug)
                     FPS_PRINT_INFO(" [{}] is [{}] on aV [{}]", setupNum, aV->getbParam((char*)setupNum.c_str()),
                                    aV->name);
@@ -504,13 +502,9 @@ bool setupDone(assetVar* aV, int setup_iteration)
         }
         else
         {
-            // every "setupX" we checked returned true and there are no more setupX
-            // params, return true
+            // every "setupX" we checked returned true and there are no more setupX params, return true
             if (debug)
-                FPS_PRINT_INFO(
-                    "There is no [{}] param, so we do not need to keep "
-                    "checking for more params",
-                    setupNum);
+                FPS_PRINT_INFO("There is no [{}] param, so we do not need to keep checking for more params", setupNum);
             return true;
         }
     }
@@ -518,12 +512,12 @@ bool setupDone(assetVar* aV, int setup_iteration)
     return false;  // we should never get to this return statement
 }
 
-// this is the function that manages our thread and all of the datamap contexts
-// its running
+// this is the function that manages our thread and all of the datamap contexts its running
 int RunThread(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV)
 {
     UNUSED(amap);
     UNUSED(p_fims);
+
     if (!checkParams(vmap, aV))
         return 0;
 
@@ -539,13 +533,14 @@ int RunThread(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, asse
     aV->setParam("logging_enabled", logging_enabled);
     aV->setParam("LogDir", LogDir);
 
-    std::string tname(aV->getcParam("threadName"));    // tname = thread name
-    std::string dmName(aV->getcParam("datamapName"));  // dmName = datamap name
-    assetVar* threadAV = getOrMakeThreadAV(vmap, aV->am->vm, tname);
+    std::string tname(aV->getcParam("threadName"));  // tname = thread name
 
     ess_thread* ess = threadMaps[tname];
     if (ess)
     {
+        std::string dmName(aV->getcParam("datamapName"));  // dmName = datamap name
+        assetVar* threadAV = getOrMakeThreadAV(vmap, aV->am->vm, tname);
+
         // setup phase
         int reload = aV->getiParam("reload");
         if (reload < 2)
@@ -592,8 +587,7 @@ int RunThread(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, asse
         }
 
         // check if our thread has told us that we are done
-        // dont set runStatus if our error flag is high (error flag is set by the
-        // fault handling state)
+        // dont set runStatus if our error flag is high (error flag is set by the fault handling state)
         if (aV->getbParam("done") && !aV->getbParam("error"))
         {
             aV->setParam("runStatus", RUN_CONTEXT);
@@ -615,31 +609,26 @@ int RunThread(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, asse
             aV->setParam("runStatus", WAITING_FOR_DONE);
             signalThread(aV, GET);
             if (debug)
-                FPS_PRINT_INFO(
-                    "signaling thread [{}] to start run sequence (GET) for "
-                    "datamap [{}]",
-                    tname, dmName);
+                FPS_PRINT_INFO("signaling thread [{}] to start run sequence (GET) for datamap [{}]", tname, dmName);
         }
 
         // flag setup function to create datamap and amap
         if (ess->core == SETUP_CONTEXT)  // 11
         {
-            // SETUP_CONTEXT creates an assetVar, uses that to run our setup function,
-            // then stays in SETUP_CHECK until all setup functions are done
+            // SETUP_CONTEXT creates an assetVar, uses that to run our setup function, then stays in SETUP_CHECK until
+            // all setup functions are done
 
             if (!aV->gotParam("setup"))
             {
                 aV->setParam("setup", SETUP_READY);
             }
-            int setup_state = aV->getiParam("setup");  // controls what setup state we
-                                                       // are in; set by partial reload
+            int setup_state = aV->getiParam("setup");  // controls what setup state we are in; set by partial reload
 
-            // create our transfer AV and send this assetVar to the thread so it can
-            // set us up
+            // create our transfer AV and send this assetVar to the thread so it can set us up
             if (setup_state == SETUP_READY)
             {
-                // make new transfer av that will be used for running our setup and
-                // datamap amap access functions on the core scheduler
+                // make new transfer av that will be used for running our setup and datamap amap access functions on the
+                // core scheduler
                 double dval = 0.0;
                 std::string comp = "/control/transfer:" + dmName;
                 assetVar* transferAV = vm->getVar(vmap, (char*)comp.c_str(), nullptr);
@@ -647,22 +636,22 @@ int RunThread(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, asse
                 {
                     // if this transferAV doesnt exist already, make it
                     transferAV = vm->makeVar(vmap, comp.c_str(), nullptr, dval);
+
+                    // set all the fields our transferAV needs
+                    setTransferAV(aV, transferAV, comp);
                 }
 
-                // set all the fields our transferAV needs
-                setTransferAV(aV, transferAV, comp);
                 if (debug)
                     FPS_PRINT_INFO("     got transfer AV [{}] in aV [{}] setup", transferAV->name, aV->name);
 
                 // tell our thread to set up all the functions on this aV
                 signalThread(aV, SETUP);
 
-                // put this aV in setup STANDBY mode to wait until all setup params have
-                // been made and all its functions have been scheduled
+                // put this aV in setup STANDBY mode to wait until all setup params have been made and all its functions
+                // have been scheduled
                 aV->setParam("setup", STANDBY);
 
-                // setup is set to SETUP_CHECK after all the setup functions are kicked
-                // off by the thread
+                // setup is set to SETUP_CHECK after all the setup functions are kicked off by the thread
             }
 
             if (setup_state == SETUP_CHECK)
@@ -690,8 +679,8 @@ int RunThread(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, asse
 
             if (setup_state == STANDBY)
             {
-                // if we get into this standby state, start our timer by counting each
-                // iteration we are in this state and incrementing "checkSetupCounter"
+                // if we get into this standby state, start our timer by counting each iteration we are in this state
+                // and incrementing "checkSetupCounter"
                 int setup_iteration = limitSetupTime(aV, threadAV);
                 if (setup_iteration == EXCEEDED_TIME_LIMIT)
                     return 0;  // error msg and flagging is done in limitSetupTime
@@ -699,22 +688,20 @@ int RunThread(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, asse
                 if (debug)
                     FPS_PRINT_INFO("In STANDBY setup state on iteration [{}]", setup_iteration);
 
-                // we dont need to call setupDone because the setup functions have not
-                // even been scheduled yet just inc our counter and return
+                // we dont need to call setupDone because the setup functions have not even been scheduled yet
+                // just inc our counter and return
                 aV->setParam("checkSetupCounter", setup_iteration + 1);
                 return 0;
 
-                // the thread will change our state to SETUP_CHECK if everything is
-                // working properly and the counter will not reset because the same
-                // params/functions are used in SETUP_CHECK
+                // the thread will change our state to SETUP_CHECK if everything is working properly and the counter
+                // will not reset because the same params/functions are used in SETUP_CHECK
             }
         }
 
         // handle the error we got
         if (ess->core == ERROR_ON_CONTEXT)  // 19
         {
-            // link our current amap to the /config/ess FaultDestination and
-            // AlarmDestination
+            // link our current amap to the /config/ess FaultDestination and AlarmDestination
             double dval = 0;
             linkVals(*vm, vmap, am->amap, "ess", "/config", dval, "FaultDestination", "AlarmDestination");
 
@@ -737,8 +724,7 @@ int RunThread(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, asse
             else
             {
                 FPS_PRINT_ERROR(
-                    "Error was triggered on aV [{}] with unknown error "
-                    "type [{}]. Setting error type to fault",
+                    "Error was triggered on aV [{}] with unknown error type [{}]. Setting error type to fault",
                     aV->name, errorType);
                 fault = true;
             }
@@ -762,7 +748,7 @@ int RunThread(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, asse
             // get the error message
             if (!aV->gotParam("errorMsg"))
             {
-                FPS_PRINT_ERROR("In Error state and do not have an errorMsg.", NULL);
+                FPS_PRINT_ERROR("In Error state and do not have an errorMsg.", nullptr);
                 aV->setParam("errorMsg", (char*)"No error message found");
             }
             std::string msg = aV->getcParam("errorMsg");
@@ -781,10 +767,8 @@ int RunThread(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, asse
                 // after getting an error, stall our aV
                 FPS_PRINT_ERROR("Stalling aV [{}] because of error: [{}]", aV->name, msg);
                 aV->setParam("runStatus", STALL);
-                aV->setParam("error", true);  // set this param so that RunThread doesnt
-                                              // run anymore functions after we've
-                                              // faulted (this param is checked in the
-                                              // "done" block)
+                aV->setParam("error", true);  // set this param so that RunThread doesnt run anymore functions after
+                                              // we've faulted (this param is checked in the "done" block)
                 aV->setParam("fault", true);
 
                 // disable our heartbeat timer
@@ -812,25 +796,22 @@ int RunThread(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, asse
 
                     if (alarmsOn.find(aV->name) == std::string::npos)
                     {
-                        // this means that the substring aV->name is not already contained
-                        // within alarmsOn. add aV->name to this string
+                        // this means that the substring aV->name is not already contained within alarmsOn. add aV->name
+                        // to this string
                         alarmsOn = alarmsOn + ", " + aV->name;
                         threadAV->setParam("AlarmsOn", (char*)alarmsOn.c_str());
                     }
 
-                    // if aV->name is already in our alarmsOn string, we dont want to add
-                    // it again and spam the param
+                    // if aV->name is already in our alarmsOn string, we dont want to add it again and spam the param
                 }
 
                 // we want to trigger our aV to run again so we dont get a 1 cycle delay
-                aV->setParam("error", false);  // clear this flag that was set by the
-                                               // thread so we can run again
+                aV->setParam("error", false);  // clear this flag that was set by the thread so we can run again
                 aV->setParam("runStatus", WAITING_FOR_DONE);
                 signalThread(aV, GET);
                 if (debug)
                     FPS_PRINT_INFO(
-                        "In ERROR_ON_CONTEXT alarm state and signaling thread "
-                        "[{}] to start run sequence (GET) for datamap [{}]",
+                        "In ERROR_ON_CONTEXT alarm state and signaling thread [{}] to start run sequence (GET) for datamap [{}]",
                         tname, dmName);
             }
 
@@ -842,10 +823,8 @@ int RunThread(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, asse
         // check if we are overran
         if (ess->core == WAITING_FOR_DONE)  // 10
         {
-            FPS_PRINT_WARN(
-                "{} tried to run function(s) on assetVar [{}] but "
-                "previous run has not completed",
-                __func__, aV->name);
+            FPS_PRINT_WARN("{} tried to run function(s) on assetVar [{}] but previous run has not completed", __func__,
+                           aV->name);
 
             if (!aV->gotParam("incrementOverrun"))
             {
@@ -874,15 +853,12 @@ int RunThread(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, asse
             else
             {
                 // set an alarm for overrunning but we're still under our limit
-                FPS_PRINT_WARN(
-                    "AV [{}] has overrun (counter = [{}]) but we arent over "
-                    "our limit of [{}]",
-                    aV->name, counter, limit);
+                FPS_PRINT_WARN("AV [{}] has overrun (counter = [{}]) but we arent over our limit of [{}]", aV->name,
+                               counter, limit);
 
                 std::string errorMsg = fmt::format(
-                    "AV [{}] has overrun (counter = [{}]) but we arent "
-                    "over our limit of [{}]",
-                    aV->name, counter, limit);
+                    "AV [{}] has overrun (counter = [{}]) but we arent over our limit of [{}]", aV->name, counter,
+                    limit);
                 aV->setParam("errorType", (char*)"alarm");
                 aV->setParam("errorMsg", (char*)errorMsg.c_str());
 
@@ -902,11 +878,13 @@ int RunThread(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, asse
     }
     else
     {
-        // we did not find this thread name in list of all threads, starting a new
-        // thread
+        // we did not find this thread name in list of all threads, starting a new thread
         if (debug)
             FPS_PRINT_INFO("Calling startThread with thread name: [{}]", tname, tname);
         startThread(aV, vmap, (char*)tname.c_str());
+
+        // start our heartbeat timer
+        heartbeatSetup(vmap, aV);
     }
 
     return 0;
@@ -918,6 +896,7 @@ int CoreAmapAccess(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims,
     UNUSED(amap);
     UNUSED(aname);
     UNUSED(p_fims);
+
     asset_manager* am = aV->am;
     VarMapUtils* vm = am->vm;
 
@@ -927,23 +906,18 @@ int CoreAmapAccess(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims,
     }
     int debug = aV->getbParam("debug");
 
-    bool logging_enabled = getLoggingEnabled(vmap, *aV->am->vm);
-    char* LogDir = getLogDir(vmap, *aV->am->vm);
-
     if (debug)
         FPS_PRINT_INFO(" running {} using assetVar [{}]  at time [{}]", __func__, aV->name, vm->get_time_dbl());
 
-    std::string dmName = "ERROR";  // default to this name in case we dont get a
-                                   // datamap name and throw an error to our catch
-                                   // block
+    std::string dmName =
+        "ERROR";  // default to this name in case we dont get a datamap name and throw an error to our catch block
     std::string op = "ERROR";
 
     // if we cant find our parent AV, time out
     if (!aV->gotParam("parentAV"))
     {
         FPS_PRINT_ERROR(
-            "assetVar [{}] does not have a \"parent_AV\" parameter and "
-            "we cannot send a signal back to the thread. Timing out",
+            "assetVar [{}] does not have a \"parent_AV\" parameter and we cannot send a signal back to the thread. Timing out",
             aV->name);
         return 0;
     }
@@ -953,20 +927,20 @@ int CoreAmapAccess(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims,
     if (!parent_AV)
     {
         FPS_PRINT_ERROR(
-            "Could not find assetVar with comp [{}]. This assetVar "
-            "({}) has no parent and cannot signal back to the thread. "
-            "Timing out",
+            "Could not find assetVar with comp [{}]. This assetVar ({}) has no parent and cannot signal back to the thread. Timing out",
             parent_uri, aV->name);
         return 0;
     }
-    if (debug) FPS_PRINT_INFO("Got parent_AV [{}]", parent_uri);
+    if (debug)
+        FPS_PRINT_INFO("Got parent_AV [{}]", parent_uri);
 
     // GET or SEND
     try
     {
         if (!aV->gotParam("datamapName"))
         {
-            FPS_PRINT_ERROR("In {} function and assetVar [{}] did not properly set a datamap name parameter", __func__, parent_uri);
+            FPS_PRINT_ERROR("In {} function and assetVar [{}] did not properly set a datamap name parameter", __func__,
+                            parent_uri);
             std::string nameError = "transferAV for [" + parent_uri + "] has no datamap name parameter";
             throw std::invalid_argument(nameError);
         }
@@ -981,7 +955,8 @@ int CoreAmapAccess(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims,
         std::string funcName_i = aV->getcParam("function");
 
         // get the function name
-        size_t underscore_index = funcName_i.find_last_of('_');                  // gets the index of the last '_' -> the '_' separates the func name and the instance
+        size_t underscore_index = funcName_i.find_last_of(
+            '_');  // gets the index of the last '_' -> the '_' separates the func name and the instance
         std::string funcName = funcName_i.substr(0, underscore_index);
 
         // get the instance from the func name
@@ -989,26 +964,30 @@ int CoreAmapAccess(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims,
         int instance = std::stoi(instanceNum);
 
         // get the run function pointer from our global map
-        DataMap* dm = dataMaps[dmName];
-        if (!dm)
+        DataMap* dm = nullptr;
+        auto it = dataMaps.find(dmName);
+        if (it != dataMaps.end())
         {
-            // we could not find that datamap name in our global map of all datamaps,
-            // signal error
+            dm = it->second.get();
+        }
+        else
+        {
+            // we could not find that datamap name in our global map of all datamaps, signal error
             FPS_PRINT_ERROR("Datamap name [{}] not found in global list of dataMaps", dmName);
             std::string nameError = "Could not find datamap with name  [" + dmName + "]";
             throw std::invalid_argument(nameError);
         }
 
         // get the amap specific to this assetVar and instance
-        std::string amname = parent_uri + "_" + funcName_i + "_asset_manager";
+        std::string tmp = replaceSlashAndColonWithUnderscore(parent_uri);
+        tmp.erase(tmp.begin());
+        std::string amname = tmp + "_" + funcName_i + "_asset_manager";
         am = vm->getaM(vmap, amname.c_str());
         if (!am)
         {
             // this asset manager should be created in setup function
             FPS_PRINT_ERROR(
-                "Could not find asset manager [{}], we do not have "
-                "access to an amap. Ensure setup function for {} creates "
-                "an asset manager ",
+                "Could not find asset manager [{}], we do not have access to an amap. Ensure setup function for {} creates an asset manager ",
                 amname, funcName);
             std::string amError = "Asset manager [" + amname + "] does not exist.";
             throw std::invalid_argument(amError);
@@ -1017,7 +996,9 @@ int CoreAmapAccess(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims,
         // are we getting from or sending to the amap?
         if (!aV->gotParam("operation"))
         {
-            FPS_PRINT_ERROR("In {} function and assetVar [{}] never set an operation parameter; it does not know whether to get from or send to amap", __func__, parent_uri);
+            FPS_PRINT_ERROR(
+                "In {} function and assetVar [{}] never set an operation parameter; it does not know whether to get from or send to amap",
+                __func__, parent_uri);
             std::string opError = "transferAV for [" + parent_uri + "] has no operation parameter";
             throw std::invalid_argument(opError);
         }
@@ -1028,11 +1009,13 @@ int CoreAmapAccess(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims,
             std::string getInputsKey = funcName + "Inputs";
 
             // use global map to get reference to model input block
-            void *inputRef = modelFcnRef[getInputsKey];
+            void* inputRef = modelFcnRef[getInputsKey];
             if (!inputRef)
             {
                 // our datamap name does not have the associated ModelObjectInputs
-                FPS_PRINT_ERROR("Datamap Inputs [{}] does not exist in global map of model object inputs. Check [{}] setup file", getInputsKey, funcName);
+                FPS_PRINT_ERROR(
+                    "Datamap Inputs [{}] does not exist in global map of model object inputs. Check [{}] setup file",
+                    getInputsKey, funcName);
                 std::string keyError = "Could not find [" + getInputsKey + "] in global map of model object inputs";
                 throw std::invalid_argument(keyError);
             }
@@ -1048,7 +1031,8 @@ int CoreAmapAccess(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims,
 
             // run getFromAmap on this datamap
             dm->getFromAmap(inputBlock, am, modelInputs);
-            if (debug) FPS_PRINT_INFO("    just ran dm->getFromAmap using datamap [{}] and am [{}]", dm->name, am->name); 
+            if (debug)
+                FPS_PRINT_INFO("    just ran dm->getFromAmap using datamap [{}] and am [{}]", dm->name, am->name);
 
             signalThread(parent_AV, RUN);
         }
@@ -1057,11 +1041,13 @@ int CoreAmapAccess(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims,
             std::string getOutputsKey = funcName + "Outputs";
 
             // use map to get dmReferenceOutput
-            void *outputRef = modelFcnRef[getOutputsKey];
+            void* outputRef = modelFcnRef[getOutputsKey];
             if (!outputRef)
             {
                 // our datamap name does not have the associated ModelObjectOutputs
-                FPS_PRINT_ERROR("Datamap Outputs [{}] does not exist in global map of model object outputs. Check [{}] setup file", getOutputsKey, funcName);
+                FPS_PRINT_ERROR(
+                    "Datamap Outputs [{}] does not exist in global map of model object outputs. Check [{}] setup file",
+                    getOutputsKey, funcName);
                 std::string keyError = "Could not find [" + getOutputsKey + "] in global map of model object outputs";
                 throw std::invalid_argument(keyError);
             }
@@ -1077,14 +1063,16 @@ int CoreAmapAccess(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims,
 
             // run send to amap using this asset manager and datamap
             dm->sendToAmap(vmap, outputBlock, am, modelOutputs);
-            if (debug) FPS_PRINT_INFO("    just ran dm->sendToAmap using datamap [{}] and am [{}]\n", dm->name, am->name);
+            if (debug)
+                FPS_PRINT_INFO("    just ran dm->sendToAmap using datamap [{}] and am [{}]\n", dm->name, am->name);
 
             signalThread(parent_AV, DONE);
         }
         else
         {
             // unknown operation
-            FPS_PRINT_ERROR("In {} function and assetVar [{}] triggered an unknown operation parameter [{}]", __func__, parent_uri, op);
+            FPS_PRINT_ERROR("In {} function and assetVar [{}] triggered an unknown operation parameter [{}]", __func__,
+                            parent_uri, op);
             std::string opError = "AssetVar [" + parent_uri + "] does not know what to do with operation [" + op + "]";
             throw std::invalid_argument(opError);
         }
@@ -1092,26 +1080,11 @@ int CoreAmapAccess(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims,
     catch (const std::exception& e)
     {
         if (debug)
-            FPS_PRINT_ERROR(
-                "Tried to run {} using operation [{}] and datamap [{}] "
-                "model object and failed: {}",
-                __func__, op, dmName, e.what());
+            FPS_PRINT_ERROR("Tried to run {} using operation [{}] and datamap [{}] model object and failed: {}",
+                            __func__, op, dmName, e.what());
 
         std::string errorMsg = e.what();
-        parent_AV->setParam("errorType", (char*)"fault");
-        parent_AV->setParam("errorMsg", (char*)errorMsg.c_str());
-
-        ESSLogger::get().critical(
-            "While trying to run {} with datamap [{}] and "
-            "assetVar [{}], we got this error: [{}] ",
-            __func__, dmName, aV->name, e.what());
-        if (logging_enabled)
-        {
-            std::string dirAndFile = fmt::format("{}/{}.{}", LogDir, "datamap_errors", "txt");
-            ESSLogger::get().logIt(dirAndFile);
-        }
-
-        signalThread(parent_AV, ERROR);
+        signalError(parent_AV, "CoreAmapAccess", errorMsg, true);
     }
 
     return 0;
@@ -1124,6 +1097,7 @@ int HeartbeatTimer(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims,
     UNUSED(amap);
     UNUSED(aname);
     UNUSED(p_fims);
+
     bool debug = false;
     if (heartbeatAV->gotParam("debug"))
     {
@@ -1152,24 +1126,18 @@ int HeartbeatTimer(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims,
 
                     if (current_heartbeat_timeout > (timeout / 2))  // smaller means faster
                     {
-                        // our heartbeat timer should run twice as fast as the smallest
-                        // heartbeat timeout if we get into this if statement, that means
-                        // the heartbeat timeout of this aV is faster than 2*our current
-                        // heartbeat timeout set this as a warning but do not increase the
-                        // speed at which this function runs
+                        // our heartbeat timer should run twice as fast as the smallest heartbeat timeout
+                        // if we get into this if statement, that means the heartbeat timeout of this aV is faster than
+                        // 2*our current heartbeat timeout set this as a warning but do not increase the speed at which
+                        // this function runs
 
                         FPS_PRINT_INFO(
-                            "Heartbeat timeout of aV [{}] is [{}] and our heartbeatTimer "
-                            "is currently running every [{}] seconds. HeartbeatTimer "
-                            "should run twice as fast as the fastest heartbeat timeout. "
-                            "Setting a warning to this AV [{}]",
+                            "Heartbeat timeout of aV [{}] is [{}] and our heartbeatTimer is currently running every [{}] seconds. HeartbeatTimer should run twice as fast as the fastest heartbeat timeout. Setting a warning to this AV [{}]",
                             aV->name, timeout, current_heartbeat_timeout, aV->name);
 
                         // signal an error
                         std::string errorMsg = fmt::format(
-                            "HeartbeatTimer repTime is [{}] and heartbeat timeout of aV "
-                            "[{}] is [{}]. HeartbeatTimer should run twice as fast as the "
-                            "fastest heartbeat timeout",
+                            "HeartbeatTimer repTime is [{}] and heartbeat timeout of aV [{}] is [{}]. HeartbeatTimer should run twice as fast as the fastest heartbeat timeout",
                             current_heartbeat_timeout, aV->name, timeout);
                         aV->setParam("errorType", (char*)"alarm");
                         aV->setParam("errorMsg", (char*)errorMsg.c_str());
@@ -1187,42 +1155,24 @@ int HeartbeatTimer(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims,
                         {
                             if (debug)
                                 FPS_PRINT_INFO(
-                                    " aV [{}]: last heartbeat was [{:.3f}] and it "
-                                    "is now [{:.3f}]. we are [{:.3f}]s over our "
-                                    "timeout of [{}]",
+                                    " aV [{}]: last heartbeat was [{:.3f}] and it is now [{:.3f}]. we are [{:.3f}]s over our timeout of [{}]",
                                     aV->name, lastResetTime, tNow, tNow - lastResetTime, timeout);
 
                             // signal an error
                             std::string errorMsg = fmt::format(
-                                "It has been [{:.3f}]s since aV [{}]'s last heartbeat which "
-                                "is longer than its heartbeatTimeout of [{}]",
+                                "It has been [{:.3f}]s since aV [{}]'s last heartbeat which is longer than its heartbeatTimeout of [{}]",
                                 tNow - lastResetTime, aV->name, timeout);
-                            aV->setParam("errorType", (char*)"fault");
-                            aV->setParam("errorMsg", (char*)errorMsg.c_str());
 
-                            bool logging_enabled = aV->getbParam("logging_enabled");
-                            char* LogDir = aV->getcParam("LogDir");
-
-                            ESSLogger::get().critical(
-                                "While HeartbeatTimer was running, aV "
-                                "[{}] got this error: [{}] ",
-                                aV->name, errorMsg);
-                            if (logging_enabled)
-                            {
-                                std::string dirAndFile = fmt::format("{}/{}.{}", LogDir, "datamap_errors", "txt");
-                                ESSLogger::get().logIt(dirAndFile);
-                            }
-
-                            signalThread(aV, ERROR);
+                            signalError(aV, "HeartbeatTimer", errorMsg, true);
                         }
                         else
                         {
                             // display the last heartbeat time for each function group
                             std::string fg = "_FuncGroup_";
                             std::string param = thread->name + fg +
-                                                std::to_string(str_aV_pair.second.second);  // convert the int
-                                                                                            // assoc w the aV
-                                                                                            // to a string
+                                                std::to_string(
+                                                    str_aV_pair.second
+                                                        .second);  // convert the int assoc w the aV to a string
 
                             heartbeatAV->setParam((char*)param.c_str(), lastResetTime);
                             if (debug)

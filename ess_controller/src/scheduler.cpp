@@ -128,7 +128,6 @@ VarMapUtils vm;
 varsmap vmap;
 std::vector<char*> syscVec;
 
-#if defined _JUST_LIB
 // use av->addSchedReq(schAvList*avlist)
 
 schedItem::schedItem()
@@ -260,6 +259,30 @@ void schedItem::setUp(const char* _id, const char* _aname, const char* _uri, con
         show();
 
     return;
+}
+
+void schedItem::putOnScheduler(std::string func, double _refTime, double _runTime, double _repTime, std::string targURI,
+                               assetVar* aV)
+{
+    // create a new ID based on the comp and name of our aV
+    std::string schedID = aV->comp + ":" + aV->name + "_schedItem";
+
+    setUp((char*)schedID.c_str(), (char*)aV->am->name.c_str(), (char*)aV->comp.c_str(), (char*)func.c_str(), _refTime,
+          _runTime, _repTime, 0, (char*)targURI.c_str());
+
+    // configure the params the assetVar needs to run on the scheduler
+    av = aV;                           // our sched item should run on this av
+    av->setParam("runTime", _runTime);  // this tells the scheduler when to run
+    av->setParam("repTime", _repTime);  // this is how often our func will run
+    av->setParam("update", true);      // this flag allows the scheduler to run faster after its first pass
+
+    // put our new schedItem on the scheduler and wake it up
+    auto reqChan = (channel<schedItem*>*)aV->am->reqChan;
+    reqChan->put(this);
+    if (aV->am->wakeChan)
+    {
+        aV->am->wakeChan->put(0);
+    }
 }
 
 scheduler::scheduler(const char* _name, int* _run)
@@ -1241,5 +1264,3 @@ std::string ReplaceString(std::string subject, const std::string& search, const 
     }
     return subject;
 }
-
-#endif

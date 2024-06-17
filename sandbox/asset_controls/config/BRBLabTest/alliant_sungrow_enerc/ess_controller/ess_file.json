@@ -1,0 +1,7 @@
+{
+    "/sysconfig/default": {
+        "Config": "ess_init",
+        "EssName": "ess",
+        "Subs": ":/assets:/site:/components:"
+    }
+}

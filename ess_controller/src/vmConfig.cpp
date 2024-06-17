@@ -24,7 +24,8 @@ const char* FimsDir;
 
 #if (__GNUC__ > 11) || (__GNUC__ == 11 && __GNUC_MINOR__ >= 0)
 
-std::string bodymd5(const char* body, int len) {
+std::string bodymd5(const char* body, int len)
+{
     EVP_MD_CTX* mdctx;
     const EVP_MD* md;
     unsigned char md_value[EVP_MAX_MD_SIZE];
@@ -39,7 +40,8 @@ std::string bodymd5(const char* body, int len) {
     EVP_MD_CTX_free(mdctx);
 
     // Convert the hash to a hexadecimal string
-    for (i = 0; i < md_len; i++) {
+    for (i = 0; i < md_len; i++)
+    {
         char hex[3];
         snprintf(hex, sizeof(hex), "%02x", md_value[i]);
         result.append(hex);
@@ -53,8 +55,8 @@ std::string bodymd5(const char* body, int len)
 {
     unsigned char result[MD5_DIGEST_LENGTH];
     MD5((const unsigned char*)body, len, result);
-    //char result[MD5_DIGEST_LENGTH];
-    //MD5((void*)body, len, result);
+    // char result[MD5_DIGEST_LENGTH];
+    // MD5((void*)body, len, result);
 
     std::ostringstream sout;
     sout << std::hex << std::setfill('0');
@@ -65,7 +67,7 @@ std::string bodymd5(const char* body, int len)
     return sout.str();
 }
 
-#endif 
+#endif
 // stdcfg map for referencing JSON strings loaded in autoLoadHeaders.h
 const std::map<std::string, const char*> autoCfgMap = { { "std_bms_manager_controls", std_bms_manager_controls_s },
                                                         { "std_bms_manager_faults", std_bms_manager_faults_s },

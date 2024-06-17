@@ -1,0 +1,114 @@
+{
+    "/config/ess": {
+        "enable": false,
+        "FaultDestination": "/faults/ess",
+        "AlarmDestination": "/alarms/ess"
+    },
+    "/example/uri": {
+        "note": {
+            "value": "all of these aV's are just examples to show that brb configs can be numbers or URI's"
+        },
+        "racks": {
+            "value": 5
+        },
+        "maxSetupTime": {
+            "value": 120
+        },
+        "doVoltageFiltering": {
+            "value": true
+        },
+        "10_seconds": {
+            "value": 10
+        }
+    },
+    "/new/config": {
+        "brb": {
+            "value": 0,
+            "enable": "/config/ess:enable",
+            "debug": false,
+            "fims": true,
+            "every": 3,
+            "note_about_notes": "all of the \"note...\" params can and should be removed when actually configuring BRB to run. They only exist for clarification in this example configuration",
+            "note_output": "set /ess/control/new_config_brb_bms_#/BatteryBalancing/debug to true to see terminal output for this av",
+            "note_pcs_templating": "Multiple PCS's will need to be configured by hand. Templating multiple PCS's cannot be done because each PCS needs to be differently configured to reflect its bms",
+
+            "note_site_controller": "this uri is how the BRB system will report its status back to site controller. SiteController commands will need to be remapped to StartCmdURI (likely by config composer)",
+            "SiteStatusURI": "/site/ess:rack_balancing_status",
+
+            "ClearFaultsDoneURI": "/controls/ess/@@BMS_ID@@:clear",
+
+            "StartCmdURI": "/controls/ess/@@BMS_ID@@:BatteryBalancingStartCmd",
+            "BmsMaintModeURI": "/assets/bms/@@BMS_ID@@/summary:maint_mode",
+            "PcsMaintModeURI": "/assets/pcs/pcs_1/summary:maint_mode",
+
+            "StopCmdURI": "/controls/ess/@@BMS_ID@@:BatteryBalancingStopCmd",
+            "FineBalancingEnableURI": "/status/@@BMS_ID@@:fineBalancing",
+            "MaxBalancePowerURI": "/status/pcs_1:MaxBalancePower",
+            "PActlURI": "/status/pcs_1:PActl",
+
+            "PCmdURI": "/controls/pcs_1:ActivePowerCmd",
+            "StateVariableReportURI": "/status/ess/@@BMS_ID@@:BatteryBalancingStateVariable",
+            "ErrorReportURI": "/status/ess/@@BMS_ID@@:error",
+
+            "OpenContactorURI": "/assets/bms/@@BMS_ID@@/summary:open_contactors",
+            "CloseContactorURI": "/assets/bms/@@BMS_ID@@/summary:close_contactors",
+
+            "PcsStartURI": "/assets/pcs_1:StartCmd",
+            "PcsStopURI": "/assets/pcs_1:StopCmd",
+
+            "RackVoltURI": "/status/@@BMS_ID@@_@@RACK_ID@@:voltage",
+            "RackSoCURI": "/status/@@BMS_ID@@_@@RACK_ID@@:soc",
+            "RackContactorStatusURI": "/status/@@BMS_ID@@_@@RACK_ID@@:contactorStatus",
+            "RackEnableFeedbackURI": "/status/@@BMS_ID@@_@@RACK_ID@@:enableFeedback",
+            "RackFaultURI": "/status/@@BMS_ID@@_@@RACK_ID@@:fault",
+
+            "RackEnableCmdURI": "/controls/@@BMS_ID@@_@@RACK_ID@@:enableCmd",
+            "RackBalanceFailureURI": "/controls/@@BMS_ID@@_@@RACK_ID@@:balanceFail",
+            
+            "note_templating": "this templating is different from the ess_controller templating and is something that is expanded at set up time. This templating uses the same formatting but different key ID's",
+            "RackTmpl": "@@RACK_ID@@",
+            "BmsTmpl": "@@BMS_ID@@",
+            "RackRep": "rack_{:1d}",
+            "BmsRep": "bms_{:1d}",
+            
+            "FilterRackVoltage": "/example/uri:doVoltageFiltering",
+            "VoltageFilterFC": 0.05,
+            
+            "BmsIDs": "1, 2",
+            "bms_1_NumRacks": "/example/uri:racks",
+            "bms_2_NumRacks": 4,
+            
+            "note_params": "all the params listed here are the default values that would be assigned if no param was specified (except BatteryRelaxTime, which is normally 60)",
+            "RampStartDeltaVoltage": 2.5,
+            "RampEndDeltaVoltage": 0.25,
+            "RackCloseDeltaVoltage": 5,
+            "BatteryRelaxTime": 6,
+            "MinimumFeedbackDelayTime": "/example/uri:10_seconds",
+            "ActivePowerUpdateTimeMinimum": 10, 
+            "ActionDelayTimeout": 20, 
+            "MaxOpenContactorAttempts": 2,
+            "MaxCloseContactorAttempts": 2,
+            "RackLevelContactorControl": false,
+            "ActivePowerRampRatekWps": 10,
+            "MinRackBalancePower": 1.5,
+            
+            "note_datamap_system": "The below params are for the datamap system itself, not BRB specifically; these are all optional; the listed values are the system defaults",
+            "overrunLimit": 50,
+            "decrementOverrun": 1,
+            "incrementOverrun": 5,
+            "setupTimeLimit": "/example/uri:maxSetupTime",
+            "heartbeatTimeout": 10,            
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "func": "BRB"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    }
+}

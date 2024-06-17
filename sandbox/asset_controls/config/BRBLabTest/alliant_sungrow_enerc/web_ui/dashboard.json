@@ -1,0 +1,164 @@
+{
+    "data": [
+        {
+            "info": {
+                "name": "BMS 1 Racks",
+                "sourceURIs": [
+                    "/assets"
+                ],
+                "isTemplate": true,
+                "items": [
+                    {
+                        "name": "Rack 1",
+                        "uri": "/bms_1/rack_1"
+                    },
+                    {
+                        "name": "Rack 2",
+                        "uri": "/bms_1/rack_2"
+                    },
+                    {
+                        "name": "Rack 3",
+                        "uri": "/bms_1/rack_3"
+                    },
+                    {
+                        "name": "Rack 4",
+                        "uri": "/bms_1/rack_4"
+                    },
+                    {
+                        "name": "Rack 5",
+                        "uri": "/bms_1/rack_5"
+                    }
+                ],
+                "batteryView": true,
+                "batteryViewSourceURI": "/assets",
+                "batteryViewURI": "/soc"
+            },
+            "status": [
+                {
+                    "name": "DC Contactors Closed",
+                    "uri": "/dc_contactors_closed"
+                },
+                {
+                    "name": "State of Charge",
+                    "uri": "/soc",
+                    "scalar": 1,
+                    "units": "%"
+                },
+                {
+                    "name": "State of Health",
+                    "uri": "/state_of_health",
+                    "scalar": 1,
+                    "units": "%"
+                },
+                {
+                    "name": "DC Current",
+                    "uri": "/battery_subsystem_current",
+                    "scalar": 1,
+                    "units": "A"
+                },
+                {
+                    "name": "DC Voltage (Before Bus Bar)",
+                    "uri": "/battery_subsystem_inside_voltage",
+                    "scalar": 1,
+                    "units": "V"
+                },
+                {
+                    "name": "DC Voltage (After Bus Bar)",
+                    "uri": "/battery_subsystem_outside_voltage",
+                    "scalar": 1,
+                    "units": "V"
+                },
+                {
+                    "name": "DC Power",
+                    "uri": "/battery_subsystem_power",
+                    "scalar": 1000,
+                    "units": "kW"
+                },
+                {
+                    "name": "Chargeable Energy",
+                    "uri": "/subsystem_remaining_charge_energy",
+                    "scalar": 1000,
+                    "units": "kWh"
+                },
+                {
+                    "name": "Dischargeable Energy",
+                    "uri": "/subsystem_remaining_discharge_energy",
+                    "scalar": 1000,
+                    "units": "kWh"
+                },
+                {
+                    "name": "Avg Cell Voltage",
+                    "uri": "/average_single_cell_voltage",
+                    "scalar": 1,
+                    "units": "V"
+                },
+                {
+                    "name": "Max Cell Voltage",
+                    "uri": "/max_single_cell_voltage",
+                    "scalar": 1,
+                    "units": "V"
+                },
+                {
+                    "name": "Min Cell Voltage",
+                    "uri": "/min_single_cell_voltage",
+                    "scalar": 1,
+                    "units": "V"
+                },
+                {
+                    "name": "Cell Voltage Delta",
+                    "uri": "/cell_voltage_delta",
+                    "scalar": 1,
+                    "units": "V"
+                },
+                {
+                    "name": "Avg Cell Temperature",
+                    "uri": "/average_single_cell_temperature",
+                    "scalar": 1,
+                    "units": "°C"
+                },
+                {
+                    "name": "Max Cell Temperature",
+                    "uri": "/max_single_cell_temperature",
+                    "scalar": 1,
+                    "units": "°C"
+                },
+                {
+                    "name": "Min Cell Temperature",
+                    "uri": "/min_single_cell_temperature",
+                    "scalar": 1,
+                    "units": "°C"
+                },
+                {
+                    "name": "Cell Temperature Delta",
+                    "uri": "/cell_temp_delta",
+                    "scalar": 1,
+                    "units": "°C"
+                },
+                {
+                    "name": "Max Charge Power Limit",
+                    "uri": "/max_charge_power_allowed",
+                    "scalar": 1000,
+                    "units": "kW"
+                },
+                {
+                    "name": "Max Discharge Power Limit",
+                    "uri": "/max_discharge_power_allowed",
+                    "scalar": 1000,
+                    "units": "kW"
+                },
+                {
+                    "name": "Max Charge Current Limit",
+                    "uri": "/max_allowed_charge_current",
+                    "scalar": 1,
+                    "units": "A"
+                },
+                {
+                    "name": "Max Discharge Current Limit",
+                    "uri": "/max_allowed_discharge_current",
+                    "scalar": 1,
+                    "units": "A"
+                }
+            ]
+        }
+    ]
+}
