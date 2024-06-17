@@ -217,7 +217,16 @@ void Site_Manager::build_JSON_features_active_power(fmt::memory_buffer& buf, con
         ess_actual_kW.add_to_JSON_buffer(buf, var);
         // TODO: variables shared by active power features get added multiple times
         // but incorrectly, creating invalid json. Pulled out this variable as a quick fix
+        soc_min_all.add_to_JSON_buffer(buf, var);
+        soc_max_all.add_to_JSON_buffer(buf, var);
+        soc_avg_all.add_to_JSON_buffer(buf, var);
+        soc_min_running.add_to_JSON_buffer(buf, var);
+        soc_max_running.add_to_JSON_buffer(buf, var);
         soc_avg_running.add_to_JSON_buffer(buf, var);
+        soc_min_controllable.add_to_JSON_buffer(buf, var);
+        soc_max_controllable.add_to_JSON_buffer(buf, var);
+        soc_avg_controllable.add_to_JSON_buffer(buf, var);
+        
     }
     if (pAssets->get_num_feeder_parsed() > 0) {
         feeder_kW_cmd.add_to_JSON_buffer(buf, var);
@@ -1373,9 +1382,12 @@ void Site_Manager::get_values() {
     soc_min_all.value.set(pAssets->get_all_ess_soc_min());
     soc_max_all.value.set(pAssets->get_all_ess_soc_max());
     soc_avg_all.value.set(pAssets->get_all_ess_soc_avg());
-    soc_min_running.value.set(pAssets->get_ess_soc_min());
-    soc_max_running.value.set(pAssets->get_ess_soc_max());
-    soc_avg_running.value.set(pAssets->get_ess_soc_avg());
+    soc_min_running.value.set(pAssets->get_running_ess_soc_min());
+    soc_max_running.value.set(pAssets->get_running_ess_soc_max());
+    soc_avg_running.value.set(pAssets->get_running_ess_soc_avg());
+    soc_min_controllable.value.set(pAssets->get_controllable_ess_soc_min());
+    soc_max_controllable.value.set(pAssets->get_controllable_ess_soc_max());
+    soc_avg_controllable.value.set(pAssets->get_controllable_ess_soc_avg());
 
     ess_actual_kW.value.set(pAssets->get_ess_total_active_power());
     gen_actual_kW.value.set(pAssets->get_gen_total_active_power());
@@ -2309,9 +2321,9 @@ void Site_Manager::handle_ess_sequence_functions(const char* cmd, Value_Object* 
     } else if (strcmp(cmd, "allow_auto_restart") == 0) {
         allow_ess_auto_restart.value.set(value->value_bool);
     } else if (strcmp(cmd, "controllable_soc_above") == 0) {
-        return_value = ((value->type == Float) && soc_avg_running.value.value_float > value->value_float);
+        return_value = ((value->type == Float) && soc_avg_controllable.value.value_float > value->value_float);
     } else if (strcmp(cmd, "controllable_soc_below") == 0) {
-        return_value = ((value->type == Float) && soc_avg_running.value.value_float < value->value_float);
+        return_value = ((value->type == Float) && soc_avg_controllable.value.value_float < value->value_float);
     } else if (strcmp(cmd, "all_soc_above") == 0) {
         return_value = ((value->type == Float) && soc_avg_all.value.value_float > value->value_float);
     } else if (strcmp(cmd, "all_soc_below") == 0) {

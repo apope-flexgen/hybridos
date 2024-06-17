@@ -62,6 +62,10 @@ protected:
     float controllableEssAvgSoc;
     float controllableEssMaxSoc;
 
+    float runningEssMinSoc;
+    float runningEssMaxSoc;
+    float runningEssAvgSoc;
+
     float parsedEssMinSoc;
     float parsedEssAvgSoc;
     float parsedEssMaxSoc;
@@ -99,9 +103,13 @@ public:
     int get_num_ess_controllable(void);
     int get_num_ess_in_standby(void);
 
-    float get_ess_soc_max(void);
-    float get_ess_soc_min(void);
-    float get_ess_soc_avg(void);
+    float get_running_ess_soc_max(void);
+    float get_running_ess_soc_min(void);
+    float get_running_ess_soc_avg(void);
+
+    float get_controllable_ess_soc_max(void);
+    float get_controllable_ess_soc_min(void);
+    float get_controllable_ess_soc_avg(void);
 
     float get_all_ess_soc_max(void);
     float get_all_ess_soc_min(void);
@@ -168,8 +176,7 @@ public:
 
     void generate_asset_type_summary_json(fmt::memory_buffer& buf, const char* const var = NULL) override;
 
-
-    void zero_all_controllable_ess_reactive_power(void); 
+    void zero_all_controllable_ess_reactive_power(void);
     void all_controllable_ess_max_reactive_power(void);
     void all_controllable_ess_min_reactive_power(void);
     void calculate_ess_reactive_power(void);

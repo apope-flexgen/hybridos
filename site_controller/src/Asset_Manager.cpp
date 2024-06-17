@@ -771,16 +771,28 @@ std::vector<int> Asset_Manager::get_ess_setpoint_statuses(void) {
     return ess_manager->get_setpoint_statuses();
 }
 
-float Asset_Manager::get_ess_soc_max(void) {
-    return ess_manager->get_ess_soc_max();
+float Asset_Manager::get_running_ess_soc_max(void) {
+    return ess_manager->get_running_ess_soc_max();
 }
 
-float Asset_Manager::get_ess_soc_min(void) {
-    return ess_manager->get_ess_soc_min();
+float Asset_Manager::get_running_ess_soc_min(void) {
+    return ess_manager->get_running_ess_soc_min();
 }
 
-float Asset_Manager::get_ess_soc_avg(void) {
-    return ess_manager->get_ess_soc_avg();
+float Asset_Manager::get_running_ess_soc_avg(void) {
+    return ess_manager->get_running_ess_soc_avg();
+}
+
+float Asset_Manager::get_controllable_ess_soc_min(void) {
+    return ess_manager->get_controllable_ess_soc_min();
+}
+
+float Asset_Manager::get_controllable_ess_soc_max(void) {
+    return ess_manager->get_controllable_ess_soc_max();
+}
+
+float Asset_Manager::get_controllable_ess_soc_avg(void) {
+    return ess_manager->get_controllable_ess_soc_avg();
 }
 
 float Asset_Manager::get_all_ess_soc_max(void) {
