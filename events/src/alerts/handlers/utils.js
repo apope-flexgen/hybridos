@@ -34,13 +34,14 @@ function pubToUI(message) {
  *
  * @param {object} alert An alert entry from mongo
  * @param {object} templates Global templates from mongo
+ * @returns Error, or null if successful.
  */
-function updateGoMetricsConfig(alert, templates) {
+async function updateGoMetricsConfig(alert, templates, replyUri) {
     if (alert.deleted) {
         fims.send({
             method: 'del',
             uri: `/go_metrics_alerting/configuration/${alert.id}`,
-            replyto: null,
+            replyto: replyUri,
             body: null,
             username: null,
         });
@@ -118,7 +119,7 @@ function updateGoMetricsConfig(alert, templates) {
     fims.send({
         method: 'set',
         uri: `/go_metrics_alerting/configuration/${alert.id}`,
-        replyto: null,
+        replyto: replyUri,
         body: JSON.stringify(goMetricsObj),
         username: null,
     });

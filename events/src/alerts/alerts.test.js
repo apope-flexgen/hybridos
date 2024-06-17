@@ -129,6 +129,7 @@ describe('Alerts tests', () => {
         mockedUuidv4.mockReturnValueOnce('mocked-new-uuid');
         mockedUuidv4.mockReturnValueOnce('mocked-new-template-uuid-0');
         mockedUuidv4.mockReturnValueOnce('mocked-new-template-uuid-1');
+        mockedUuidv4.mockReturnValueOnce('mocked-reply-uuid');
         const {id, ...body} = postManagementRequest;
         processEvent({
             uri: '/events/alerts/management',
@@ -137,6 +138,12 @@ describe('Alerts tests', () => {
             replyto: 'dummy_replyto',
         });
         await sleep(sleepMs);
+        processEvent({
+            uri: '/events/alerts/reply/mocked-reply-uuid',
+            method: 'set',
+            body: genericSuccessResponse,
+            replyto: null,
+        });
         await sleep(sleepMs);
         processEvent({
             uri: '/events/alerts/management',
@@ -149,7 +156,7 @@ describe('Alerts tests', () => {
             {
                 body: JSON.stringify(outboundSetManagementNew),
                 method: 'set',
-                replyto: null,
+                replyto: '/events/alerts/reply/mocked-reply-uuid',
                 uri: '/go_metrics_alerting/configuration/mocked-new-uuid',
                 username: null,
             },
@@ -180,11 +187,19 @@ describe('Alerts tests', () => {
     test('UI | Updates an existing alerting rule configuration', async () => {
         mockedUuidv4.mockReturnValueOnce('mocked-new-template-uuid-0');
         mockedUuidv4.mockReturnValueOnce('mocked-new-template-uuid-1');
+        mockedUuidv4.mockReturnValueOnce('mocked-reply-uuid');
         processEvent({
             uri: '/events/alerts/management',
             method: 'post',
             body: postManagementRequest,
             replyto: 'dummy_replyto',
+        });
+        await sleep(sleepMs);
+        processEvent({
+            uri: '/events/alerts/reply/mocked-reply-uuid',
+            method: 'set',
+            body: genericSuccessResponse,
+            replyto: null,
         });
         await sleep(sleepMs);
         processEvent({
@@ -198,7 +213,7 @@ describe('Alerts tests', () => {
             {
                 body: JSON.stringify(outboundSetManagement),
                 method: 'set',
-                replyto: null,
+                replyto: '/events/alerts/reply/mocked-reply-uuid',
                 uri: '/go_metrics_alerting/configuration/28beecbc-232f-431b-ac7d-8d29350e9000',
                 username: null,
             },
@@ -226,13 +241,71 @@ describe('Alerts tests', () => {
         ]);
     });
 
+    test('UI | Update rejection for an existing alerting rule configuration', async () => {
+        mockedUuidv4.mockReturnValueOnce('mocked-new-template-uuid-0');
+        mockedUuidv4.mockReturnValueOnce('mocked-new-template-uuid-1');
+        mockedUuidv4.mockReturnValueOnce('mocked-reply-uuid');
+        processEvent({
+            uri: '/events/alerts/management',
+            method: 'post',
+            body: postManagementRequest,
+            replyto: 'dummy_replyto',
+        });
+        await sleep(sleepMs);
+        processEvent({
+            uri: '/events/alerts/reply/mocked-reply-uuid',
+            method: 'set',
+            body: {success: false, message: "No bueno"},
+            replyto: null,
+        });
+        await sleep(sleepMs);
+        processEvent({
+            uri: '/events/alerts/management',
+            method: 'get',
+            body: getManagementRequest,
+            replyto: 'dummy_replyto',
+        });
+        await sleep(sleepMs);
+        expectFimsSendHelper([
+            {
+                body: JSON.stringify(outboundSetManagement),
+                method: 'set',
+                replyto: '/events/alerts/reply/mocked-reply-uuid',
+                uri: '/go_metrics_alerting/configuration/28beecbc-232f-431b-ac7d-8d29350e9000',
+                username: null,
+            },
+            {
+                body: JSON.stringify({success: false, message: `Invalid config: No bueno`}),
+                method: 'set',
+                replyto: null,
+                uri: 'dummy_replyto',
+                username: null,
+            },
+            {
+                body: JSON.stringify(getManagementResponses.base),
+                method: 'set',
+                replyto: null,
+                uri: 'dummy_replyto',
+                username: null
+            }
+        ]);
+    });
+
     test('UI | Deletes an existing alerting rule configuration', async () => {
         mockedUuidv4.mockReturnValue('mocked-new-template-uuid');
+        mockedUuidv4.mockReturnValueOnce('mocked-reply-uuid');
         processEvent({
             uri: '/events/alerts/management',
             method: 'post',
             body: postManagementRequestDeletion,
             replyto: 'dummy_replyto',
+        });
+        await sleep(sleepMs);
+        processEvent({
+            uri: '/events/alerts/reply/mocked-reply-uuid',
+            method: 'set',
+            body: genericSuccessResponse,
+            replyto: null,
         });
         await sleep(sleepMs);
         processEvent({
@@ -249,7 +322,7 @@ describe('Alerts tests', () => {
             {
                 body: null,
                 method: 'del',
-                replyto: null,
+                replyto: '/events/alerts/reply/mocked-reply-uuid',
                 uri: '/go_metrics_alerting/configuration/28beecbc-232f-431b-ac7d-8d29350e9000',
                 username: null,
             },
@@ -416,7 +489,7 @@ describe('Alerts tests', () => {
         expectFimsSendHelper([{
             body: null,
             method: 'get',
-            replyto: '/events/refresh_alerts',
+            replyto: '/events_reply/refresh_alerts',
             uri: '/go_metrics_alerting/events/alerts',
             username: null,
         }]);

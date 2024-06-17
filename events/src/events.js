@@ -17,6 +17,7 @@ const {
     handlePostAlertOrganizations,
     handleDeleteAlertOrganizations,
 } = require('./alerts/handlers/alertOrganizations');
+const { checkAlertTimeouts, handleReply } = require('./alerts/handlers/alertReplies');
 
 fims.connect('events');
 fims.subscribeTo('/events');
@@ -32,6 +33,9 @@ function processEvent(msg) {
             fims.receiveWithTimeout(500, processEvent);
         }, 20);
     }
+
+    // maintain alert reply messages
+    checkAlertTimeouts();
 
     if (!msg) { return; }
 
@@ -54,6 +58,8 @@ function processEvent(msg) {
             } else if (msg.method === 'del') {
                 handleDeleteAlertOrganizations(msg);
             }
+        } else if (segments[3] === 'reply') {
+            handleReply(msg);
         } else if (msg.method === 'get') {
             handleGetAlerts(msg);
         } else if (msg.method === 'post') {

@@ -8,6 +8,7 @@ const {
 } = require('./utils');
 const { getAlertOrganizations } = require('../alertsOrgDb');
 const { getAlertTemplates, upsertAlertTemplates, deleteAlertTemplates } = require('../alertsTemplateDb');
+const { addReplyListener } = require('./alertReplies');
 
 module.exports = {
     /**
@@ -15,9 +16,11 @@ module.exports = {
      * UI is upserting a single alert management entry.
      * 1. Fetch relevant entry
      * 2. Combine with supplied entry, notably stuffing fields into history.
-     * 3. Return to UI
+     * 3. Send request to go_metrics and listen on a reply URI with a callback
+     * 4. When that reply is received, callback is invoked. If expired, onExpire is invoked.
      */
     async handlePostAlertsManagement(msg) {
+        // VALIDATION
         const validation = validateAlert(msg, {
             requiredGroups: [
                 ['deadline', 'enabled', 'expression', 'organization', 'severity', 'title', 'messages'],
@@ -37,8 +40,8 @@ module.exports = {
             }
             return;
         }
-        // if only body.enabled
-        // use THIS URI and shape req like { body: { enabled: true }}
+
+        // ALERT ROW JOINING
         let { body } = msg;
         const orgs = await getAlertOrganizations();
         if (body.organization) {
@@ -113,36 +116,73 @@ module.exports = {
             };
         }
 
-        // join included templates with existing templates
         const oldTemplates = await getAlertTemplates();
         let templates = Object.keys(body).includes('templates') ? body.templates : oldTemplates;
-
         templates = templates.map((template) => ({
             // eslint-disable-next-line no-param-reassign
             ...template,
             id: template.id || uuidv4(),
         }));
         templates.sort((a, b) => (a.token < b.token ? -1 : 1));
-        if (Object.keys(body).includes('templates')) {
-            const templatesToDel = oldTemplates.reduce((acc, curr) => {
-                if (!templates.find((tem) => tem.id === curr.id)) {
-                    return [...acc, curr.id];
+
+        // Prepare reply and expiry handlers
+        const onReply = async (replyMsg) => {
+            const replyValidation = validateAlert(replyMsg, {
+                requiredGroups: [
+                    ['success', 'message'],
+                ],
+                optional: [],
+            });
+            if (!replyValidation.success) {
+                if (replyMsg.replyto) {
+                    fims.send({
+                        method: 'set',
+                        uri: replyMsg.replyto,
+                        replyto: null,
+                        body: JSON.stringify(replyValidation),
+                        username: null,
+                    });
                 }
-                return acc;
-            }, []);
+                return;
+            }
 
-            await upsertAlertTemplates(templates);
-            await deleteAlertTemplates(templatesToDel);
-        }
-        templates.sort((a, b) => (a.token < b.token ? -1 : 1));
-        updateGoMetricsConfig(newAlert, templates);
+            const { body: replyBody } = replyMsg;
 
-        // Upsert mongo
-        const err = await upsertAlertManagement(newAlert);
-        if (!err) {
-            pubToUI('An alert configuration has been changed');
-        }
-        genericReply(msg, err);
+            if (!replyBody.success) {
+                genericReply(msg, `Invalid config: ${replyBody.message}`);
+                return;
+            }
+
+            // Upsert templates
+            if (Object.keys(body).includes('templates')) {
+                const templatesToDel = oldTemplates.reduce((acc, curr) => {
+                    if (!templates.find((tem) => tem.id === curr.id)) {
+                        return [...acc, curr.id];
+                    }
+                    return acc;
+                }, []);
+
+                await upsertAlertTemplates(templates);
+                await deleteAlertTemplates(templatesToDel);
+            }
+            templates.sort((a, b) => (a.token < b.token ? -1 : 1));
+
+            // Upsert mongo
+            const err = await upsertAlertManagement(newAlert);
+            if (!err) {
+                pubToUI('An alert configuration has been changed');
+            }
+            genericReply(msg, err);
+        };
+
+        // invoke this if go_metrics never receives a reply.
+        const onExpire = async () => {
+            genericReply(msg, 'Internal Server Error - could not contact go_metrics');
+        };
+
+        const replyUri = `/events/alerts/reply/${uuidv4()}`;
+        addReplyListener(replyUri, onReply, onExpire);
+        await updateGoMetricsConfig(newAlert, templates, replyUri);
     },
 
     /**

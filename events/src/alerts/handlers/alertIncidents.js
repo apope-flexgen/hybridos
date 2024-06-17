@@ -256,7 +256,7 @@ async function handleInitAlerts() {
     fims.send({
         method: 'get',
         uri: '/go_metrics_alerting/events/alerts',
-        replyto: '/events/refresh_alerts',
+        replyto: '/events_reply/refresh_alerts',
         body: null,
         username: null,
     });
@@ -266,7 +266,7 @@ async function handleInitAlerts() {
                 result.body.forEach((incident) => {
                     handlePostAlerts({
                         body: incident,
-                        replyto: '/events/refresh_alerts_reply',
+                        replyto: '/events_reply/refresh_alerts_reply',
                     });
                 });
                 console.info(`Initialized with ${result.body.length} incidents from go_metrics`);
