@@ -199,9 +199,10 @@ var configErrorLocs ErrorLocations
 //
 //	if empty, no collisions are allowed, else the unique id will help prevent collisions, and any that occur can safely use the latest value
 //
-// Return NewMetricsInfo struct containing updated values, as well as any warnings or errors that occurred
-func UnmarshalConfig(data []byte, configId string) (NewMetricsInfo, bool, bool) {
+// Return NewMetricsInfo struct containing updated values, as well as any warnings, errors, or fatal issues that occurred
+func UnmarshalConfig(data []byte, configId string) (NewMetricsInfo, bool, bool, bool) {
 	metricsConfigMutex.Lock()
+	defer metricsConfigMutex.Unlock()
 	overwrite_conflicting_configs := false
 	if len(configId) > 0 {
 		overwrite_conflicting_configs = true
@@ -217,17 +218,26 @@ func UnmarshalConfig(data []byte, configId string) (NewMetricsInfo, bool, bool) 
 	new_metrics_starting_index := len(MetricsConfig.Metrics)
 	new_echo_starting_index := len(MetricsConfig.Echo)
 
-	pj, err := simdjson.Parse(data, nil)
-	if err != nil {
-		log.Fatalf("%v", err)
-	}
-
 	wasWarning := false
 	wasError := false
+	wasFatal := false
+
+	pj, err := simdjson.Parse(data, nil)
+	if err != nil {
+		// Return early, indicating for the program to close because the configuration could not be parsed
+		wasError = true
+		wasFatal = true
+		log.Errorf("%v", err)
+		return NewMetricsInfo{}, wasWarning, wasError, wasFatal
+	}
+
 	// this is where the main config processing happens
-	pj.ForEach(func(i simdjson.Iter) error {
+	err = pj.ForEach(func(i simdjson.Iter) error {
 		if i.Type() != simdjson.TypeObject {
-			log.Fatalf("Unexpected JSON format for config. Must be a json object containing meta data, inputs, filters (optional), outputs, and expressions.")
+			// Return early, indicating for the program to close because the configuration could not be parsed
+			wasError = true
+			wasFatal = true
+			return fmt.Errorf("Unexpected JSON format for config. Must be a json object containing meta data, inputs, filters (optional), outputs, and expressions.")
 		}
 
 		tempMeta, tempWasWarning, tempWasError := parseMeta(&i)
@@ -280,6 +290,32 @@ func UnmarshalConfig(data []byte, configId string) (NewMetricsInfo, bool, bool) 
 										templateIndex += 1
 										return
 									} else {
+										// Get the format of the range
+										element, internal_err = templateIter.FindElement(nil, "format")
+										configErrorLocs.addKey("format", simdjson.TypeString)
+										if internal_err == nil {
+											template.Format, internal_err = element.Iter.StringCvt()
+											if internal_err != nil {
+												configErrorLocs.logError(fmt.Errorf("invalid format specifier %s; defaulting to %%d", template.Format))
+												wasError = true
+												template.Format = "%d"
+											}
+											valid := false
+											for _, format_specifier := range format_specifiers {
+												if match, _ := regexp.MatchString(format_specifier, template.Format); match {
+													valid = true
+													break
+												}
+											}
+
+											if !valid {
+												configErrorLocs.logError(fmt.Errorf("invalid format specifier %s; defaulting to %%d", template.Format))
+												wasError = true
+												template.Format = "%d"
+											}
+										} else {
+											template.Format = "%d"
+										}
 										// Handle range based templating which gives multiple ranges of number that should be included in the form of an array
 										// e.g. [1..2, 4, 6-10] would produce numbers: 1,2,4,6,7,8,9,10
 										configErrorLocs.addKey("range", simdjson.TypeArray)
@@ -332,35 +368,9 @@ func UnmarshalConfig(data []byte, configId string) (NewMetricsInfo, bool, bool) 
 											}
 											// Iterate including the starting and ending values
 											for i := startingIndex; i <= endingIndex; i++ {
-												template.List = append(template.List, fmt.Sprintf("%v", i))
+												template.List = append(template.List, fmt.Sprintf(template.Format, i))
 											}
 										})
-										element, internal_err = templateIter.FindElement(nil, "format")
-										configErrorLocs.addKey("format", simdjson.TypeString)
-										if internal_err == nil {
-											template.Format, internal_err = element.Iter.StringCvt()
-											if internal_err != nil {
-												configErrorLocs.logError(fmt.Errorf("invalid format specifier %s; defaulting to %%d", template.Format))
-												wasError = true
-												template.Format = "%d"
-											}
-											format_specifiers := []string{"%d", `%(0??)(\d+)d`, "%c", "%U"}
-											valid := false
-											for _, format_specifier := range format_specifiers {
-												if match, _ := regexp.MatchString(format_specifier, template.Format); match {
-													valid = true
-													break
-												}
-											}
-
-											if !valid {
-												configErrorLocs.logError(fmt.Errorf("invalid format specifier %s; defaulting to %%d", template.Format))
-												wasError = true
-												template.Format = "%d"
-											}
-										} else {
-											template.Format = "%d"
-										}
 									}
 								} else {
 									configErrorLocs.addKey("list", simdjson.TypeArray)
@@ -490,7 +500,6 @@ func UnmarshalConfig(data []byte, configId string) (NewMetricsInfo, bool, bool) 
 											wasError = true
 											template.Format = "%d"
 										}
-										format_specifiers := []string{"%d", `%(0??)(\d+)d`, "%c", "%U"}
 										valid := false
 										for _, format_specifier := range format_specifiers {
 											if match, _ := regexp.MatchString(format_specifier, template.Format); match {
@@ -636,7 +645,6 @@ func UnmarshalConfig(data []byte, configId string) (NewMetricsInfo, bool, bool) 
 													wasError = true
 													template.Format = "%d"
 												}
-												format_specifiers := []string{"%d", `%(0??)(\d+)d`, "%c", "%U"}
 												valid := false
 												for _, format_specifier := range format_specifiers {
 													if match, _ := regexp.MatchString(format_specifier, template.Format); match {
@@ -692,6 +700,31 @@ func UnmarshalConfig(data []byte, configId string) (NewMetricsInfo, bool, bool) 
 									}
 									configErrorLocs.removeLevel() // remove "list"
 								} else if template.Type == "range" {
+									element, internal_err = templateIter.FindElement(nil, "format")
+									configErrorLocs.addKey("format", simdjson.TypeString)
+									if internal_err == nil {
+										template.Format, internal_err = element.Iter.StringCvt()
+										if internal_err != nil {
+											configErrorLocs.logError(fmt.Errorf("invalid format specifier %s; defaulting to %%d", template.Format))
+											wasError = true
+											template.Format = "%d"
+										}
+										valid := false
+										for _, format_specifier := range format_specifiers {
+											if match, _ := regexp.MatchString(format_specifier, template.Format); match {
+												valid = true
+												break
+											}
+										}
+
+										if !valid {
+											configErrorLocs.logError(fmt.Errorf("invalid format specifier %s; defaulting to %%d", template.Format))
+											wasError = true
+											template.Format = "%d"
+										}
+									} else {
+										template.Format = "%d"
+									}
 									// Handle range based templating which gives multiple ranges of number that should be included in the form of an array
 									// e.g. [1..2, 4, 6-10] would produce numbers: 1,2,4,6,7,8,9,10
 									element, internal_err = templateIter.FindElement(nil, "range")
@@ -758,35 +791,9 @@ func UnmarshalConfig(data []byte, configId string) (NewMetricsInfo, bool, bool) 
 											}
 											// Iterate including the starting and ending values
 											for i := startingIndex; i <= endingIndex; i++ {
-												template.List = append(template.List, fmt.Sprintf("%v", i))
+												template.List = append(template.List, fmt.Sprintf(template.Format, i))
 											}
 										})
-									}
-									element, internal_err = templateIter.FindElement(nil, "format")
-									configErrorLocs.addKey("format", simdjson.TypeString)
-									if internal_err == nil {
-										template.Format, internal_err = element.Iter.StringCvt()
-										if internal_err != nil {
-											configErrorLocs.logError(fmt.Errorf("invalid format specifier %s; defaulting to %%d", template.Format))
-											wasError = true
-											template.Format = "%d"
-										}
-										format_specifiers := []string{"%d", `%(0??)(\d+)d`, "%c", "%U"}
-										valid := false
-										for _, format_specifier := range format_specifiers {
-											if match, _ := regexp.MatchString(format_specifier, template.Format); match {
-												valid = true
-												break
-											}
-										}
-
-										if !valid {
-											configErrorLocs.logError(fmt.Errorf("invalid format specifier %s; defaulting to %%d", template.Format))
-											wasError = true
-											template.Format = "%d"
-										}
-									} else {
-										template.Format = "%d"
 									}
 								} else {
 									configErrorLocs.logError(fmt.Errorf("unexpected template type %v: need \"sequential\" or \"list\"", template.Type))
@@ -1592,6 +1599,24 @@ func UnmarshalConfig(data []byte, configId string) (NewMetricsInfo, bool, bool) 
 						}
 						configErrorLocs.removeLevel() // remove type
 
+						// Determine whether the metric is enabled
+						element, internal_err = metricsIter.FindElement(nil, "enabled")
+						configErrorLocs.addKey("enabled", simdjson.TypeString)
+						if internal_err != nil {
+							// enabled field is optional, default to true
+							metric.Enabled = true
+						} else {
+							// error if enabled field was found but does not contain a boolean value
+							enabledVal, internal_err := element.Iter.Bool()
+							if internal_err != nil {
+								configErrorLocs.logError(internal_err)
+								wasError = true
+							} else {
+								metric.Enabled = enabledVal
+							}
+						}
+						configErrorLocs.removeLevel() // remove "alert"
+
 						// Determine whether this is an alert (default false)
 						element, internal_err = metricsIter.FindElement(nil, "alert")
 						configErrorLocs.addKey("alert", simdjson.TypeString)
@@ -1773,6 +1798,22 @@ func UnmarshalConfig(data []byte, configId string) (NewMetricsInfo, bool, bool) 
 						// apply templating
 						metricsObjects := handleMetricsTemplates(metric)
 
+						// Update starting index of the metricsObject
+						if overwrite_conflicting_configs {
+							for _, metric := range metricsObjects {
+								for i, metricObject := range MetricsConfig.Metrics {
+									if metricObject.Id == metric.Id && new_metrics_starting_index > 0 {
+										MetricsConfig.Metrics = append(MetricsConfig.Metrics[:i], MetricsConfig.Metrics[i+1:]...)
+										if len(metricObject.InternalOutput) > 0 {
+											internal_vars, _ = removeStringFromSlice(internal_vars, metricObject.InternalOutput)
+										}
+										new_metrics_starting_index--
+										break
+									}
+								}
+							}
+						}
+
 						// now that we've applied templating, check that the output vars are all valid
 						// remove them if they're not
 						configErrorLocs.addKey("outputs", simdjson.TypeArray)
@@ -1878,18 +1919,6 @@ func UnmarshalConfig(data []byte, configId string) (NewMetricsInfo, bool, bool) 
 								configErrorLocs.logError(fmt.Errorf("%v; excluding this metric from calculations", internal_err))
 								wasError = true
 							} else {
-								if overwrite_conflicting_configs {
-									for i, metricObject := range MetricsConfig.Metrics {
-										if metricObject.Id == metric.Id && new_metrics_starting_index > 0 {
-											MetricsConfig.Metrics = append(MetricsConfig.Metrics[:i], MetricsConfig.Metrics[i+1:]...)
-											if len(metricObject.InternalOutput) > 0 {
-												internal_vars, _ = removeStringFromSlice(internal_vars, metricObject.InternalOutput)
-											}
-											new_metrics_starting_index--
-											break
-										}
-									}
-								}
 								MetricsConfig.Metrics = append(MetricsConfig.Metrics, metric)
 								internal_vars = append(internal_vars, metric.InternalOutput)
 							}
@@ -1954,7 +1983,8 @@ func UnmarshalConfig(data []byte, configId string) (NewMetricsInfo, bool, bool) 
 						wasError = true
 					} else { // handle the echo object
 						// get the uri
-						fatalErr := false
+						// Track whether the echo object is valid and remove it if not
+						fatalEchoErr := false
 						echo.Inputs = make([]EchoInput, 0)
 						echo.Echo = make(map[string]interface{}, 0)
 						element, internal_err = echoIter.FindElement(nil, "uri")
@@ -1962,13 +1992,13 @@ func UnmarshalConfig(data []byte, configId string) (NewMetricsInfo, bool, bool) 
 						if internal_err != nil {
 							configErrorLocs.logError(internal_err)
 							wasError = true
-							fatalErr = true
+							fatalEchoErr = true
 						} else {
 							echo.PublishUri, internal_err = element.Iter.StringCvt()
 							if internal_err != nil {
 								configErrorLocs.logError(internal_err)
 								wasError = true
-								fatalErr = true
+								fatalEchoErr = true
 							}
 						}
 						configErrorLocs.removeLevel()
@@ -1979,13 +2009,13 @@ func UnmarshalConfig(data []byte, configId string) (NewMetricsInfo, bool, bool) 
 						if internal_err != nil {
 							configErrorLocs.logError(internal_err)
 							wasError = true
-							fatalErr = true
+							fatalEchoErr = true
 						} else {
 							echo.PublishRate, internal_err = element.Iter.Int()
 							if internal_err != nil {
 								configErrorLocs.logError(internal_err)
 								wasError = true
-								fatalErr = true
+								fatalEchoErr = true
 							}
 						}
 						configErrorLocs.removeLevel()
@@ -2205,7 +2235,7 @@ func UnmarshalConfig(data []byte, configId string) (NewMetricsInfo, bool, bool) 
 						}
 
 						configErrorLocs.removeLevel()
-						if !fatalErr {
+						if !fatalEchoErr {
 							MetricsConfig.Echo = append(MetricsConfig.Echo, echo)
 						}
 
@@ -2226,6 +2256,15 @@ func UnmarshalConfig(data []byte, configId string) (NewMetricsInfo, bool, bool) 
 		}
 		return nil
 	})
+
+	// Handle any errors from parsing the config
+	if err != nil && err.Error() != "" {
+		log.Errorf("%v", err)
+		if wasFatal {
+			// Notify to exit early if the error was fatal
+			return NewMetricsInfo{}, wasWarning, wasError, wasFatal
+		}
+	}
 
 	var bytesDat interface{}
 	err = json.Unmarshal(data, &bytesDat)
@@ -2318,8 +2357,7 @@ func UnmarshalConfig(data []byte, configId string) (NewMetricsInfo, bool, bool) 
 		new_echo_starting_index,
 		0,
 	}
-	metricsConfigMutex.Unlock()
-	return new_metrics_info, wasWarning, wasError
+	return new_metrics_info, wasWarning, wasError, wasFatal
 }
 
 func handleInputsTemplates(new_inputs []string, overwrite_conflicting_configs bool) ([]string, bool, bool) {
@@ -2601,6 +2639,7 @@ func handleMetricsTemplates(metricTmp MetricsObject) []MetricsObject {
 					}
 					newMetric.Type = metric.Type
 					newMetric.Alert = metric.Alert
+					newMetric.Enabled = metric.Enabled
 					newMetric.Outputs = make([]string, len(metric.Outputs))
 					for p, output := range metric.Outputs {
 						newOutput := strings.ReplaceAll(output, template.Tok, replacement)
@@ -2895,7 +2934,7 @@ func (metricsObject *MetricsObject) configureStateAndOutputs() (warning string, 
 func (metricsObject *MetricsObject) getExpression(internal_vars []string, netIndex int, configId string) (string, error) {
 	var warning string
 	if inputToMetricsExpression == nil {
-		inputToMetricsExpression = make(map[string][]int, 0)
+		inputToMetricsExpression = make(map[string]map[int]struct{}, 0)
 	}
 	if expressionNeedsEval == nil {
 		expressionNeedsEval = make(map[int]bool, len(MetricsConfig.Metrics))
@@ -2921,14 +2960,14 @@ func (metricsObject *MetricsObject) getExpression(internal_vars []string, netInd
 
 	for _, var_name := range exp.Vars {
 		if _, ok := inputToMetricsExpression[var_name]; !ok {
-			inputToMetricsExpression[var_name] = make([]int, 0)
+			inputToMetricsExpression[var_name] = make(map[int]struct{}, 0)
 			if MetricsConfig.Inputs[var_name].Internal && !stringInSlice(internal_vars, var_name) {
 				warning = fmt.Sprintf("metrics expression uses internal_output var '%v' prior to its calculation; results displayed for this metric will lag behind '%v' by one cycle", var_name, var_name)
 			}
 			containedInValChanged[var_name] = false
 			inputYieldsDirectMsg[var_name] = false
 		}
-		inputToMetricsExpression[var_name] = append(inputToMetricsExpression[var_name], netIndex)
+		inputToMetricsExpression[var_name][netIndex] = struct{}{}
 
 		if strings.Contains((*metricsObject).ParsedExpression.String, "ValueChanged") || strings.Contains((*metricsObject).ParsedExpression.String, "OverTimescale") {
 			containedInValChanged[var_name] = true

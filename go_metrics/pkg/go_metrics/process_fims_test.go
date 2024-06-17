@@ -24,9 +24,9 @@ func TestHandleDecodedMetricsInputValue(t *testing.T) {
 	inputToFilterExpression = map[string][]string{
 		"input1": {"filter1"},
 	}
-	inputToMetricsExpression = map[string][]int{
-		"filter1": {0},
-		"input1":  {1},
+	inputToMetricsExpression = map[string]map[int]struct{}{
+		"filter1": {0: {}},
+		"input1":  {1: {}},
 	}
 	expressionNeedsEval = map[int]bool{
 		0: false,
@@ -67,11 +67,11 @@ func TestHandleDecodedMetricsAttributeValue(t *testing.T) {
 		"input1":         {"filter1"},
 		"input1@enabled": {"filter2"},
 	}
-	inputToMetricsExpression = map[string][]int{
-		"filter1":        {0},
-		"input1":         {1},
-		"filter2":        {2},
-		"input1@enabled": {3},
+	inputToMetricsExpression = map[string]map[int]struct{}{
+		"filter1":        {0: {}},
+		"input1":         {1: {}},
+		"filter2":        {2: {}},
+		"input1@enabled": {3: {}},
 	}
 	expressionNeedsEval = map[int]bool{
 		0: false,
@@ -103,7 +103,7 @@ func TestHandleDecodedMetricsAttributeValue(t *testing.T) {
 
 type ProcessFimsTestsGlobal struct {
 	inputToFilterExpression  map[string][]string
-	inputToMetricsExpression map[string][]int
+	inputToMetricsExpression map[string]map[int]struct{}
 	uriToInputNameMap        map[string][]string
 	uriToEchoObjectInputMap  map[string]map[int]int
 	uriToOutputNameMap       map[string][]string
@@ -215,13 +215,13 @@ var GlobalConstants = ProcessFimsTestsGlobal{
 		"input1@attribute": {"filter2"},
 		"input2":           {"filter3"},
 	},
-	inputToMetricsExpression: map[string][]int{
-		"input1":           {0},
-		"filter1":          {1},
-		"input1@attribute": {2},
-		"filter2":          {3},
-		"input2":           {4},
-		"filter3":          {5},
+	inputToMetricsExpression: map[string]map[int]struct{}{
+		"input1":           {0: {}},
+		"filter1":          {1: {}},
+		"input1@attribute": {2: {}},
+		"filter2":          {3: {}},
+		"input2":           {4: {}},
+		"filter3":          {5: {}},
 	},
 	uriToInputNameMap: map[string][]string{
 		"/test/input1": {"input1"},

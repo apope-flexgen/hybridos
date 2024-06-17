@@ -72,9 +72,7 @@ func addAlertingAttributesToOutput(outputVar string, clothedOutputVal *map[strin
 		var details []map[string]interface{}
 		details = make([]map[string]interface{}, 0)
 		for index, activeMessage := range messagesList {
-			if valueChangedList[index].b || is_get {
-				details = append(details, map[string]interface{}{"message": activeMessage.s, "timestamp": timestampsList[index].s})
-			}
+			details = append(details, map[string]interface{}{"message": activeMessage.s, "timestamp": timestampsList[index].s})
 		}
 		// We still want to send an empty array if no entries are present
 		(*clothedOutputVal)["details"] = details

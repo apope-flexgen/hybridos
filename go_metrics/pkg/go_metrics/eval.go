@@ -668,6 +668,13 @@ func EvaluateExpressions() {
 	for q, metricsObject := range MetricsConfig.Metrics {
 		metricsObjectPointer := &MetricsConfig.Metrics[q]
 		metricsMutex[q].RUnlock()
+		// Skip metrics that are toggled off
+		if !metricsObjectPointer.Enabled {
+			if q < len(MetricsConfig.Metrics)-1 {
+				metricsMutex[q+1].RLock() // lock this value before we try to access the next metrics object
+			}
+			continue
+		}
 		expressionNeedsEvalMutex.RLock()
 		needEval := expressionNeedsEval[q]
 		expressionNeedsEvalMutex.RUnlock()
@@ -802,7 +809,7 @@ func EvaluateExpressions() {
 				if len(metricsObject.InternalOutput) > 0 {
 					input := InputScope[metricsObject.InternalOutput]
 					if !unionListsMatch(input, outputVals) {
-						for _, expNum := range inputToMetricsExpression[metricsObject.InternalOutput] {
+						for expNum := range inputToMetricsExpression[metricsObject.InternalOutput] {
 							expressionNeedsEvalMutex.Lock()
 							expressionNeedsEval[expNum] = true
 							expressionNeedsEvalMutex.Unlock()

@@ -51,6 +51,14 @@ async function updateGoMetricsConfig(alert, templates, replyUri) {
     let metricsId = alert.id;
     const aliasMap = {};
 
+    // TEMPLATES
+    templates.forEach(template => {
+        if (template.minWidth !== undefined) {
+          template.format = `%.${template.minWidth}d`;
+          delete template.minWidth;
+        }
+    });
+
     // INPUTS
     const inputs = (alert.aliases || []).reduce((acc, entry) => {
         // format input key

@@ -468,14 +468,40 @@ func handleNewRuntimeConfiguration(msg *fims.FimsMsgRaw, id string) (bool, error
 		if msg.Method != "del" {
 			return false, fmt.Errorf("received empty configuration")
 		}
-	} else if err := handleNewConfiguration(msg.Body, id); err != nil {
+	}
+
+	var err error
+	switch msg.Method {
+	case "set":
+		err = handleNewConfiguration(msg.Body, id)
+	case "del":
+		err = deleteOldConfiguration(id)
+	}
+	// Notify the sender of the config if requested
+	if msg.Replyto != "" {
+		errMsg := ""
+		if err != nil {
+			errMsg = err.Error()
+		}
+		responseMap := map[string]interface{}{"success": bool(err == nil), "message": errMsg}
+		responseBody, err := json.Marshal(responseMap)
+		if err != nil {
+			log.Errorf("Failed to create response to configuration source. There is something wrong with the code")
+		}
+		f.SendRaw(fims.FimsMsgRaw{
+			Method: "set",
+			Uri:    msg.Replyto,
+			Body:   responseBody,
+		})
+	}
+	if err != nil && msg.Method != "del" {
 		return false, err
 	}
 
-	// Backup the config to DBI if the configuration was handled successfully
+	// Backup the config to DBI if the configuration was handled successfully or there is a deletion
 	// Always send a set unless the message is a deletion
 	fimsMethod := "set"
-	if (*msg).Method == "del" {
+	if msg.Method == "del" {
 		fimsMethod = "del"
 	}
 	f.SendRaw(fims.FimsMsgRaw{
@@ -483,8 +509,7 @@ func handleNewRuntimeConfiguration(msg *fims.FimsMsgRaw, id string) (bool, error
 		Uri:    fmt.Sprintf("/dbi/%s/%s", ProcessName, id),
 		Body:   msg.Body,
 	})
-
-	return true, nil
+	return true, err
 }
 
 // handle new configuration documents received in raw byte form
@@ -494,12 +519,14 @@ func handleNewRuntimeConfiguration(msg *fims.FimsMsgRaw, id string) (bool, error
 // return whether any errors occurred
 func handleNewConfiguration(config []byte, id string) error {
 	// Ignore warnings as they will be reported during the config processing itself
-	new_metrics_info, _, wasError := UnmarshalConfig(config, id)
+	new_metrics_info, _, wasError, wasFatal := UnmarshalConfig(config, id)
+
 	new_metrics_info = GetPubTickers(new_metrics_info)
 	GetSubscribeUris(new_metrics_info)
 
-	if wasError {
-		return fmt.Errorf("error handling configuration received from fims")
+	if wasError || wasFatal {
+		deleteOldConfiguration(id)
+		return fmt.Errorf("could not handle configuration received from fims")
 	} else {
 		log.Infof("Received new configuration [%s] via FIMS", id)
 	}
@@ -516,6 +543,26 @@ func handleNewConfiguration(config []byte, id string) error {
 	metricsConfigMutex.Unlock()
 	wg.Wait()
 
+	return nil
+}
+
+// Disable all the metrics associated with the given configuration id
+// TODO: actually delete all the old values and restart everything so we don't old onto stale config
+func deleteOldConfiguration(id string) error {
+	metricsConfigMutex.Lock()
+	defer metricsConfigMutex.Unlock()
+	disabledAny := false
+	for i := range MetricsConfig.Metrics {
+		metricsObjectPointer := &MetricsConfig.Metrics[i]
+		if strings.HasPrefix(metricsObjectPointer.Id, id) {
+			disabledAny = true
+			metricsObjectPointer.Enabled = false
+		}
+	}
+
+	if !disabledAny {
+		return fmt.Errorf("could not find any metrics associated with the given configuration id: %s", id)
+	}
 	return nil
 }
 
@@ -663,13 +710,13 @@ func handleDecodedMetricsInputValue(inputName string) {
 			filterNeedsEvalMutex.Lock()
 			filterNeedsEval[filterName] = true
 			filterNeedsEvalMutex.Unlock()
-			for _, expNum := range inputToMetricsExpression[filterName] {
+			for expNum := range inputToMetricsExpression[filterName] {
 				expressionNeedsEvalMutex.Lock()
 				expressionNeedsEval[expNum] = true
 				expressionNeedsEvalMutex.Unlock()
 			}
 		}
-		for _, expNum := range inputToMetricsExpression[inputName] {
+		for expNum := range inputToMetricsExpression[inputName] {
 			expressionNeedsEvalMutex.Lock()
 			expressionNeedsEval[expNum] = true
 			expressionNeedsEvalMutex.Unlock()
@@ -701,7 +748,7 @@ func handleDecodedMetricsAttributeValue(inputName, scopeVar string) {
 			filterNeedsEvalMutex.Lock()
 			filterNeedsEval[filterName] = true
 			filterNeedsEvalMutex.Unlock()
-			for _, expNum := range inputToMetricsExpression[filterName] {
+			for expNum := range inputToMetricsExpression[filterName] {
 				expressionNeedsEvalMutex.Lock()
 				expressionNeedsEval[expNum] = true
 				expressionNeedsEvalMutex.Unlock()
@@ -711,13 +758,13 @@ func handleDecodedMetricsAttributeValue(inputName, scopeVar string) {
 			filterNeedsEvalMutex.Lock()
 			filterNeedsEval[filterName] = true
 			filterNeedsEvalMutex.Unlock()
-			for _, expNum := range inputToMetricsExpression[filterName] {
+			for expNum := range inputToMetricsExpression[filterName] {
 				expressionNeedsEvalMutex.Lock()
 				expressionNeedsEval[expNum] = true
 				expressionNeedsEvalMutex.Unlock()
 			}
 		}
-		for _, expNum := range inputToMetricsExpression[scopeVar] {
+		for expNum := range inputToMetricsExpression[scopeVar] {
 			expressionNeedsEvalMutex.Lock()
 			expressionNeedsEval[expNum] = true
 			expressionNeedsEvalMutex.Unlock()

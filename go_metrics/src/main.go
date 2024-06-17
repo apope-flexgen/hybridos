@@ -205,7 +205,10 @@ func getAndParseConfig(IsAlertingInstance bool) (metrics.NewMetricsInfo, error) 
 	}
 
 	metrics.ConfigSource = configSource
-	new_metrics_info, _, _ := metrics.UnmarshalConfig(cfgBytes, "")
+	new_metrics_info, _, _, wasFatal := metrics.UnmarshalConfig(cfgBytes, "")
+	if wasFatal {
+		log.Fatalf("Exiting due to unreadable configuration")
+	}
 
 	if templateOutput {
 		// Setup the destination of the generated template config

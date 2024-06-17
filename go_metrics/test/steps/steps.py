@@ -9,10 +9,11 @@ from process_fims_messages import process_messages
 
 # TODO: Clean up message processing
 
+
 def compare_json(actual, expected):
     """
     Recursively compare JSON elements.
-    
+
     :param actual: The actual JSON element.
     :param expected: The expected JSON element.
     :return: True if actual matches expected, otherwise False.
@@ -38,7 +39,7 @@ def compare_json(actual, expected):
             return False, f"\nExpected list length {len(expected)}, got {len(actual)}"
         for (i, item_expected) in enumerate(expected):
             found_match = False
-            for item_actual in actual: # allows items to be in a different order (needed for alerting)
+            for item_actual in actual:  # allows items to be in a different order (needed for alerting)
                 ok, message = compare_json(item_actual, item_expected)
                 if ok:
                     found_match = True
@@ -49,6 +50,7 @@ def compare_json(actual, expected):
 
     else:
         return actual == expected or expected == "any", ""
+
 
 def fims_listen_thread(method, uri, return_value_array):
     # Listen and use stdbuf -o0 to immediately flush the result rather than buffering it
@@ -98,12 +100,20 @@ def step_impl(context, method, uri):
     context.start_time = time.time()
 
 
+@when(u'I send a fims {method} with replyto {replyto} to {uri} containing')
+def step_impl(context, method, replyto, uri):
+    context.start_time = time.time()
+    subprocess.run(["fims_send", "-m", method, "-r", replyto, "-u", uri, context.text.strip()],
+                   stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False)
+
+
 @when(u'I send a fims {method} to {uri} containing')
 def step_impl(context, method, uri):
     context.start_time = time.time()
     subprocess.run(["fims_send", "-m", method, "-u", uri, context.text.strip()],
                    stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False)
-    
+
+
 @when(u'I clear the fims message list')
 def step_impl(context):
     if hasattr(context, "fims_listen_result_array"):
@@ -163,7 +173,7 @@ def step_impl(context, method, uri, delay):
         assert False, "Must include step containing 'Given I am listening for a fims {method} on {uri}'"
 
     # Wait for fims_listen results before proceeding
-    while (time.time() - context.start_time) < float(delay)+1:
+    while (time.time() - context.start_time) < float(delay) + 1:
         time.sleep(float(delay) + 1 - (time.time() - context.start_time))
 
     # Process and store the results received from fims_listen

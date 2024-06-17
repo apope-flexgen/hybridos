@@ -23,6 +23,8 @@ const (
 	STRING
 )
 
+var format_specifiers = []string{"%d", `%(0??)(\d+|\.\d+)d`, "%c", "%U"}
+
 func (dataType DataType) String() string {
 	switch dataType {
 	case STRING:
@@ -190,6 +192,7 @@ type Filter struct {
 type MetricsObject struct {
 	Id               string             `json:"id"`                        // the identifier for the metric; necessary for proper update tool functionality
 	Type             DataType           `json:"type"`                      // the default value for an output - also specifies the data type
+	Enabled          bool               `json:"enabled"`                   // whether the metric is enabled
 	Alert            bool               `json:"alert"`                     // whether the expression is for an alert and should include special alerting behavior
 	Messages         map[string]string  `json:"messages,omitempty"`        // For alerts, the associated messages to send on the outputs
 	Outputs          []string           `json:"outputs,omitempty"`         // the output variable to publish to (e.g. "output_1" which would have been mapped to an Output struct)

@@ -383,11 +383,14 @@ def start_go_metrics():
             run(['fims_send', '-m', 'del', '-u', f'/dbi/go_metrics_alerting', '-r', f'/{pid}'],
                 stdout=DEVNULL)  # reply-to used to keep FIMS from getting clogged
         if systemd:
+            # start the alerting service
+            Popen(["sudo", "systemctl", "start", "go_metrics_alerting"])
+            # start the base go_metrics service
             Popen(["sudo", "systemctl", "start", "go_metrics@configuration.json"])
         else:
             Popen([bin_dir + '/FlexGenMCP', machine_config_dir_symlink + '/mcp/mcp_go_metrics.json'])
-        # demo, start another go_metrics
-        Popen([bin_dir + '/FlexGenMCP', machine_config_dir_symlink + '/mcp/mcp_go_metrics_example.json'])
+            # Start the base go_metrics service
+            Popen([bin_dir + '/FlexGenMCP', machine_config_dir_symlink + '/mcp/mcp_go_metrics_example.json'])
 
 
 def start_scheduler():
