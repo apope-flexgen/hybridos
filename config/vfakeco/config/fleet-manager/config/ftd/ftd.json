@@ -1,75 +1,210 @@
 {
+    "client": "vfakeco",
+    "site": "fleet_manager",
     "1": {
-        "archive": "/home/hybridos/powercloud/owner/fleetman01/archives",
-        "db_name": "fleetman01",
-        "num_archive_workers": 1,
+        "db_name": "vfakeco_fleet_manager_fleet_manager_01",
         "period": 300,
+        "archive": "/home/hybridos/powercloud/owner/fleetman01/archives_cold",
+        "batchpqtgz": true,
+        "num_archive_workers": 1,
         "uris": [
             {
-                "destination": "influx",
-                "measurement": "sites",
-                "uri": "/sites"
-            },
-            {
-                "destination": "influx",
-                "measurement": "components",
-                "uri": "/components"
-            },
-            {
-                "destination": "influx",
-                "measurement": "fleet_features_ercotAs",
-                "uri": "/fleet/features/ercotAs"
-            },
-            {
-                "destination": "influx",
-                "measurement": "fleet_sites",
-                "uri": "/fleet/sites"
-            },
-            {
-                "destination": "influx",
-                "measurement": "cpustats",
-                "uri": "/systemstats/cpu"
-            },
-            {
-                "destination": "influx",
-                "measurement": "memstats",
-                "uri": "/systemstats/mem"
-            },
-            {
-                "destination": "influx",
-                "measurement": "netstats",
-                "uri": "/systemstats/net"
-            },
-            {
-                "destination": "influx",
-                "measurement": "diskstats",
-                "uri": "/systemstats/disk"
-            },
-            {
-                "destination": "influx",
-                "measurement": "processstats",
-                "uri": "/systemstats/process"
-            },
-            {
-                "destination": "mongo",
-                "measurement": "events",
+                "uri": "/components",
                 "message_methods": [
-                    "post"
+                    "pub"
                 ],
+                "destination": "influx",
+                "measurement": "components"
+            },
+            {
+                "uri": "/events",
                 "sources": [
                     ""
                 ],
-                "uri": "/events"
+                "message_methods": [
+                    "post"
+                ],
+                "destination": "mongo",
+                "measurement": "events"
             },
             {
+                "uri": "/fleet/features/ercotAs",
+                "message_methods": [
+                    "set"
+                ],
                 "destination": "influx",
-                "measurement": "cops_stats",
-                "uri": "/cops/stats"
+                "measurement": "fleet_features_ercotAs_sets"
             },
             {
+                "uri": "/fleet/features/ercotAs",
+                "message_methods": [
+                    "pub"
+                ],
                 "destination": "influx",
-                "measurement": "cops_summary",
-                "uri": "/cops/summary"
+                "measurement": "fleet_features_ercotAs"
+            },
+            {
+                "uri": "/fleet/sites",
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "fleet_sites"
+            },
+            {
+                "uri": "/metrics",
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "metrics"
+            },
+            {
+                "uri": "/sites",
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "sites"
+            },
+            {
+                "uri": "/systemstats/cpu",
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "cpustats"
+            },
+            {
+                "uri": "/systemstats/disk",
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "diskstats"
+            },
+            {
+                "uri": "/systemstats/mem",
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "memstats"
+            },
+            {
+                "uri": "/systemstats/net",
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "netstats"
+            },
+            {
+                "uri": "/systemstats/process",
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "processstats"
+            }
+        ]
+    },
+    "2": {
+        "db_name": "vfakeco_fleet_manager_fleet_manager_01",
+        "period": 60,
+        "archive": "/home/hybridos/powercloud/owner/fleetman01/archives_warm",
+        "batchpqtgz": true,
+        "num_archive_workers": 1,
+        "uris": [
+            {
+                "uri": "/components",
+                "fields": [
+                    "gen_soc",
+                    "gen_basepoint_deviation",
+                    "gen_basepoint_feedback",
+                    "gen_gross_mw",
+                    "gen_lmp",
+                    "load_basepoint_deviation",
+                    "load_basepoint_feedback"
+                ],
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "components"
+            },
+            {
+                "uri": "/events",
+                "sources": [
+                    ""
+                ],
+                "message_methods": [
+                    "post"
+                ],
+                "destination": "mongo",
+                "measurement": "events"
+            },
+            {
+                "uri": "/fleet/features/ercotAs",
+                "message_methods": [
+                    "set"
+                ],
+                "destination": "influx",
+                "measurement": "fleet_features_ercotAs_sets"
+            },
+            {
+                "uri": "/fleet/features/ercotAs",
+                "fields": [
+                    "baseload_cmd_mw"
+                ],
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "fleet_features_ercotAs"
+            },
+            {
+                "uri": "/systemstats/cpu",
+                "fields": [
+                    "uptimesec",
+                    "loadavg_5m"
+                ],
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "cpustats"
+            },
+            {
+                "uri": "/systemstats/disk",
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "diskstats"
+            },
+            {
+                "uri": "/systemstats/mem",
+                "fields": [
+                    "activeKB",
+                    "freeKB"
+                ],
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "memstats"
+            },
+            {
+                "uri": "/systemstats/net",
+                "fields": [
+                    "fims_status"
+                ],
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "netstats"
             }
         ]
     }

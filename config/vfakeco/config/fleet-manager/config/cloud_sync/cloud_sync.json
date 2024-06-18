@@ -1,23 +1,41 @@
 {
     "clients": {
-        "fleetman01" : {
-            "directory" : "/home/hybridos/powercloud/owner/fleetman01/archives",
+        "fleetman01-cold" : {
+            "directory" : "/home/hybridos/powercloud/owner/fleetman01/archives_cold",
             "private_key" : "/home/hybridos/.ssh/id_rsa",
             "known_hosts" : "/home/hybridos/.ssh/known_hosts",
-            "extension" : ".tar.gz",
-            "servers" : [ "local-backup", "powercloud02" ]
+            "extension" : ".batchpqtgz",
+            "servers" : [ "local-backup-cold", "powercloud02-cold" ]
+        },
+        "fleetman01-warm" : {
+            "directory" : "/home/hybridos/powercloud/owner/fleetman01/archives_warm",
+            "private_key" : "/home/hybridos/.ssh/id_rsa",
+            "known_hosts" : "/home/hybridos/.ssh/known_hosts",
+            "extension" : ".batchpqtgz",
+            "servers" : [ "local-backup-warm", "powercloud02-warm" ]
         }
     },
     "servers": {
-        "powercloud02": {
+        "powercloud02-cold": {
             "ip" : "10.128.2.30",
             "port": "22",
             "user" : "hybridos",
-            "directory" : "/mnt/powercloud/owner/fleetman01/archives",
-            "timeout" : 10
+            "directory" : "/mnt/powercloud/owner/fleetman01/archives_cold",
+            "timeout" : 300
         },
-        "local-backup": {
-            "directory" : "/mnt/powercloud/backup",
+        "local-backup-cold": {
+            "directory" : "/mnt/powercloud/backup_cold",
+            "sorted" : true
+        },
+        "powercloud02-warm": {
+            "ip" : "10.128.2.30",
+            "port": "22",
+            "user" : "hybridos",
+            "directory" : "/mnt/powercloud/owner/fleetman01/archives_warm",
+            "timeout" : 300
+        },
+        "local-backup-warm": {
+            "directory" : "/mnt/powercloud/backup_warm",
             "sorted" : true
         }
     },

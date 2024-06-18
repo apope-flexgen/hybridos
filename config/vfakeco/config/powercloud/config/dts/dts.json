@@ -2,11 +2,8 @@
     "db_health_check_delay_seconds": 0.05,
     "ext": [
         ".tar.gz",
-        ".parquet.gz"
+        ".batchpqtgz"
     ],
-    "failed_validate_path": "/home/hybridos/powercloud/validate_error",
-    "failed_write_path": "/home/hybridos/powercloud/write_error",
-    "forward": "",
     "influx_address": "influx-container:8086",
     "input_path": "/home/hybridos/powercloud/inbox",
     "mongo_address": "mongo-container:27017",

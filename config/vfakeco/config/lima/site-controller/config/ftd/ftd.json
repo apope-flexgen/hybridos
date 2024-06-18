@@ -1,248 +1,775 @@
 {
+    "client": "vfakeco",
+    "site": "lima",
     "1": {
-        "archive": "/home/hybridos/powercloud/owner/lima/archives",
-        "db_name": "lima",
-        "num_archive_workers": 1,
+        "db_name": "vfakeco_lima_site_controller_01",
         "period": 300,
+        "archive": "/home/hybridos/powercloud/owner/lima/archives_cold",
+        "batchpqtgz": true,
+        "num_archive_workers": 1,
         "uris": [
             {
-                "destination": "influx",
-                "measurement": "site",
-                "uri": "/site"
-            },
-            {
-                "destination": "influx",
-                "measurement": "features",
-                "uri": "/features"
-            },
-            {
-                "destination": "influx",
-                "group": "assets_ess_group",
-                "measurement": "ess",
-                "sources": [
-                    "ess_01",
-                    "ess_02",
-                    "ess_03",
-                    "ess_04",
-                    "ess_05",
-                    "ess_06",
-                    "ess_07",
-                    "ess_08",
-                    "ess_09",
-                    "ess_10",
-                    "ess_11",
-                    "ess_12",
-                    "ess_13",
-                    "ess_14",
-                    "ess_15",
-                    "ess_16",
-                    "ess_17",
-                    "ess_18",
-                    "ess_19",
-                    "ess_20",
-                    "ess_21",
-                    "ess_22",
-                    "ess_23",
-                    "ess_24",
-                    "ess_25",
-                    "ess_26",
-                    "ess_27",
-                    "ess_28",
-                    "ess_29",
-                    "ess_30",
-                    "ess_31",
-                    "ess_32",
-                    "ess_33"
-                ],
-                "uri": "/assets/ess"
-            },
-            {
-                "destination": "influx",
-                "measurement": "ess",
+                "uri": "/assets/ess",
                 "sources": [
                     "summary"
                 ],
-                "uri": "/assets/ess"
-            },
-            {
-                "destination": "influx",
-                "measurement": "feeders",
-                "uri": "/assets/feeders"
-            },
-            {
-                "destination": "influx",
-                "group": "components_flexgen_ess_01_to_11_hs_group",
-                "measurement": "flexgen_ess_high_speed",
-                "sources": [
-                    "flexgen_ess_01_hs",
-                    "flexgen_ess_02_hs",
-                    "flexgen_ess_03_hs",
-                    "flexgen_ess_04_hs",
-                    "flexgen_ess_05_hs",
-                    "flexgen_ess_06_hs",
-                    "flexgen_ess_07_hs",
-                    "flexgen_ess_08_hs",
-                    "flexgen_ess_09_hs",
-                    "flexgen_ess_10_hs",
-                    "flexgen_ess_11_hs"
+                "message_methods": [
+                    "pub"
                 ],
-                "uri": "/components"
+                "destination": "influx",
+                "measurement": "ess_summary"
             },
             {
-                "destination": "influx",
-                "group": "components_flexgen_ess_12_to_22_hs_group",
-                "measurement": "flexgen_ess_high_speed",
-                "sources": [
-                    "flexgen_ess_12_hs",
-                    "flexgen_ess_13_hs",
-                    "flexgen_ess_14_hs",
-                    "flexgen_ess_15_hs",
-                    "flexgen_ess_16_hs",
-                    "flexgen_ess_17_hs",
-                    "flexgen_ess_18_hs",
-                    "flexgen_ess_19_hs",
-                    "flexgen_ess_20_hs",
-                    "flexgen_ess_21_hs",
-                    "flexgen_ess_22_hs"
+                "uri": "/assets/ess",
+                "message_methods": [
+                    "set"
                 ],
-                "uri": "/components"
+                "destination": "influx",
+                "measurement": "assets_ess_sets"
             },
             {
-                "destination": "influx",
-                "group": "components_flexgen_ess_23_to_33_hs_group",
-                "measurement": "flexgen_ess_high_speed",
-                "sources": [
-                    "flexgen_ess_23_hs",
-                    "flexgen_ess_24_hs",
-                    "flexgen_ess_25_hs",
-                    "flexgen_ess_26_hs",
-                    "flexgen_ess_27_hs",
-                    "flexgen_ess_28_hs",
-                    "flexgen_ess_29_hs",
-                    "flexgen_ess_30_hs",
-                    "flexgen_ess_31_hs",
-                    "flexgen_ess_32_hs",
-                    "flexgen_ess_33_hs"
+                "bit_string_fields": [
+                    {
+                        "field": "bms_alarms",
+                        "bit_strings": [
+                            "BMS-DC-Current-Max-Threshold-Exceeded",
+                            "BMS-DC-Current-Min-Threshold-Exceeded",
+                            "BMS-Max-Cell-Temperature-Threshold-Exceeded",
+                            "BMS-Max-Cell-Voltage-Threshold-Exceeded",
+                            "BMS-Min-Cell-Temperature-Threshold-Exceeded",
+                            "BMS-Min-Cell-Voltage-Threshold-Exceeded",
+                            "BMS-State-of-Health-Below-Threshold",
+                            "BMS-DC-Voltage-Max-Threshold-Exceeded",
+                            "BMS-DC-Voltage-Min-Threshold-Exceeded",
+                            "BMS-SOC-Max-Threshold-Exceeded",
+                            "BMS-SOC-Min-Threshold-Exceeded",
+                            "BMS-Cell-Voltage-Delta-Max-Threshold-Exceeded",
+                            "BMS-Cell-Temperature-Delta-Max-Threshold-Exceeded",
+                            "BMS-Number-of-Racks-Online-Below-Min-Threshold"
+                        ]
+                    },
+                    {
+                        "field": "bms_faults",
+                        "bit_strings": [
+                            "BMS-DC-Current-Max-Threshold-Exceeded",
+                            "BMS-DC-Current-Min-Threshold-Exceeded",
+                            "BMS-Max-Cell-Temperature-Threshold-Exceeded",
+                            "BMS-Max-Cell-Voltage-Threshold-Exceeded",
+                            "BMS-Min-Cell-Temperature-Threshold-Exceeded",
+                            "BMS-Min-Cell-Voltage-Threshold-Exceeded",
+                            "BMS-State-of-Health-Below-Threshold",
+                            "BMS-DC-Voltage-Max-Threshold-Exceeded",
+                            "BMS-DC-Voltage-Min-Threshold-Exceeded",
+                            "BMS-SOC-Max-Threshold-Exceeded",
+                            "BMS-SOC-Min-Threshold-Exceeded",
+                            "BMS-Cell-Voltage-Delta-Max-Threshold-Exceeded",
+                            "BMS-Cell-Temperature-Delta-Max-Threshold-Exceeded",
+                            "BMS-Number-of-Racks-Online-Below-Min-Threshold"
+                        ]
+                    },
+                    {
+                        "field": "pcs_alarms",
+                        "bit_strings": [
+                            "PCS-Active-Power-Max-Threshold-Exceeded",
+                            "PCS-DC-Voltage-Max-Threshold-Exceeded",
+                            "PCS-DC-Voltage-Min-Threshold-Exceeded"
+                        ]
+                    },
+                    {
+                        "field": "pcs_faults",
+                        "bit_strings": [
+                            "PCS-Active-Power-Max-Threshold-Exceeded",
+                            "PCS-DC-Voltage-Max-Threshold-Exceeded",
+                            "PCS-DC-Voltage-Min-Threshold-Exceeded"
+                        ]
+                    },
+                    {
+                        "field": "status",
+                        "bit_strings": [
+                            "Stop",
+                            "Run",
+                            "Fault",
+                            "Standby"
+                        ]
+                    }
                 ],
-                "uri": "/components"
-            },
-            {
-                "destination": "influx",
-                "group": "components_flexgen_ess_ls_group",
-                "measurement": "flexgen_ess_low_speed",
+                "uri": "/assets/ess",
                 "sources": [
-                    "flexgen_ess_01_ls",
-                    "flexgen_ess_02_ls",
-                    "flexgen_ess_03_ls",
-                    "flexgen_ess_04_ls",
-                    "flexgen_ess_05_ls",
-                    "flexgen_ess_06_ls",
-                    "flexgen_ess_07_ls",
-                    "flexgen_ess_08_ls",
-                    "flexgen_ess_09_ls",
-                    "flexgen_ess_10_ls",
-                    "flexgen_ess_11_ls",
-                    "flexgen_ess_12_ls",
-                    "flexgen_ess_13_ls",
-                    "flexgen_ess_14_ls",
-                    "flexgen_ess_15_ls",
-                    "flexgen_ess_16_ls",
-                    "flexgen_ess_17_ls",
-                    "flexgen_ess_18_ls",
-                    "flexgen_ess_19_ls",
-                    "flexgen_ess_20_ls",
-                    "flexgen_ess_21_ls",
-                    "flexgen_ess_22_ls",
-                    "flexgen_ess_23_ls",
-                    "flexgen_ess_24_ls",
-                    "flexgen_ess_25_ls",
-                    "flexgen_ess_26_ls",
-                    "flexgen_ess_27_ls",
-                    "flexgen_ess_28_ls",
-                    "flexgen_ess_29_ls",
-                    "flexgen_ess_30_ls",
-                    "flexgen_ess_31_ls",
-                    "flexgen_ess_32_ls",
-                    "flexgen_ess_33_ls"
+                    "ess_01",
+                    "ess_02",
+                    "ess_03"
                 ],
-                "uri": "/components"
+                "group": "assets_ess_group_0",
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "ess_instances"
             },
             {
+                "uri": "/assets/feeders",
+                "sources": [
+                    "summary"
+                ],
+                "message_methods": [
+                    "pub"
+                ],
                 "destination": "influx",
-                "measurement": "meters",
+                "measurement": "feeders_summary"
+            },
+            {
+                "uri": "/assets/feeders",
+                "message_methods": [
+                    "set"
+                ],
+                "destination": "influx",
+                "measurement": "assets_feeders_sets"
+            },
+            {
+                "uri": "/assets/feeders",
+                "sources": [
+                    "feed_1",
+                    "feed_3"
+                ],
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "feeders_instances"
+            },
+            {
+                "uri": "/components",
+                "sources": [
+                    "acuvim",
+                    "apc_ups",
+                    "processed_acuvim",
+                    "sel_651r"
+                ],
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "components"
+            },
+            {
+                "uri": "/components",
                 "sources": [
                     "sel_735"
                 ],
-                "uri": "/components"
-            },
-            {
-                "destination": "influx",
-                "measurement": "rtac",
-                "sources": [
-                    "sel_3530_rtac"
-                ],
-                "uri": "/components"
-            },
-            {
-                "destination": "influx",
-                "measurement": "components",
-                "sources": [
-                    "apc_ups",
-                    "sel_651r",
-                    "acuvim"
-                ],
-                "uri": "/components"
-            },
-            {
-                "destination": "influx",
-                "measurement": "metrics",
-                "uri": "/metrics"
-            },
-            {
-                "destination": "mongo",
-                "measurement": "events",
                 "message_methods": [
-                    "post"
+                    "pub"
                 ],
+                "destination": "influx",
+                "measurement": "meters_sel_735"
+            },
+            {
+                "uri": "/components",
+                "sources": [
+                    "flexgen_ess_01",
+                    "flexgen_ess_02",
+                    "flexgen_ess_03"
+                ],
+                "group": "components_flexgen_ess_group_0",
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "components_flexgen_ess"
+            },
+            {
+                "uri": "/events",
                 "sources": [
                     ""
                 ],
-                "uri": "/events"
+                "message_methods": [
+                    "post"
+                ],
+                "destination": "mongo",
+                "measurement": "events"
             },
             {
+                "uri": "/features",
+                "sources": [
+                    "reactive_power"
+                ],
+                "message_methods": [
+                    "pub"
+                ],
                 "destination": "influx",
-                "measurement": "cpustats",
-                "uri": "/systemstats/cpu"
+                "measurement": "features_reactive_power"
             },
             {
+                "uri": "/features",
+                "sources": [
+                    "site_operation"
+                ],
+                "message_methods": [
+                    "pub"
+                ],
                 "destination": "influx",
-                "measurement": "memstats",
-                "uri": "/systemstats/mem"
+                "measurement": "features_site_operation"
             },
             {
+                "uri": "/features",
+                "sources": [
+                    "standalone_power"
+                ],
+                "message_methods": [
+                    "pub"
+                ],
                 "destination": "influx",
-                "measurement": "netstats",
-                "uri": "/systemstats/net"
+                "measurement": "features_standalone_power"
             },
             {
+                "uri": "/features",
+                "sources": [
+                    "summary"
+                ],
+                "message_methods": [
+                    "pub"
+                ],
                 "destination": "influx",
-                "measurement": "diskstats",
-                "uri": "/systemstats/disk"
+                "measurement": "features_summary"
             },
             {
+                "uri": "/features",
+                "sources": [
+                    "active_power"
+                ],
+                "message_methods": [
+                    "pub"
+                ],
                 "destination": "influx",
-                "measurement": "processstats",
-                "uri": "/systemstats/process"
+                "measurement": "features_active_power"
             },
             {
+                "uri": "/features",
+                "message_methods": [
+                    "set"
+                ],
                 "destination": "influx",
-                "measurement": "cops_stats",
-                "uri": "/cops/stats"
+                "measurement": "features_sets"
             },
             {
+                "uri": "/metrics",
+                "message_methods": [
+                    "pub"
+                ],
                 "destination": "influx",
-                "measurement": "cops_summary",
-                "uri": "/cops/summary"
+                "measurement": "metrics"
+            },
+            {
+                "uri": "/site",
+                "sources": [
+                    "input_sources"
+                ],
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "site_input_sources"
+            },
+            {
+                "uri": "/site",
+                "sources": [
+                    "configuration"
+                ],
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "site_configuration"
+            },
+            {
+                "uri": "/site",
+                "sources": [
+                    "operation"
+                ],
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "site_operation"
+            },
+            {
+                "uri": "/site",
+                "sources": [
+                    "summary"
+                ],
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "site_summary"
+            },
+            {
+                "uri": "/site",
+                "message_methods": [
+                    "set"
+                ],
+                "destination": "influx",
+                "measurement": "site_sets"
+            },
+            {
+                "uri": "/systemstats/cpu",
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "cpustats"
+            },
+            {
+                "uri": "/systemstats/disk",
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "diskstats"
+            },
+            {
+                "uri": "/systemstats/mem",
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "memstats"
+            },
+            {
+                "uri": "/systemstats/net",
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "netstats"
+            },
+            {
+                "uri": "/systemstats/process",
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "processstats"
+            }
+        ]
+    },
+    "2": {
+        "db_name": "vfakeco_lima_site_controller_01",
+        "period": 60,
+        "archive": "/home/hybridos/powercloud/owner/lima/archives_warm",
+        "batchpqtgz": true,
+        "num_archive_workers": 1,
+        "uris": [
+            {
+                "uri": "/assets/ess",
+                "sources": [
+                    "summary"
+                ],
+                "fields": [
+                    "ess_chargeable_power",
+                    "ess_dischargeable_power",
+                    "ess_chargeable_energy",
+                    "ess_dischargeable_energy",
+                    "ess_total_reactive_power",
+                    "num_ess_available",
+                    "num_ess_running",
+                    "ess_average_soc"
+                ],
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "ess_summary"
+            },
+            {
+                "uri": "/assets/ess",
+                "message_methods": [
+                    "set"
+                ],
+                "destination": "influx",
+                "measurement": "assets_ess_sets"
+            },
+            {
+                "bit_string_fields": [
+                    {
+                        "field": "bms_alarms",
+                        "bit_strings": [
+                            "BMS-DC-Current-Max-Threshold-Exceeded",
+                            "BMS-DC-Current-Min-Threshold-Exceeded",
+                            "BMS-Max-Cell-Temperature-Threshold-Exceeded",
+                            "BMS-Max-Cell-Voltage-Threshold-Exceeded",
+                            "BMS-Min-Cell-Temperature-Threshold-Exceeded",
+                            "BMS-Min-Cell-Voltage-Threshold-Exceeded",
+                            "BMS-State-of-Health-Below-Threshold",
+                            "BMS-DC-Voltage-Max-Threshold-Exceeded",
+                            "BMS-DC-Voltage-Min-Threshold-Exceeded",
+                            "BMS-SOC-Max-Threshold-Exceeded",
+                            "BMS-SOC-Min-Threshold-Exceeded",
+                            "BMS-Cell-Voltage-Delta-Max-Threshold-Exceeded",
+                            "BMS-Cell-Temperature-Delta-Max-Threshold-Exceeded",
+                            "BMS-Number-of-Racks-Online-Below-Min-Threshold"
+                        ]
+                    },
+                    {
+                        "field": "bms_faults",
+                        "bit_strings": [
+                            "BMS-DC-Current-Max-Threshold-Exceeded",
+                            "BMS-DC-Current-Min-Threshold-Exceeded",
+                            "BMS-Max-Cell-Temperature-Threshold-Exceeded",
+                            "BMS-Max-Cell-Voltage-Threshold-Exceeded",
+                            "BMS-Min-Cell-Temperature-Threshold-Exceeded",
+                            "BMS-Min-Cell-Voltage-Threshold-Exceeded",
+                            "BMS-State-of-Health-Below-Threshold",
+                            "BMS-DC-Voltage-Max-Threshold-Exceeded",
+                            "BMS-DC-Voltage-Min-Threshold-Exceeded",
+                            "BMS-SOC-Max-Threshold-Exceeded",
+                            "BMS-SOC-Min-Threshold-Exceeded",
+                            "BMS-Cell-Voltage-Delta-Max-Threshold-Exceeded",
+                            "BMS-Cell-Temperature-Delta-Max-Threshold-Exceeded",
+                            "BMS-Number-of-Racks-Online-Below-Min-Threshold"
+                        ]
+                    },
+                    {
+                        "field": "pcs_alarms",
+                        "bit_strings": [
+                            "PCS-Active-Power-Max-Threshold-Exceeded",
+                            "PCS-DC-Voltage-Max-Threshold-Exceeded",
+                            "PCS-DC-Voltage-Min-Threshold-Exceeded"
+                        ]
+                    },
+                    {
+                        "field": "pcs_faults",
+                        "bit_strings": [
+                            "PCS-Active-Power-Max-Threshold-Exceeded",
+                            "PCS-DC-Voltage-Max-Threshold-Exceeded",
+                            "PCS-DC-Voltage-Min-Threshold-Exceeded"
+                        ]
+                    },
+                    {
+                        "field": "status",
+                        "bit_strings": [
+                            "Stop",
+                            "Run",
+                            "Fault",
+                            "Standby"
+                        ]
+                    }
+                ],
+                "uri": "/assets/ess",
+                "sources": [
+                    "ess_01",
+                    "ess_02",
+                    "ess_03"
+                ],
+                "fields": [
+                    "active_power_setpoint",
+                    "dc_contactors_closed",
+                    "racks_in_service",
+                    "system_chargeable_energy",
+                    "system_dischargeable_energy",
+                    "system_chargeable_power",
+                    "system_dischargeable_power",
+                    "modbus_heartbeat",
+                    "faults",
+                    "voltage_l1_l2",
+                    "voltage_l2_l3",
+                    "voltage_l3_l1",
+                    "current_l1",
+                    "current_l2",
+                    "current_l3",
+                    "current_dc",
+                    "pcs_dc_current",
+                    "voltage_dc",
+                    "frequency",
+                    "apparent_power",
+                    "pf",
+                    "power_factor",
+                    "reactive_power_setpoint",
+                    "reactive_power",
+                    "active_power",
+                    "bms_maximum_cell_temperature",
+                    "bms_maximum_cell_voltage",
+                    "bms_minimum_cell_temperature",
+                    "bms_minimum_cell_voltage",
+                    "bms_average_cell_temperature",
+                    "reactive_power_ramp_rate",
+                    "active_power_ramp_rate",
+                    "soc",
+                    "min_cell_temp",
+                    "max_cell_temp",
+                    "alarms",
+                    "min_cell_voltage",
+                    "max_cell_voltage",
+                    "soh",
+                    "status",
+                    "avg_cell_temp",
+                    "dc_voltage",
+                    "bms_fault",
+                    "pcs_fault",
+                    "maint_mode",
+                    "bms_alarms",
+                    "bms_faults",
+                    "pcs_alarms",
+                    "pcs_faults",
+                    "status"
+                ],
+                "group": "assets_ess_group_0",
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "ess_instances"
+            },
+            {
+                "uri": "/assets/feeders",
+                "sources": [
+                    "summary"
+                ],
+                "fields": [
+                    "feed_1_active_power"
+                ],
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "feeders_summary"
+            },
+            {
+                "uri": "/assets/feeders",
+                "message_methods": [
+                    "set"
+                ],
+                "destination": "influx",
+                "measurement": "assets_feeders_sets"
+            },
+            {
+                "uri": "/assets/feeders",
+                "sources": [
+                    "feed_1",
+                    "feed_3"
+                ],
+                "fields": [
+                    "breaker_status",
+                    "aux_active_energy",
+                    "kwh_received",
+                    "kwh_delivered",
+                    "active_power"
+                ],
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "feeders_instances"
+            },
+            {
+                "uri": "/components",
+                "sources": [
+                    "flexgen_ess_01",
+                    "flexgen_ess_02",
+                    "flexgen_ess_03"
+                ],
+                "fields": [
+                    "active_power_setpoint",
+                    "pcs_active_power"
+                ],
+                "group": "components_flexgen_ess_group_0",
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "components_flexgen_ess"
+            },
+            {
+                "uri": "/components",
+                "sources": [
+                    "sel_735"
+                ],
+                "fields": [
+                    "hv_poi_energy_delivered",
+                    "hv_poi_energy_received",
+                    "kwh_delivered",
+                    "kwh_received",
+                    "apparent_power",
+                    "current_n",
+                    "kvarh_delivered",
+                    "kvarh_received",
+                    "voltage_l1",
+                    "voltage_l2",
+                    "voltage_l3",
+                    "active_power",
+                    "current_l1",
+                    "current_l2",
+                    "current_l3",
+                    "frequency",
+                    "power_factor",
+                    "site_energy_exported",
+                    "voltage_l1_l2",
+                    "voltage_l2_l3",
+                    "voltage_l3_l1",
+                    "mv_feeder_1_3_phase_mwhr_delivered",
+                    "mv_feeder_1_3_phase_mwhr_received",
+                    "mv_feeder_2_3_phase_mwhr_delivered",
+                    "mv_feeder_2_3_phase_mwhr_received",
+                    "mv_feeder_3_3_phase_mwhr_delivered",
+                    "mv_feeder_3_3_phase_mwhr_received",
+                    "mv_feeder_4_3_phase_mwhr_delivered",
+                    "mv_feeder_4_3_phase_mwhr_received"
+                ],
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "meters_sel_735"
+            },
+            {
+                "uri": "/events",
+                "sources": [
+                    ""
+                ],
+                "message_methods": [
+                    "post"
+                ],
+                "destination": "mongo",
+                "measurement": "events"
+            },
+            {
+                "uri": "/features",
+                "sources": [
+                    "reactive_power"
+                ],
+                "fields": [
+                    "ess_actual_kVAR",
+                    "ess_kVAR_cmd",
+                    "runmode1_kVAR_mode_status",
+                    "site_kVAR_demand"
+                ],
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "features_reactive_power"
+            },
+            {
+                "uri": "/features",
+                "sources": [
+                    "active_power"
+                ],
+                "fields": [
+                    "runmode1_kW_mode_status",
+                    "feature_kW_demand",
+                    "site_kW_demand",
+                    "ess_kW_cmd",
+                    "ess_actual_kW",
+                    "fr_baseload_cmd_kw_dnp3",
+                    "fr_baseload_cmd_kw"
+                ],
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "features_active_power"
+            },
+            {
+                "uri": "/features",
+                "message_methods": [
+                    "set"
+                ],
+                "destination": "influx",
+                "measurement": "features_sets"
+            },
+            {
+                "uri": "/site",
+                "sources": [
+                    "summary"
+                ],
+                "fields": [
+                    "active_faults",
+                    "active_alarms"
+                ],
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "site_summary"
+            },
+            {
+                "uri": "/site",
+                "sources": [
+                    "operation"
+                ],
+                "fields": [
+                    "site_status",
+                    "time"
+                ],
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "site_operation"
+            },
+            {
+                "uri": "/site",
+                "sources": [
+                    "input_sources"
+                ],
+                "fields": [
+                    "ui"
+                ],
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "site_input_sources"
+            },
+            {
+                "uri": "/site",
+                "message_methods": [
+                    "set"
+                ],
+                "destination": "influx",
+                "measurement": "site_sets"
+            },
+            {
+                "uri": "/systemstats/cpu",
+                "fields": [
+                    "uptimesec",
+                    "loadavg_5m"
+                ],
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "cpustats"
+            },
+            {
+                "uri": "/systemstats/disk",
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "diskstats"
+            },
+            {
+                "uri": "/systemstats/mem",
+                "fields": [
+                    "activeKB",
+                    "freeKB"
+                ],
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "memstats"
+            },
+            {
+                "uri": "/systemstats/net",
+                "fields": [
+                    "fims_status"
+                ],
+                "message_methods": [
+                    "pub"
+                ],
+                "destination": "influx",
+                "measurement": "netstats"
             }
         ]
     }
