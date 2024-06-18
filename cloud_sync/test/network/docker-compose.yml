@@ -1,5 +1,3 @@
-version: "3.3"
-
 services:
   cloud_sync_test_network_client:
     build:

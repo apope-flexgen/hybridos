@@ -12,6 +12,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	log "github.com/flexgen-power/go_flexgen/logger"
 	"github.com/pkg/sftp"
@@ -93,6 +94,13 @@ func createServer(name string, cfg ServerConfig) (*server, error) {
 	newServer := &server{
 		name:   strings.ReplaceAll(strings.ToLower(name), " ", "_"),
 		config: cfg,
+	}
+
+	// if server is remote, we must have a positive timeout
+	if cfg.IP != "" || cfg.Bucket != "" {
+		if cfg.Timeout <= 0 {
+			return nil, fmt.Errorf("configured timeout for remote server must be positive")
+		}
 	}
 
 	// if S3 connection, do nothing yet
@@ -298,8 +306,10 @@ func (serv *server) reestablishConnection(cl *client) (reestablished bool) {
 	if serv.config.Bucket != "" { // s3
 		err := serv.createS3Uploader(cl.config.AWSId, cl.config.AWSSecret)
 		if err != nil {
-			log.Errorf("s3 uploader issue: %v", err)
+			log.Errorf("Failed to create S3 uploader from client %s to server %s: %v", cl.name, serv.name, err)
 			return false
+		} else {
+			log.Infof("Successfully recreated S3 uploader from client %s to server %s.", cl.name, serv.name)
 		}
 	} else if serv.config.IP != "" { // if server is remote, check SSH connection
 		err := serv.checkConn(cl)
@@ -377,6 +387,17 @@ func (serv *server) createS3Uploader(aws_id, secret string) error {
 	}
 
 	serv.s3Uploader = s3manager.NewUploader(sess)
-	log.Infof("created uploader %v", serv.s3Uploader)
+
+	// check that bucket can actually be accessed
+	input := &s3.HeadBucketInput{
+		Bucket: aws.String(serv.config.Bucket),
+	}
+
+	// HeadBucket will return an error if we cannot access the bucket
+	_, err = serv.s3Uploader.S3.HeadBucket(input)
+	if err != nil {
+		return fmt.Errorf("error checking for S3 bucket: %w", err)
+	}
+
 	return nil
 }

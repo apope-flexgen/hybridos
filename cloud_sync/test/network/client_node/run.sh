@@ -17,7 +17,7 @@ echo
 tc qdisc add dev eth0 root netem delay 10ms
 
 # start our applications
-/usr/local/bin/mock_archive_producer --out=/home/archives --period=24s --num=5 &
+/usr/local/bin/mock_archive_producer --out=/home/archives --period=24s --num=1 &
 /usr/local/bin/cloud_sync --c=/home/config/cloud_sync.json --logCfg=/home/config/cloud_sync_verbose.json &
 /usr/local/bin/mock_archive_consumer --in=/home/local_consumer --period=0.5s &
 
