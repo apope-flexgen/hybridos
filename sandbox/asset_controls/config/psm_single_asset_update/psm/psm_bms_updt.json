@@ -1,0 +1,19 @@
+{
+    "updateRate": 100,
+    "bms": [
+        {
+            "vars": {
+                "id": "bms_1",
+                "Pmax": 20,
+                "Cap": 100,
+                "Tau": 400,
+                "R0": 0.25,
+                "R1": 0.1,
+                "EnableVoltageDynamics": true,
+                "contactorclsdeltav": 10,
+                "contactorclsmaxI": 3
+            }
+            
+        }
+    ]
+}
