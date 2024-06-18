@@ -158,7 +158,7 @@ void LDSS_Internal::enable(bool flag) {
  */
 void LDSS_Internal::check_start_generator(int num_controllable, float max_load_threshold_kw, float target_kw) {
     // Do not start generators if SoC is too high
-    if (enable_soc_thresholds_flag && pEss->get_controllable_ess_soc_avg() > max_soc_percent) {
+    if (enable_soc_thresholds_flag && pEss->get_ess_soc_avg() > max_soc_percent) {
         return;
     }
 
@@ -173,7 +173,7 @@ void LDSS_Internal::check_start_generator(int num_controllable, float max_load_t
         (target_kw > max_load_threshold_kw) ||
 
         // if soc threshold is enabled and SoC is under min_soc_percent, start a generator.
-        (enable_soc_thresholds_flag && pEss->get_controllable_ess_soc_avg() < min_soc_percent)) {
+        (enable_soc_thresholds_flag && pEss->get_ess_soc_avg() < min_soc_percent)) {
         start_gen_countdown = std::max(start_gen_countdown - 1, 0);
         // if the countdown hits zero, start the next gen
         if (start_gen_countdown <= 0) {
@@ -196,7 +196,7 @@ void LDSS_Internal::check_start_generator(int num_controllable, float max_load_t
  */
 void LDSS_Internal::check_stop_generator(int num_controllable, float min_load_threshold_kw, float target_kw) {
     // Do not stop generators if SoC is too low
-    if (enable_soc_thresholds_flag && pEss->get_controllable_ess_soc_avg() < min_soc_percent) {
+    if (enable_soc_thresholds_flag && pEss->get_ess_soc_avg() < min_soc_percent) {
         return;
     }
 
@@ -206,7 +206,7 @@ void LDSS_Internal::check_stop_generator(int num_controllable, float min_load_th
         (target_kw < min_load_threshold_kw && num_controllable > min_generators_active) ||
 
         // if soc threshold is enabled and SoC is above max_soc_percent, stop a generator.
-        (enable_soc_thresholds_flag && pEss->get_controllable_ess_soc_avg() > max_soc_percent)) {
+        (enable_soc_thresholds_flag && pEss->get_ess_soc_avg() > max_soc_percent)) {
         stop_gen_countdown = std::max(stop_gen_countdown - 1, 0);
 
         // if the countdown hits zero, stop the next gen

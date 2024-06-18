@@ -1,0 +1,29 @@
+{
+    "product": "ESSC",
+    "site_name": "Alliant Lab",
+    "customer": {
+        "name": "VFakeCo",
+        "server": "ESS Controller"
+    },
+    "timezone": "America/New_York",
+    "events": true,
+    "site": false,
+    "features": false,
+    "units": {
+        "W": "k",
+        "VAR": "k",
+        "VA": "k",
+        "Wh": "k",
+        "W/s": "k",
+        "VAR/s": "k"
+    },
+    "scheduler": false,
+    "inspectorComponentsName": "deprecated",
+    "met_station": false,
+    "control_cabinet": false,
+    "tracker": false,
+    "feeders": false,
+    "ess": false,
+    "solar": false,
+    "gen": false
+}

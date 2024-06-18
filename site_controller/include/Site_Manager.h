@@ -241,7 +241,7 @@ public:
 protected:
     void update_ess_kpi_values();
     bool synchronize_ess(void);
-    Fims_Object soc_min_all, soc_max_all, soc_avg_all, soc_min_running, soc_max_running, soc_avg_running, soc_min_controllable, soc_max_controllable, soc_avg_controllable;
+    Fims_Object soc_min_all, soc_max_all, soc_avg_all, soc_min_running, soc_max_running, soc_avg_running;
     Fims_Object max_potential_ess_kW, min_potential_ess_kW, rated_ess_kW, potential_ess_kVAR;
     Fims_Object ess_instant_discharge, ess_instant_charge_grid, ess_instant_charge_pv;
     Fims_Object ess_actual_kW, ess_actual_kVAR;
@@ -549,9 +549,6 @@ protected:
         { &soc_min_running, "soc_min_running" },
         { &soc_max_running, "soc_max_running" },
         { &soc_avg_running, "soc_avg_running" },
-        { &soc_min_controllable, "soc_min_controllable" },
-        { &soc_max_controllable, "soc_max_controllable" },
-        { &soc_avg_controllable, "soc_avg_controllable" },
         { &available_features_standalone_power, "available_features_standalone_power" },
         { &available_features_site_operation, "available_features_site_operation" },
         { &available_features_runmode2_kW_mode, "available_features_runmode2_kW_mode" },

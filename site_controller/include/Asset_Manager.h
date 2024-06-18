@@ -110,13 +110,9 @@ public:
     bool get_feeder_state(Asset_Feeder* target_feeder);
     bool get_feeder_utility_status(Asset_Feeder* target_feeder);
 
-    float get_running_ess_soc_max(void);
-    float get_running_ess_soc_min(void);
-    float get_running_ess_soc_avg(void);
-
-    float get_controllable_ess_soc_max(void);
-    float get_controllable_ess_soc_min(void);
-    float get_controllable_ess_soc_avg(void);
+    float get_ess_soc_max(void);
+    float get_ess_soc_min(void);
+    float get_ess_soc_avg(void);
 
     float get_all_ess_soc_max(void);
     float get_all_ess_soc_min(void);

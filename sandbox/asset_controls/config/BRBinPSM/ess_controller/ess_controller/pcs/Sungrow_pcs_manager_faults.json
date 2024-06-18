@@ -1,0 +1,2864 @@
+{
+    "/alarms/##PCS_ID##": {
+        "ACMainContactorAbnormal": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Alarm",
+                                "note": "Bit 0 - PCS ACMainContactorAbnormal - Alarm",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_alarms[0]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "ACSPD": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Alarm",
+                                "note": "Bit 1 - PCS ACSPD - Alarm",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_alarms[1]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "ACSwitchAbnormal": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Alarm",
+                                "note": "Bit 2 - PCS ACSwitchAbnormal - Alarm",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_alarms[2]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "ActivePowerCmd": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "PCS ActivePowerCmd - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "note": "Bit 0 - PCS ActivePowerCmd - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_control_alarms[0]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note": "Alarm variable that is triggered if sending active power command is unsuccessful",
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "ActivePowerDescendingRampRateCmd": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "PCS ActivePowerDescendingRampRateCmd - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "note": "Bit 1 - PCS ActivePowerDescendingRampRateCmd - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_control_alarms[1]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "ActivePowerRisingRampRateCmd": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "PCS ActivePowerRisingRampRateCmd - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "note": "Bit 2 - PCS ActivePowerRisingRampRateCmd - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_control_alarms[2]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "BatteryVoltageHigh": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Alarm",
+                                "note": "Bit 3 - PCS BatteryVoltageHigh - Alarm",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_alarms[3]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "BatteryVoltageLow": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Alarm",
+                                "note": "Bit 4 - PCS BatteryVoltageLow - Alarm",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_alarms[4]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "BranchCircuitBoardCommunicationError": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Alarm",
+                                "note": "Bit 5 - PCS BranchCircuitBoardCommunicationError - Alarm",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_alarms[5]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "ClearFaults": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "PCS ClearFaults - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "note": "Bit 3 - PCS ClearFaults - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_control_alarms[3]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note": "Alarm variable that is triggered if sending clear faults command is unsuccessful",
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "DCFuseAbnormal": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Alarm",
+                                "note": "Bit 6 - PCS DCFuseAbnormal - Alarm",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_alarms[6]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "DCSPD": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Alarm",
+                                "note": "Bit 7 - PCS DCSPD - Alarm",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_alarms[7]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "DCSensorAbnormal": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Alarm",
+                                "note": "Bit 8 - PCS DCSensorAbnormal - Alarm",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_alarms[8]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "DCSwitchAbnormal": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Alarm",
+                                "note": "Bit 9 - PCS DCSwitchAbnormal - Alarm",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_alarms[9]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "Fan1Abnormal": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Alarm",
+                                "note": "Bit 10 - PCS Fan1Abnormal - Alarm",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_alarms[10]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "Fan2Abnormal": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Alarm",
+                                "note": "Bit 11 - PCS Fan2Abnormal - Alarm",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_alarms[11]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "FrequencySetpoint": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "PCS FrequencySetpoint - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "note": "Bit 4 - PCS FrequencySetpoint - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_control_alarms[4]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note": "Alarm variable that is triggered if sending frequency setpoint command is unsuccessful",
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "GFRTRunning": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Alarm",
+                                "note": "Bit 12 - PCS GFRTRunning - Alarm",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_alarms[12]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "GridFollowPQ": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "PCS GridFollowPQ - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "note": "Bit 5 - PCS GridFollowPQ - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_control_alarms[5]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note": "Alarm variable that is triggered if sending grid-following mode command is unsuccessful",
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "GridFormVF": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "PCS GridFormVF - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "note": "Bit 6 - PCS GridFormVF - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_control_alarms[6]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note": "Alarm variable that is triggered if sending grid-forming mode (VF) command is unsuccessful",
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "GridFormVSG": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "PCS GridFormVSG - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "note": "Bit 7 - PCS GridFormVSG - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_control_alarms[7]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note": "Alarm variable that is triggered if sending grid-forming mode (VSG) command is unsuccessful",
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "HeartbeatRead": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "HeartbeatStop": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Alarm",
+                                "note": "Bit 13 - PCS HeartbeatStop - Alarm",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_alarms[13]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "LowInsulationResistance": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Alarm",
+                                "note": "Bit 14 - PCS LowInsulationResistance - Alarm",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_alarms[14]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "MonitorVarAlarm": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": "ActivePower_limit_max",
+                                "note": "Bit 0 - PCS ActivePower - Max Threshold Exceeded",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_monitor_alarms[0]"
+                            },
+                            {
+                                "inValue": "DCVoltage_limit_max",
+                                "note": "Bit 1 - PCS DCVoltage - Max Threshold Exceeded",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_monitor_alarms[1]"
+                            },
+                            {
+                                "inValue": "DCVoltage_limit_min",
+                                "note": "Bit 2 - PCS DCVoltage - Min Threshold Exceeded",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_monitor_alarms[2]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "ifChanged": false,
+            "note1": "Contains last recently reported alarm from any monitoring variable",
+            "note2": "Useful for reporting alarm states to an external management system (e.g. Site Controller) or modifying the alarm message before it is reported on the UI",
+            "value": "Normal"
+        },
+        "ReactivePowerCmd": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "PCS ReactivePowerCmd - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "note": "Bit 8 - PCS ReactivePowerCmd - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_control_alarms[8]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note": "Alarm variable that is triggered if sending reactive power command is unsuccessful",
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "ReactivePowerDescendingRampRateCmd": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "PCS ReactivePowerDescendingRampRateCmd - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "note": "Bit 9 - PCS ReactivePowerDescendingRampRateCmd - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_control_alarms[9]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "ReactivePowerRisingRampRateCmd": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "PCS ReactivePowerRisingRampRateCmd - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "note": "Bit 10 - PCS ReactivePowerRisingRampRateCmd - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_control_alarms[10]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "SCUMeteringBoardCommunicationError": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Alarm",
+                                "note": "Bit 15 - PCS SCUMeteringBoardCommunicationError - Alarm",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_alarms[15]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "Standby": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "PCS Standby - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "note": "Bit 11 - PCS Standby - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_control_alarms[11]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note": "Alarm variable that is triggered if sending standby command is unsuccessful",
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "Start": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "PCS Start - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "note": "Bit 12 - PCS Start - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_control_alarms[12]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note": "Alarm variable that is triggered if sending start command is unsuccessful",
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "Stop": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "PCS Stop - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "note": "Bit 13 - PCS Stop - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_control_alarms[13]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note": "Alarm variable that is triggered if sending stop command is unsuccessful",
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "TemperatureAbnormal": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Alarm",
+                                "note": "Bit 16 - PCS TemperatureAbnormal - Alarm",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_alarms[16]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "VerifyActivePowerCmd": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "PCS VerifyActivePowerCmd - Command was sent, but the expected result was not observed before timeout",
+                                "note": "Bit 14 - PCS VerifyActivePowerCmd - Command was sent, but the expected result was not observed before timeout",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_control_alarms[14]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note": "Alarm variable that is triggered if the PCS's actual active power setpoint after sending the command is not expected",
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "VerifyActivePowerDescendingRampRateCmd": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "PCS VerifyActivePowerDescendingRampRateCmd - Command was sent, but the expected result was not observed before timeout",
+                                "note": "Bit 15 - PCS VerifyActivePowerDescendingRampRateCmd - Command was sent, but the expected result was not observed before timeout",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_control_alarms[15]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "VerifyActivePowerRisingRampRateCmd": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "PCS VerifyActivePowerRisingRampRateCmd - Command was sent, but the expected result was not observed before timeout",
+                                "note": "Bit 16 - PCS VerifyActivePowerRisingRampRateCmd - Command was sent, but the expected result was not observed before timeout",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_control_alarms[16]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "VerifyFrequencySetpoint": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "PCS VerifyFrequencySetpoint - Command was sent, but the expected result was not observed before timeout",
+                                "note": "Bit 17 - PCS VerifyFrequencySetpoint - Command was sent, but the expected result was not observed before timeout",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_control_alarms[17]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note": "Alarm variable that is triggered if the PCS's actual frequency setpoint after sending the command is not expected",
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "VerifyGridFollowPQ": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "PCS VerifyGridFollowPQ - Command was sent, but the expected result was not observed before timeout",
+                                "note": "Bit 18 - PCS VerifyGridFollowPQ - Command was sent, but the expected result was not observed before timeout",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_control_alarms[18]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note": "Alarm variable that is triggered if the PCS failed to transition to grid-following",
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "VerifyGridFormVF": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "PCS VerifyGridFormVF - Command was sent, but the expected result was not observed before timeout",
+                                "note": "Bit 19 - PCS VerifyGridFormVF - Command was sent, but the expected result was not observed before timeout",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_control_alarms[19]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note": "Alarm variable that is triggered if the PCS failed to transition to grid-forming (VF)",
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "VerifyGridFormVSG": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "PCS VerifyGridFormVSG - Command was sent, but the expected result was not observed before timeout",
+                                "note": "Bit 20 - PCS VerifyGridFormVSG - Command was sent, but the expected result was not observed before timeout",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_control_alarms[20]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note": "Alarm variable that is triggered if the PCS failed to transition to grid-forming (VSG)",
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "VerifyReactivePowerCmd": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "PCS VerifyReactivePowerCmd - Command was sent, but the expected result was not observed before timeout",
+                                "note": "Bit 21 - PCS VerifyReactivePowerCmd - Command was sent, but the expected result was not observed before timeout",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_control_alarms[21]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note": "Alarm variable that is triggered if the PCS's actual reactive power setpoint after sending the command is not expected",
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "VerifyReactivePowerDescendingRampRateCmd": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "PCS VerifyReactivePowerDescendingRampRateCmd - Command was sent, but the expected result was not observed before timeout",
+                                "note": "Bit 22 - PCS VerifyReactivePowerDescendingRampRateCmd - Command was sent, but the expected result was not observed before timeout",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_control_alarms[22]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "VerifyReactivePowerRisingRampRateCmd": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "PCS VerifyReactivePowerRisingRampRateCmd - Command was sent, but the expected result was not observed before timeout",
+                                "note": "Bit 23 - PCS VerifyReactivePowerRisingRampRateCmd - Command was sent, but the expected result was not observed before timeout",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_control_alarms[23]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "VerifyStandby": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "PCS VerifyStandby - Command was sent, but the expected result was not observed before timeout",
+                                "note": "Bit 24 - PCS VerifyStandby - Command was sent, but the expected result was not observed before timeout",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_control_alarms[24]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note": "Alarm variable that is triggered if the PCS failed to transition to standby",
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "VerifyStart": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "PCS VerifyStart - Command was sent, but the expected result was not observed before timeout",
+                                "note": "Bit 25 - PCS VerifyStart - Command was sent, but the expected result was not observed before timeout",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_control_alarms[25]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note": "Alarm variable that is triggered if the PCS failed to start",
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "VerifyStop": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "PCS VerifyStop - Command was sent, but the expected result was not observed before timeout",
+                                "note": "Bit 26 - PCS VerifyStop - Command was sent, but the expected result was not observed before timeout",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_control_alarms[26]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note": "Alarm variable that is triggered if the PCS failed to stop",
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "VerifyVoltageSetpoint": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "PCS VerifyVoltageSetpoint - Command was sent, but the expected result was not observed before timeout",
+                                "note": "Bit 27 - PCS VerifyVoltageSetpoint - Command was sent, but the expected result was not observed before timeout",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_control_alarms[27]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note": "Alarm variable that is triggered if the PCS's actual voltage setpoint after sending the command is not expected",
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "VoltageSetpoint": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "PCS VoltageSetpoint - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "note": "Bit 28 - PCS VoltageSetpoint - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_control_alarms[28]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note": "Alarm variable that is triggered if sending voltage setpoint command is unsuccessful",
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "clear_alarms": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note1": "When this variable is set to Clear, all alarm variables (defined in /alarms/##PCS_ID##) will be reset to the normal state (defined in /config/##PCS_ID##:NoAlarmMsg)",
+            "note2": "Also, all monitoring variables (defined in variable) will have their alarm/fault states reset",
+            "numVars": 2,
+            "type": "alarm",
+            "value": "Normal",
+            "variable1": "ActivePower",
+            "variable2": "DCVoltage"
+        }
+    },
+    "/faults/##PCS_ID##": {
+        "ACContactor": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 0 - PCS ACContactor - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_faults[0]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "ACCurrentUnbalance1": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 1 - PCS ACCurrentUnbalance1 - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_faults[1]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "ACCurrentUnbalance2": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 2 - PCS ACCurrentUnbalance2 - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_faults[2]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "ACCurrentUnbalance3": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 3 - PCS ACCurrentUnbalance3 - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_faults[3]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "ACOvercurrent": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 4 - PCS ACOvercurrent - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_faults[4]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "ACOverfrequency": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 5 - PCS ACOverfrequency - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_faults[5]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "ACOvervoltage": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 6 - PCS ACOvervoltage - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_faults[6]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "ACSPD": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 7 - PCS ACSPD - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_faults[7]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "ACSwitch": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 8 - PCS ACSwitch - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_faults[8]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "ACUnderfrequency": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 9 - PCS ACUnderfrequency - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_faults[9]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "ACUndervoltage": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 10 - PCS ACUndervoltage - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_faults[10]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "ACVoltageUnbalance": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 11 - PCS ACVoltageUnbalance - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_faults[11]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "AmbientTemperatureAbnormal": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 12 - PCS AmbientTemperatureAbnormal - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_faults[12]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "BatteryPolarityReversed": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 13 - PCS BatteryPolarityReversed - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_faults[13]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "CarrierSync": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 14 - PCS CarrierSync - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_faults[14]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "ControlCabinetTemperatureAbnormal": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 15 - PCS ControlCabinetTemperatureAbnormal - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_faults[15]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "DCFuse": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 16 - PCS DCFuse - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_faults[16]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "DCInjection": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 17 - PCS DCInjection - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_faults[17]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "DCOvercurrent": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 18 - PCS DCOvercurrent - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_faults[18]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "DCOvervoltage": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 19 - PCS DCOvervoltage - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_faults[19]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "DCSPD": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 20 - PCS DCSPD - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_faults[20]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "DCSwitch": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 21 - PCS DCSwitch - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_faults[21]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "DCUndervoltage": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 22 - PCS DCUndervoltage - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_faults[22]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "DCVoltageSampling": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 23 - PCS DCVoltageSampling - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_faults[23]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "DeviceCodeRepeat": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 24 - PCS DeviceCodeRepeat - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_faults[24]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "DoorOpeningProtection": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 25 - PCS DoorOpeningProtection - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_faults[25]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "DriveBoard": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 26 - PCS DriveBoard - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_faults[26]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "Fan1": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 27 - PCS Fan1 - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_faults[27]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "Fan2": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 28 - PCS Fan2 - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_faults[28]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "Hardware": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 29 - PCS Hardware - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_faults[29]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "HeartbeatRead": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "Host": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 30 - PCS Host - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_faults[30]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "InsulationResistance": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 31 - PCS InsulationResistance - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_faults[31]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "IslandingProtection": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 0 - PCS IslandingProtection - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_faults_2[0]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "LCDDSPFault": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 1 - PCS LCDDSPFault - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_faults_2[1]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "LVRoomSmokeSensor": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 2 - PCS LVRoomSmokeSensor - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_faults_2[2]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "LeakageCurrentProtection": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 3 - PCS LeakageCurrentProtection - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_faults_2[3]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "LocalEmergencyStop": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 4 - PCS LocalEmergencyStop - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_faults_2[4]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "ModuleOvertemperature": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 5 - PCS ModuleOvertemperature - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_faults_2[5]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "MonitorVarFault": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": "ActivePower_limit_max",
+                                "note": "Bit 0 - PCS ActivePower - Max Threshold Exceeded",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_monitor_faults[0]"
+                            },
+                            {
+                                "inValue": "DCVoltage_limit_max",
+                                "note": "Bit 1 - PCS DCVoltage - Max Threshold Exceeded",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_monitor_faults[1]"
+                            },
+                            {
+                                "inValue": "DCVoltage_limit_min",
+                                "note": "Bit 2 - PCS DCVoltage - Min Threshold Exceeded",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_monitor_faults[2]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "ifChanged": false,
+            "note1": "Contains last recently reported fault from any monitoring variable",
+            "note2": "Useful for reporting fault states to an external management system (e.g. Site Controller) or modifying the fault message before it is reported on the UI",
+            "value": "Normal"
+        },
+        "NeutralPointPotentialShift": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 6 - PCS NeutralPointPotentialShift - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_faults_2[6]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "OverloadProtection": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 7 - PCS OverloadProtection - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_faults_2[7]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "PDPProtection": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 8 - PCS PDPProtection - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_faults_2[8]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "ParallelCommunicationError": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 9 - PCS ParallelCommunicationError - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_faults_2[9]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "ReactorOvertemperature": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 10 - PCS ReactorOvertemperature - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_faults_2[10]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "RemoteEmergencyStop": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 11 - PCS RemoteEmergencyStop - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_faults_2[11]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "Sampling": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 12 - PCS Sampling - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_faults_2[12]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "SoftStart": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 13 - PCS SoftStart - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_faults_2[13]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "TransformerOvertemperature": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 14 - PCS TransformerOvertemperature - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_faults_2[14]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "clear_faults": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note1": "When this variable is set to Clear, all fault variables (defined in /faults/##PCS_ID##) will be reset to the normal state (defined in /config/##PCS_ID##:NoFaultMsg)",
+            "note2": "Also, all monitoring variables (defined in variable) will have their alarm/fault states reset",
+            "numVars": 2,
+            "type": "fault",
+            "value": "Normal",
+            "variable1": "ActivePower",
+            "variable2": "DCVoltage"
+        }
+    },
+    "/schedule/wake_monitor/##PCS_ID##": {
+        "/status/##PCS_ID##:ActivePower": {
+            "amap": "##PCS_ID##",
+            "func": "CheckMonitorVar"
+        },
+        "/status/##PCS_ID##:DCVoltage": {
+            "amap": "##PCS_ID##",
+            "func": "CheckMonitorVar"
+        },
+        "/status/##PCS_ID##:IsAlarming": {
+            "amap": "##PCS_ID##",
+            "func": "CalculateVar"
+        },
+        "/status/##PCS_ID##:IsFaulted": {
+            "amap": "##PCS_ID##",
+            "func": "CalculateVar"
+        },
+        "/status/##PCS_ID##:TotalAlarmCnt": {
+            "amap": "##PCS_ID##",
+            "func": "CalculateVar"
+        },
+        "/status/##PCS_ID##:TotalFaultCnt": {
+            "amap": "##PCS_ID##",
+            "func": "CalculateVar"
+        }
+    },
+    "/status/##PCS_ID##": {
+        "ActivePower": {
+            "EnableFaultCheck": true,
+            "EnableMaxValCheck": true,
+            "MaxAlarmThreshold": 3510,
+            "MaxAlarmTimeout": 1,
+            "MaxFaultThreshold": 3525,
+            "MaxFaultTimeout": 1.5,
+            "MaxRecoverTimeout": 1.4,
+            "MaxResetValue": 3510,
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "CheckMonitorVar"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "note": "Also a monitoring variable that reports an alarm/fault for over active power conditions",
+            "value": 0
+        },
+        "AlarmCnt": 0,
+        "ClearFaultsDone": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "outValue": 0,
+                                "uri": "/site/ess:pcs_##PCS_ID##_control_alarms"
+                            },
+                            {
+                                "outValue": 0,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_alarms"
+                            },
+                            {
+                                "outValue": 0,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_faults"
+                            },
+                            {
+                                "outValue": 0,
+                                "uri": "/site/ess:pcs_##PCS_ID##_vendor_faults_2"
+                            },
+                            {
+                                "outValue": 0,
+                                "uri": "/site/ess:pcs_##PCS_ID##_monitor_alarms"
+                            },
+                            {
+                                "outValue": 0,
+                                "uri": "/site/ess:pcs_##PCS_ID##_monitor_faults"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "ifChanged": false,
+            "note": "When this variable is set, the alarm/fault bitfields will be set to 0 to clear all bits",
+            "value": false
+        },
+        "DCVoltage": {
+            "EnableFaultCheck": true,
+            "EnableMaxValCheck": false,
+            "EnableMinValCheck": false,
+            "MaxAlarmThreshold": 3000,
+            "MaxAlarmTimeout": 0,
+            "MaxFaultThreshold": 4000,
+            "MaxFaultTimeout": 0,
+            "MaxRecoverTimeout": 0,
+            "MaxResetValue": 2000,
+            "MinAlarmThreshold": 1200,
+            "MinAlarmTimeout": 0,
+            "MinFaultThreshold": 1100,
+            "MinFaultTimeout": 1,
+            "MinRecoverTimeout": 1,
+            "MinResetValue": 1140,
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "CheckMonitorVar"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "note": "Also a monitoring variable that reports an alarm/fault for over/under DC voltage conditions",
+            "value": 0
+        },
+        "FaultCnt": 0,
+        "FaultShutdown": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##PCS_ID##",
+                                "func": "LogInfo"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": true,
+                                "outValue": true,
+                                "uri": "/status/pcs:FaultShutdown"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "ifChanged": true,
+            "note": "When the PCS instance faults, the fault shutdown event will be propagated to its parent",
+            "value": false
+        },
+        "IsAlarming": {
+            "enable": "/config/##PCS_ID##:enable",
+            "expression": "{1} > 0",
+            "numVars": 1,
+            "useExpr": true,
+            "value": false,
+            "variable1": "/status/##PCS_ID##:TotalAlarmCnt"
+        },
+        "IsFaulted": {
+            "enable": "/config/##PCS_ID##:enable",
+            "expression": "{1} or {2} > 0",
+            "numVars": 2,
+            "useExpr": true,
+            "value": false,
+            "variable1": "/status/##PCS_ID##:SystemFault",
+            "variable2": "/status/##PCS_ID##:TotalFaultCnt"
+        },
+        "SystemFault": false,
+        "TotalAlarmCnt": {
+            "enable": "/config/##PCS_ID##:enable",
+            "expression": "{1}",
+            "numVars": 1,
+            "useExpr": true,
+            "value": 0,
+            "variable1": "/status/##PCS_ID##:AlarmCnt"
+        },
+        "TotalFaultCnt": {
+            "enable": "/config/##PCS_ID##:enable",
+            "expression": "{1}",
+            "numVars": 1,
+            "useExpr": true,
+            "value": 0,
+            "variable1": "/status/##PCS_ID##:FaultCnt"
+        }
+    }
+}

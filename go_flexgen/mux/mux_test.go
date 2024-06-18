@@ -1,9 +1,8 @@
 package mux
 
 import (
+	"fims"
 	"testing"
-
-	fims "github.com/flexgen-power/hybridos/fims/go_fims"
 
 	"github.com/stretchr/testify/assert"
 )

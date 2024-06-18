@@ -1,0 +1,32 @@
+{
+    "data": [
+        {
+            "info": {
+                "key": "ess",
+                "name": "ESS",
+                "icon": ""
+            }
+        },
+        {
+            "info": {
+                "key": "bms",
+                "name": "BMS",
+                "icon": ""
+            }
+        },
+        {
+            "info": {
+                "key": "bms_1",
+                "name": "BMS 1 Racks",
+                "icon": ""
+            }
+        },
+        {
+            "info": {
+                "key": "pcs",
+                "name": "PCS",
+                "icon": ""
+            }
+        }
+    ]
+}

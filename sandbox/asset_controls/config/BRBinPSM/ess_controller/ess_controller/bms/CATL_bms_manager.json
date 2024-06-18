@@ -1,0 +1,315 @@
+{
+    "/config/##BMS_ID##": {
+        "AlarmDestination": "/assets/bms/##BMS_ID##:alarms",
+        "CurrentBeforeStopThreshold": 35,
+        "FaultDestination": "/assets/bms/##BMS_ID##:faults",
+        "NoAlarmMsg": "Normal",
+        "NoFaultMsg": "Normal",
+        "enable": false,
+        "enum_opt": false
+    },
+    "/links/##BMS_ID##": {
+        "ChargeCurrentLimit": {
+            "value": "/limits/##BMS_ID##:ChargeCurrentLimit"
+        },
+        "ChargePowerLimit": {
+            "value": "/limits/##BMS_ID##:ChargePowerLimit"
+        },
+        "DischargeCurrentLimit": {
+            "value": "/limits/##BMS_ID##:DischargeCurrentLimit"
+        },
+        "DischargePowerLimit": {
+            "value": "/limits/##BMS_ID##:DischargePowerLimit"
+        }
+    },
+    "/sched/##BMS_ID##": {
+        "pubAssets_##BMS_ID##": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##",
+                                "func": "RunPub"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##BMS_ID##:enable",
+            "mode": "ui",
+            "note": "Publishes UI asset data (/assets/bms/##BMS_ID##)",
+            "table": "/assets/bms/##BMS_ID##",
+            "value": 1
+        },
+        "runMonitor_##BMS_ID##": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##",
+                                "func": "RunMonitor"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "aname": "##BMS_ID##",
+            "enable": "/config/##BMS_ID##:enable",
+            "monitor": "wake_monitor",
+            "note": "Periodically runs functions for variables defined in /schedule/wake_monitor/##BMS_ID##",
+            "value": 1
+        },
+        "updateHeartbeatWrite_##BMS_ID##": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##",
+                                "func": "CalculateVar",
+                                "inAv": "/status/##BMS_ID##:HeartbeatWrite"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##BMS_ID##:enable",
+            "note": "Periodically updates the heartbeat write variable defined in /status/##BMS_ID##:HeartbeatWrite",
+            "value": 1
+        }
+    },
+    "/schedule/wake_monitor/##BMS_ID##": {
+        "/status/##BMS_ID##:CellTempDelta_Calculated": {
+            "amap": "##BMS_ID##",
+            "func": "CalculateVar"
+        },
+        "/status/##BMS_ID##:CellVoltageDelta_Calculated": {
+            "amap": "##BMS_ID##",
+            "func": "CalculateVar"
+        },
+        "/status/##BMS_ID##:DCCharging": {
+            "amap": "##BMS_ID##",
+            "func": "CalculateVar"
+        },
+        "/status/##BMS_ID##:DCClosed_Calculated": {
+            "amap": "##BMS_ID##",
+            "func": "CalculateVar"
+        },
+        "/status/##BMS_ID##:DCDischarging": {
+            "amap": "##BMS_ID##",
+            "func": "CalculateVar"
+        }
+    },
+    "/status/##BMS_ID##": {
+        "CellTempDelta_Calculated": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/status/##BMS_ID##:CellTempDelta"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##BMS_ID##:enable",
+            "expression": "{2} - {1}",
+            "note": "Calculates the difference between the max and min cell temperatures",
+            "numVars": 2,
+            "useExpr": true,
+            "value": 0,
+            "variable1": "/status/##BMS_ID##:MinCellTemp",
+            "variable2": "/status/##BMS_ID##:MaxCellTemp"
+        },
+        "CellVoltageDelta_Calculated": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/status/##BMS_ID##:CellVoltageDelta"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##BMS_ID##:enable",
+            "expression": "{2} - {1}",
+            "note": "Calculates the difference between the max and min cell voltages",
+            "numVars": 2,
+            "useExpr": true,
+            "value": 0,
+            "variable1": "/status/##BMS_ID##:MinCellVoltage",
+            "variable2": "/status/##BMS_ID##:MaxCellVoltage"
+        },
+        "CommsOK": true,
+        "DCCharging": {
+            "enable": "/config/##BMS_ID##:enable",
+            "expression": "{1} < 0",
+            "note": "Determines if the BMS is charging",
+            "numVars": 1,
+            "useExpr": true,
+            "value": false,
+            "variable1": "/status/##BMS_ID##:DCCurrent"
+        },
+        "DCClosed": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/status/##BMS_ID##:CellTempDelta@EnableMaxValCheck"
+                            },
+                            {
+                                "uri": "/status/##BMS_ID##:CellVoltageDelta@EnableMaxValCheck"
+                            },
+                            {
+                                "uri": "/status/##BMS_ID##:DCCurrent@EnableMaxValCheck"
+                            },
+                            {
+                                "uri": "/status/##BMS_ID##:DCCurrent@EnableMinValCheck"
+                            },
+                            {
+                                "uri": "/status/##BMS_ID##:DCVoltage@EnableMaxValCheck"
+                            },
+                            {
+                                "uri": "/status/##BMS_ID##:DCVoltage@EnableMinValCheck"
+                            },
+                            {
+                                "uri": "/status/##BMS_ID##:MaxCellTemp@EnableMaxValCheck"
+                            },
+                            {
+                                "uri": "/status/##BMS_ID##:MaxCellVoltage@EnableMaxValCheck"
+                            },
+                            {
+                                "uri": "/status/##BMS_ID##:MinCellTemp@EnableMinValCheck"
+                            },
+                            {
+                                "uri": "/status/##BMS_ID##:MinCellVoltage@EnableMinValCheck"
+                            },
+                            {
+                                "uri": "/status/##BMS_ID##:NumRacksOnline@EnableMinValCheck"
+                            },
+                            {
+                                "uri": "/status/##BMS_ID##:SOC@EnableMaxValCheck"
+                            },
+                            {
+                                "uri": "/status/##BMS_ID##:SOC@EnableMinValCheck"
+                            },
+                            {
+                                "uri": "/status/##BMS_ID##:SOH@EnableMinValCheck"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##BMS_ID##:enable",
+            "note1": "Enables/disables monitoring variables if BMS DC contactors are closed/opened",
+            "note2": "Also reports the BMS DC contactor status to the UI",
+            "note3": "TODO: Decode or calculate DC contactors closed status and remap/link value to this variable",
+            "value": false
+        },
+        "DCClosed_Calculated": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/status/##BMS_ID##:DCClosed"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##BMS_ID##:enable",
+            "note": "Aggregated DC Closed status based on all racks",
+            "numVars": 1,
+            "operation": "or",
+            "value": false,
+            "variable1": "##BMS_ID##:DCClosed"
+        },
+        "DCDischarging": {
+            "enable": "/config/##BMS_ID##:enable",
+            "expression": "{1} > 0",
+            "note": "Determines if the BMS is discharging",
+            "numVars": 1,
+            "useExpr": true,
+            "value": false,
+            "variable1": "/status/##BMS_ID##:DCCurrent"
+        },
+        "HeartbeatWrite": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "fims": "set",
+                                "uri": "/components/##BMS_ID##:ems_heartbeat"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##BMS_ID##:enable",
+            "excludeFromDefaultSched": true,
+            "expression": "if (({1} >= 59), 0, ({1} + 1))",
+            "note": "Updates and then sends the heartbeat write value",
+            "numVars": 1,
+            "useExpr": true,
+            "value": 0,
+            "variable1": "/status/##BMS_ID##:HeartbeatWrite"
+        },
+        "NumRacksTotal": 5,
+        "Status": "INIT"
+    },
+    "/system/commands": {
+        "runOpts_##BMS_ID##": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##",
+                                "func": "SchedItemOpts"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": false,
+            "note1": "Sets schedule variables (defined in /sched/##BMS_ID##) to /system/commands:run",
+            "note2": "This allows the ESS Controller to kick off scheduled tasks based on the provided variables",
+            "options": [
+                {
+                    "aname": "##BMS_ID##",
+                    "every": 1,
+                    "uri": "/sched/##BMS_ID##:pubAssets_##BMS_ID##",
+                    "value": 1
+                },
+                {
+                    "aname": "##BMS_ID##",
+                    "every": 0.1,
+                    "uri": "/sched/##BMS_ID##:runMonitor_##BMS_ID##",
+                    "value": 1
+                },
+                {
+                    "aname": "##BMS_ID##",
+                    "every": 1,
+                    "uri": "/sched/##BMS_ID##:checkInputs_##BMS_ID##",
+                    "value": 1
+                },
+                {
+                    "aname": "##BMS_ID##",
+                    "every": 1,
+                    "uri": "/sched/##BMS_ID##:updateHeartbeatWrite_##BMS_ID##",
+                    "value": 1
+                }
+            ],
+            "targav": "/system/commands:run",
+            "value": false
+        }
+    }
+}

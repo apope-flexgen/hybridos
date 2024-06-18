@@ -1,0 +1,2812 @@
+{
+    "/components/##BMS_ID##": {
+        "battery_system_auxiliary_power_supply_state": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": 0,
+                                "outValue": "Normal",
+                                "uri": "/faults/##BMS_ID##:auxiliary_power_supply_state"
+                            },
+                            {
+                                "inValue": 1,
+                                "outValue": "Aux Power Lost",
+                                "uri": "/faults/##BMS_ID##:auxiliary_power_supply_state"
+                            },
+                            {
+                                "enable": "/config/##BMS_ID##:enum_opt",
+                                "outValue": true,
+                                "uri": "/components/##BMS_ID##:battery_system_auxiliary_power_supply_state@ifChanged",
+                                "useAv": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##BMS_ID##:enable",
+            "ifChanged": false,
+            "value": 0
+        },
+        "bms_power_on": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": 0,
+                                "outValue": "Power Off Ready",
+                                "uri": "/status/##BMS_ID##:PowerOn"
+                            },
+                            {
+                                "inValue": 1,
+                                "outValue": "Power On Ready",
+                                "uri": "/status/##BMS_ID##:PowerOn"
+                            },
+                            {
+                                "inValue": 2,
+                                "outValue": "Power On Fault",
+                                "uri": "/status/##BMS_ID##:PowerOn"
+                            },
+                            {
+                                "inValue": 3,
+                                "outValue": "Power Off Fault",
+                                "uri": "/status/##BMS_ID##:PowerOn"
+                            },
+                            {
+                                "enable": "/config/##BMS_ID##:enum_opt",
+                                "outValue": true,
+                                "uri": "/components/##BMS_ID##:bms_power_on@ifChanged",
+                                "useAv": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##BMS_ID##:enable",
+            "ifChanged": false,
+            "note1": "TODO: if applicable, decode the variable's value to other variables using either remap (default) or enum action",
+            "note2": "Use enum if the variable's value contains bitfields. Otherwise, use remap",
+            "value": -1
+        },
+        "bms_status": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": 0,
+                                "outValue": "Initial",
+                                "uri": "/status/##BMS_ID##:Status"
+                            },
+                            {
+                                "inValue": 1,
+                                "outValue": "Normal",
+                                "uri": "/status/##BMS_ID##:Status"
+                            },
+                            {
+                                "inValue": 2,
+                                "outValue": "Full Charge",
+                                "uri": "/status/##BMS_ID##:Status"
+                            },
+                            {
+                                "inValue": 3,
+                                "outValue": "Full Discharge",
+                                "uri": "/status/##BMS_ID##:Status"
+                            },
+                            {
+                                "inValue": 4,
+                                "outValue": "Warning",
+                                "uri": "/status/##BMS_ID##:Status"
+                            },
+                            {
+                                "inValue": 5,
+                                "outValue": "Fault",
+                                "uri": "/status/##BMS_ID##:Status"
+                            },
+                            {
+                                "enable": "/config/##BMS_ID##:enum_opt",
+                                "outValue": true,
+                                "uri": "/components/##BMS_ID##:bms_status@ifChanged",
+                                "useAv": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##BMS_ID##:enable",
+            "ifChanged": false,
+            "value": -1
+        },
+        "max_allowed_charge_voltage": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/limits/##BMS_ID##:ChargeVoltageLimit"
+                            },
+                            {
+                                "enable": "/config/##BMS_ID##:enum_opt",
+                                "outValue": true,
+                                "uri": "/components/##BMS_ID##:max_allowed_charge_voltage@ifChanged",
+                                "useAv": true
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "note": "For PSM",
+                                "uri": "/status/##BMS_ID##:ChargeVoltageLimit"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##BMS_ID##:enable",
+            "ifChanged": false,
+            "value": 0
+        },
+        "mbmu_rack_warning_1": {
+            "actions": {
+                "onSet": [
+                    {
+                        "enum": [
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "Vmax＜3.30V",
+                                "outValue": "Normal",
+                                "shift": 0,
+                                "uri": "/alarms/##BMS_ID##:single_cell_overvoltage_warning_level_1"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Vmax＞3.72V",
+                                "outValue": "Alarm",
+                                "shift": 0,
+                                "uri": "/alarms/##BMS_ID##:single_cell_overvoltage_warning_level_1"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "Vmax＜3.30V ",
+                                "outValue": "Normal",
+                                "shift": 1,
+                                "uri": "/alarms/##BMS_ID##:single_cell_overvoltage_warning_level_2"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Vmax＞3.75V",
+                                "outValue": "Alarm",
+                                "shift": 1,
+                                "uri": "/alarms/##BMS_ID##:single_cell_overvoltage_warning_level_2"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "Vmax＜3.30V",
+                                "outValue": "Normal",
+                                "shift": 2,
+                                "uri": "/alarms/##BMS_ID##:single_cell_overvoltage_warning_level_3"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Vmax＞3.78V",
+                                "outValue": "Alarm",
+                                "shift": 2,
+                                "uri": "/alarms/##BMS_ID##:single_cell_overvoltage_warning_level_3"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "Vmin > 3.10V (≥0℃) ",
+                                "note3": "OR",
+                                "note4": "Vmin > 3.0V (<0℃）",
+                                "outValue": "Normal",
+                                "shift": 3,
+                                "uri": "/alarms/##BMS_ID##:single_cell_undervoltage_level_1"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Vmin＜2.4 (≥0℃) ",
+                                "note3": "OR",
+                                "note4": "Vmin＜2.4V (<0℃)",
+                                "note5": "",
+                                "outValue": "Alarm",
+                                "shift": 3,
+                                "uri": "/alarms/##BMS_ID##:single_cell_undervoltage_level_1"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "Vmin > 3.10V (≥0℃) ",
+                                "note3": "OR",
+                                "note4": "Vmin > 3.0V (<0℃)",
+                                "outValue": "Normal",
+                                "shift": 4,
+                                "uri": "/alarms/##BMS_ID##:single_cell_undervoltage_level_2"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Vmin＜2.37 (≥0℃) ",
+                                "note3": "OR",
+                                "note4": "Vmin＜2.37V (<0℃）",
+                                "note5": "",
+                                "outValue": "Alarm",
+                                "shift": 4,
+                                "uri": "/alarms/##BMS_ID##:single_cell_undervoltage_level_2"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "Vmin > 3.10V (≥0℃) ",
+                                "note3": "OR",
+                                "note4": "Vmin > 3.0V (<0℃）",
+                                "outValue": "Normal",
+                                "shift": 5,
+                                "uri": "/alarms/##BMS_ID##:single_cell_undervoltage_level_3"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Vmin＜2.34 (≥0℃) ",
+                                "note3": "OR",
+                                "note4": "Vmin＜2.34V (<0℃)",
+                                "outValue": "Alarm",
+                                "shift": 5,
+                                "uri": "/alarms/##BMS_ID##:single_cell_undervoltage_level_3"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 6,
+                                "uri": "/faults/##BMS_ID##:single_cell_extreme_overvoltage"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Umax＞3.81V",
+                                "note3": "",
+                                "outValue": "Fault",
+                                "shift": 6,
+                                "uri": "/faults/##BMS_ID##:single_cell_extreme_overvoltage"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 7,
+                                "uri": "/faults/##BMS_ID##:single_cell_extreme_undervoltage"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Vmin＜2.32 (≥0℃) ",
+                                "note3": "OR",
+                                "note4": "Vmin＜2.32V (<0℃)",
+                                "outValue": "Fault",
+                                "shift": 7,
+                                "uri": "/faults/##BMS_ID##:single_cell_extreme_undervoltage"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "Vbat＜3.65V*N-5",
+                                "outValue": "Normal",
+                                "shift": 8,
+                                "uri": "/alarms/##BMS_ID##:single_rack_overvoltage_level_1"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Vbat (inner high voltage sampling) ",
+                                "note3": "OR",
+                                "note4": "Total Sum > 3.7V*N",
+                                "outValue": "Alarm",
+                                "shift": 8,
+                                "uri": "/alarms/##BMS_ID##:single_rack_overvoltage_level_1"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "Vbat＜3.75V*N-5",
+                                "outValue": "Normal",
+                                "shift": 9,
+                                "uri": "/alarms/##BMS_ID##:single_rack_overvoltage_level_2"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Vbat (inner high voltage sampling) ",
+                                "note3": "OR",
+                                "note4": "Total Sum > 3.8V*N",
+                                "outValue": "Alarm",
+                                "shift": 9,
+                                "uri": "/alarms/##BMS_ID##:single_rack_overvoltage_level_2"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "Vbat＞2.8V*N+5",
+                                "outValue": "Normal",
+                                "shift": 10,
+                                "uri": "/alarms/##BMS_ID##:single_rack_undervoltage_level_1"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Vbat (inner high voltage sampling) ",
+                                "note3": "OR",
+                                "note4": "Total Sum < 2.5V*N",
+                                "outValue": "Alarm",
+                                "shift": 10,
+                                "uri": "/alarms/##BMS_ID##:single_rack_undervoltage_level_1"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "Vbat＞2.6V*N+5",
+                                "outValue": "Normal",
+                                "shift": 11,
+                                "uri": "/alarms/##BMS_ID##:single_rack_undervoltage_level_2"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Vbat (inner high voltage sampling)",
+                                "note3": "OR",
+                                "note4": "Total Sum < 2.4V*N",
+                                "outValue": "Alarm",
+                                "shift": 11,
+                                "uri": "/alarms/##BMS_ID##:single_rack_undervoltage_level_2"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "⊿V＜0.45V",
+                                "outValue": "Normal",
+                                "shift": 12,
+                                "uri": "/alarms/##BMS_ID##:big_voltage_difference_between_cells"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Vmax or Vmin is in between 3.2V - 3.35V",
+                                "note3": "OR",
+                                "note4": "Vmax > 3.35V AND Vmin < 3.2V AND ⊿ V > 0.5V",
+                                "outValue": "Alarm",
+                                "shift": 12,
+                                "uri": "/alarms/##BMS_ID##:big_voltage_difference_between_cells"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 13,
+                                "uri": "/faults/##BMS_ID##:invalid_cell_voltage"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "CSC didn't collect all the data points; CAN communication is lost; the maximum, minimum and average voltages sent by CSC exist invalid number; the detailed voltage exists invalid",
+                                "note3": "number",
+                                "outValue": "Fault",
+                                "shift": 13,
+                                "uri": "/faults/##BMS_ID##:invalid_cell_voltage"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 14,
+                                "uri": "/faults/##BMS_ID##:single_cell_overdischarge_replacement_required"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Vmin＜1.8V",
+                                "note3": "",
+                                "outValue": "Fault",
+                                "shift": 14,
+                                "uri": "/faults/##BMS_ID##:single_cell_overdischarge_replacement_required"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 15,
+                                "uri": "/faults/##BMS_ID##:single_cell_overcharge_replacement_required"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Vmax＞4.3V",
+                                "outValue": "Fault",
+                                "shift": 15,
+                                "uri": "/faults/##BMS_ID##:single_cell_overcharge_replacement_required"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "enable": "/config/##BMS_ID##:enum_opt",
+                                "outValue": true,
+                                "uri": "/components/##BMS_ID##:mbmu_rack_warning_1@ifChanged",
+                                "useAv": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##BMS_ID##:enable",
+            "ifChanged": false,
+            "value": 0
+        },
+        "mbmu_rack_warning_10": {
+            "actions": {
+                "onSet": [
+                    {
+                        "enum": [
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "Rack average temperature – system minimum temperature ≤ 1℃",
+                                "outValue": "Normal",
+                                "shift": 8,
+                                "uri": "/alarms/##BMS_ID##:big_temperature_difference_between_racks"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "The rack is in HV online status ",
+                                "note3": "AND ",
+                                "note4": "The rack current |I| < 30A and duration T = 15min ",
+                                "note5": "AND ",
+                                "note6": "The rack average temperature – system minimum temperature ≥ 2℃ and duration T = 60s",
+                                "outValue": "Alarm",
+                                "shift": 8,
+                                "uri": "/alarms/##BMS_ID##:big_temperature_difference_between_racks"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "enable": "/config/##BMS_ID##:enum_opt",
+                                "outValue": true,
+                                "uri": "/components/##BMS_ID##:mbmu_rack_warning_10@ifChanged",
+                                "useAv": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##BMS_ID##:enable",
+            "ifChanged": false,
+            "value": 0
+        },
+        "mbmu_rack_warning_2": {
+            "actions": {
+                "onSet": [
+                    {
+                        "enum": [
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "Vmin ＞2.9V",
+                                "outValue": "Normal",
+                                "shift": 0,
+                                "uri": "/alarms/##BMS_ID##:low_soc_overdischarge"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Vmin＜2.7V ",
+                                "note3": "AND",
+                                "note4": "Discharge Current＞0A lasting  30min",
+                                "outValue": "Alarm",
+                                "shift": 0,
+                                "uri": "/alarms/##BMS_ID##:low_soc_overdischarge"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 1,
+                                "uri": "/faults/##BMS_ID##:low_soc_overdischarge"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Vmin＜2.65V ",
+                                "note3": "AND",
+                                "note4": "Discharge Current＞0A lasting 30min",
+                                "note5": "",
+                                "outValue": "Fault",
+                                "shift": 1,
+                                "uri": "/faults/##BMS_ID##:low_soc_overdischarge"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "I1 ≤ I0 ",
+                                "outValue": "Normal",
+                                "shift": 2,
+                                "uri": "/alarms/##BMS_ID##:discharge_overcurrent_level_1"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "I1 > max(I0*105%, 10A) ",
+                                "outValue": "Alarm",
+                                "shift": 2,
+                                "uri": "/alarms/##BMS_ID##:discharge_overcurrent_level_1"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "I1 ≤ I0",
+                                "outValue": "Normal",
+                                "shift": 3,
+                                "uri": "/alarms/##BMS_ID##:discharge_overcurrent_level_2"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "I1 > max(I0*114%, 10A)",
+                                "note3": "OR ",
+                                "note4": "Level 1 alarm lasting 20s",
+                                "note5": "(configurable)",
+                                "outValue": "Alarm",
+                                "shift": 3,
+                                "uri": "/alarms/##BMS_ID##:discharge_overcurrent_level_2"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "I1 ≤ I0 ",
+                                "outValue": "Normal",
+                                "shift": 4,
+                                "uri": "/alarms/##BMS_ID##:discharge_overcurrent_level_3"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "I1 > max(I0*125%, 10A)",
+                                "note3": "OR",
+                                "note4": "Level 2 alarm lasting 20s",
+                                "note5": "(configurable)",
+                                "outValue": "Alarm",
+                                "shift": 4,
+                                "uri": "/alarms/##BMS_ID##:discharge_overcurrent_level_3"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 5,
+                                "uri": "/faults/##BMS_ID##:discharge_overcurrent_level_4"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "I1 > max(I0*135%, 10A)",
+                                "note3": "OR ",
+                                "note4": "Level 3 alarm lasting 10s (configurable)",
+                                "outValue": "Fault",
+                                "shift": 5,
+                                "uri": "/faults/##BMS_ID##:discharge_overcurrent_level_4"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "I1 ≤ I0",
+                                "outValue": "Normal",
+                                "shift": 6,
+                                "uri": "/alarms/##BMS_ID##:charge_overcurrent_level_1"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "I1 > max(I0*105%, 10A)",
+                                "outValue": "Alarm",
+                                "shift": 6,
+                                "uri": "/alarms/##BMS_ID##:charge_overcurrent_level_1"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "I1 ≤ I0 ",
+                                "outValue": "Normal",
+                                "shift": 7,
+                                "uri": "/alarms/##BMS_ID##:charge_overcurrent_level_2"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "I1 > max(I0*114%, 10A)",
+                                "note3": "OR",
+                                "note4": "Level 1 alarm lasting 20s (configurable)",
+                                "outValue": "Alarm",
+                                "shift": 7,
+                                "uri": "/alarms/##BMS_ID##:charge_overcurrent_level_2"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "I1 ≤ I0",
+                                "outValue": "Normal",
+                                "shift": 8,
+                                "uri": "/alarms/##BMS_ID##:charge_overcurrent_level_3"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "I1 > max(I0*125%, 10A)",
+                                "note3": "OR",
+                                "note4": "Level 2 alarm lasting 20s (configurable)",
+                                "outValue": "Alarm",
+                                "shift": 8,
+                                "uri": "/alarms/##BMS_ID##:charge_overcurrent_level_3"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 9,
+                                "uri": "/faults/##BMS_ID##:charge_overcurrent_level_4"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "I1 > max(I0*135%, 10A)",
+                                "note3": "OR ",
+                                "note4": "Level 3 alarm lasting 10s (configurable)",
+                                "outValue": "Fault",
+                                "shift": 9,
+                                "uri": "/faults/##BMS_ID##:charge_overcurrent_level_4"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 10,
+                                "uri": "/faults/##BMS_ID##:current_sensor_failed"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Current sensor fault",
+                                "outValue": "Fault",
+                                "shift": 10,
+                                "uri": "/faults/##BMS_ID##:current_sensor_failed"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "Tmax < 48℃",
+                                "outValue": "Normal",
+                                "shift": 14,
+                                "uri": "/alarms/##BMS_ID##:single_cell_overtemperature_level_1"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Tmax＞50℃",
+                                "outValue": "Alarm",
+                                "shift": 14,
+                                "uri": "/alarms/##BMS_ID##:single_cell_overtemperature_level_1"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "Tmax < 53℃",
+                                "outValue": "Normal",
+                                "shift": 15,
+                                "uri": "/alarms/##BMS_ID##:single_cell_overtemperature_level_2"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Tmax＞55℃",
+                                "outValue": "Alarm",
+                                "shift": 15,
+                                "uri": "/alarms/##BMS_ID##:single_cell_overtemperature_level_2"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "enable": "/config/##BMS_ID##:enum_opt",
+                                "outValue": true,
+                                "uri": "/components/##BMS_ID##:mbmu_rack_warning_2@ifChanged",
+                                "useAv": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##BMS_ID##:enable",
+            "ifChanged": false,
+            "value": 0
+        },
+        "mbmu_rack_warning_3": {
+            "actions": {
+                "onSet": [
+                    {
+                        "enum": [
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "Tmax < 53℃ ",
+                                "outValue": "Normal",
+                                "shift": 0,
+                                "uri": "/alarms/##BMS_ID##:single_cell_overtemperature_level_3"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Tmax＞55℃",
+                                "outValue": "Alarm",
+                                "shift": 0,
+                                "uri": "/alarms/##BMS_ID##:single_cell_overtemperature_level_3"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 1,
+                                "uri": "/faults/##BMS_ID##:single_cell_overtemperature_level_4"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Tmax＞57℃",
+                                "note3": "",
+                                "outValue": "Fault",
+                                "shift": 1,
+                                "uri": "/faults/##BMS_ID##:single_cell_overtemperature_level_4"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "Tmin＞5℃",
+                                "outValue": "Normal",
+                                "shift": 2,
+                                "uri": "/alarms/##BMS_ID##:single_cell_undertemperature_level_1"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Tmin＜0℃",
+                                "outValue": "Alarm",
+                                "shift": 2,
+                                "uri": "/alarms/##BMS_ID##:single_cell_undertemperature_level_1"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "Tmin＞0℃",
+                                "outValue": "Normal",
+                                "shift": 3,
+                                "uri": "/alarms/##BMS_ID##:single_cell_undertemperature_level_2"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Tmin＜-10℃",
+                                "outValue": "Alarm",
+                                "shift": 3,
+                                "uri": "/alarms/##BMS_ID##:single_cell_undertemperature_level_2"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "Tmin＞-10℃",
+                                "outValue": "Normal",
+                                "shift": 4,
+                                "uri": "/alarms/##BMS_ID##:single_cell_undertemperature_level_3"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Tmin＜-20℃",
+                                "outValue": "Alarm",
+                                "shift": 4,
+                                "uri": "/alarms/##BMS_ID##:single_cell_undertemperature_level_3"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "⊿T＜10℃",
+                                "outValue": "Normal",
+                                "shift": 5,
+                                "uri": "/alarms/##BMS_ID##:big_temperature_difference_between_cells_level_1"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "⊿T＞15℃",
+                                "outValue": "Alarm",
+                                "shift": 5,
+                                "uri": "/alarms/##BMS_ID##:big_temperature_difference_between_cells_level_1"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "⊿T＜15℃",
+                                "outValue": "Normal",
+                                "shift": 6,
+                                "uri": "/alarms/##BMS_ID##:big_temperature_difference_between_cells_level_2"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "⊿T＞20℃",
+                                "outValue": "Alarm",
+                                "shift": 6,
+                                "uri": "/alarms/##BMS_ID##:big_temperature_difference_between_cells_level_2"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "⊿T＜20℃",
+                                "outValue": "Normal",
+                                "shift": 7,
+                                "uri": "/alarms/##BMS_ID##:big_temperature_difference_between_cells_level_3"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "⊿T＞25℃",
+                                "outValue": "Alarm",
+                                "shift": 7,
+                                "uri": "/alarms/##BMS_ID##:big_temperature_difference_between_cells_level_3"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 15,
+                                "uri": "/faults/##BMS_ID##:single_temperature_sampling_abnormal"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Any of the cell's temperature sampling is invalid",
+                                "note3": "",
+                                "outValue": "Fault",
+                                "shift": 15,
+                                "uri": "/faults/##BMS_ID##:single_temperature_sampling_abnormal"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "enable": "/config/##BMS_ID##:enum_opt",
+                                "outValue": true,
+                                "uri": "/components/##BMS_ID##:mbmu_rack_warning_3@ifChanged",
+                                "useAv": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##BMS_ID##:enable",
+            "ifChanged": false,
+            "value": 0
+        },
+        "mbmu_rack_warning_4": {
+            "actions": {
+                "onSet": [
+                    {
+                        "enum": [
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 0,
+                                "uri": "/faults/##BMS_ID##:temperature_sampling_abnormal_in_multiple_cells"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "≥2 cells temperature sampling is invalid",
+                                "outValue": "Fault",
+                                "shift": 0,
+                                "uri": "/faults/##BMS_ID##:temperature_sampling_abnormal_in_multiple_cells"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "enable": "/config/##BMS_ID##:enum_opt",
+                                "outValue": true,
+                                "uri": "/components/##BMS_ID##:mbmu_rack_warning_4@ifChanged",
+                                "useAv": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##BMS_ID##:enable",
+            "ifChanged": false,
+            "value": 0
+        },
+        "mbmu_rack_warning_5": {
+            "actions": {
+                "onSet": [
+                    {
+                        "enum": [
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 9,
+                                "uri": "/faults/##BMS_ID##:csc_24v_power_supply_voltage_abnormal"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Power Supply Voltage＜18V",
+                                "note3": "OR ",
+                                "note4": "Power Supply Voltage＞30V",
+                                "note5": "OR",
+                                "note6": "Invalid voltage sampling value",
+                                "outValue": "Fault",
+                                "shift": 9,
+                                "uri": "/faults/##BMS_ID##:csc_24v_power_supply_voltage_abnormal"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 10,
+                                "uri": "/faults/##BMS_ID##:sbmu_24v_power_supply_voltage_abnormal"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Power Supply Voltage＜18V",
+                                "note3": "OR",
+                                "note4": "Power Supply Voltage＞ 30V",
+                                "note5": "OR",
+                                "note6": "Invalid voltage sampling value",
+                                "outValue": "Fault",
+                                "shift": 10,
+                                "uri": "/faults/##BMS_ID##:sbmu_24v_power_supply_voltage_abnormal"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 14,
+                                "uri": "/faults/##BMS_ID##:msd"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "MSD dry contact open",
+                                "outValue": "Fault",
+                                "shift": 14,
+                                "uri": "/faults/##BMS_ID##:msd"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 15,
+                                "uri": "/faults/##BMS_ID##:rack_fuse"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Rack fuse dry contact open",
+                                "note3": "",
+                                "outValue": "Fault",
+                                "shift": 15,
+                                "uri": "/faults/##BMS_ID##:rack_fuse"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "enable": "/config/##BMS_ID##:enum_opt",
+                                "outValue": true,
+                                "uri": "/components/##BMS_ID##:mbmu_rack_warning_5@ifChanged",
+                                "useAv": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##BMS_ID##:enable",
+            "ifChanged": false,
+            "value": 0
+        },
+        "mbmu_rack_warning_6": {
+            "actions": {
+                "onSet": [
+                    {
+                        "enum": [
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 0,
+                                "uri": "/faults/##BMS_ID##:rack_isolate_switch"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Rack isolate switch dry contact open",
+                                "outValue": "Fault",
+                                "shift": 0,
+                                "uri": "/faults/##BMS_ID##:rack_isolate_switch"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 1,
+                                "uri": "/faults/##BMS_ID##:main_positive_relay_sticking"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Unclosed main positive contactor feedback contactor stick",
+                                "outValue": "Fault",
+                                "shift": 1,
+                                "uri": "/faults/##BMS_ID##:main_positive_relay_sticking"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 2,
+                                "uri": "/faults/##BMS_ID##:main_negative_relay_sticking"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Unclosed negative and positive contactor feedback contactor stick",
+                                "outValue": "Fault",
+                                "shift": 2,
+                                "uri": "/faults/##BMS_ID##:main_negative_relay_sticking"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 3,
+                                "uri": "/faults/##BMS_ID##:main_positive_and_negative_relays_sticking"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Unclosed main positive and negative contactor feedback contactors stick",
+                                "outValue": "Fault",
+                                "shift": 3,
+                                "uri": "/faults/##BMS_ID##:main_positive_and_negative_relays_sticking"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 4,
+                                "uri": "/faults/##BMS_ID##:main_positive_relay_open_circuit"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "After sending close command for main positive contactor, feedback loop shows contactor still open",
+                                "outValue": "Fault",
+                                "shift": 4,
+                                "uri": "/faults/##BMS_ID##:main_positive_relay_open_circuit"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 5,
+                                "uri": "/faults/##BMS_ID##:main_negative_relay_open_circuit"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "After sending close command for main negative contactor,",
+                                "note3": "feedback loop shows contactor still open",
+                                "outValue": "Fault",
+                                "shift": 5,
+                                "uri": "/faults/##BMS_ID##:main_negative_relay_open_circuit"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 6,
+                                "uri": "/faults/##BMS_ID##:battery_rack_door"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Battery rack door (travel switch) dry contact open",
+                                "outValue": "Fault",
+                                "shift": 6,
+                                "uri": "/faults/##BMS_ID##:battery_rack_door"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 7,
+                                "uri": "/faults/##BMS_ID##:main_control_box_fan"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Main control box fan dry contact open",
+                                "outValue": "Fault",
+                                "shift": 7,
+                                "uri": "/faults/##BMS_ID##:main_control_box_fan"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 9,
+                                "uri": "/faults/##BMS_ID##:rack_fire_system_gas_detector_level_1"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Gas detector dry contact open",
+                                "note3": "",
+                                "outValue": "Fault",
+                                "shift": 9,
+                                "uri": "/faults/##BMS_ID##:rack_fire_system_gas_detector_level_1"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 10,
+                                "uri": "/faults/##BMS_ID##:rack_fire_system_smoke_detector_level_1"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Smoke detector dry contact open",
+                                "outValue": "Fault",
+                                "shift": 10,
+                                "uri": "/faults/##BMS_ID##:rack_fire_system_smoke_detector_level_1"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 11,
+                                "uri": "/faults/##BMS_ID##:rack_fire_system_temperature_detector_level_2"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Temperature detector dry contact open",
+                                "outValue": "Fault",
+                                "shift": 11,
+                                "uri": "/faults/##BMS_ID##:rack_fire_system_temperature_detector_level_2"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 14,
+                                "uri": "/faults/##BMS_ID##:aerosol_eruption_state"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Aerosol triggered dry contact open",
+                                "outValue": "Fault",
+                                "shift": 14,
+                                "uri": "/faults/##BMS_ID##:aerosol_eruption_state"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "enable": "/config/##BMS_ID##:enum_opt",
+                                "outValue": true,
+                                "uri": "/components/##BMS_ID##:mbmu_rack_warning_6@ifChanged",
+                                "useAv": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##BMS_ID##:enable",
+            "ifChanged": false,
+            "value": 0
+        },
+        "mbmu_rack_warning_7": {
+            "actions": {
+                "onSet": [
+                    {
+                        "enum": [
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 0,
+                                "uri": "/faults/##BMS_ID##:rack_fire_system_gas_and_smoke_sensors_level_2"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Smoke and gas detectors dry contact open",
+                                "outValue": "Fault",
+                                "shift": 0,
+                                "uri": "/faults/##BMS_ID##:rack_fire_system_gas_and_smoke_sensors_level_2"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "Rack humidifier fault dry contact close",
+                                "outValue": "Normal",
+                                "shift": 3,
+                                "uri": "/alarms/##BMS_ID##:rack_humidifier"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Rack humidifier fault dry contact open",
+                                "note3": "",
+                                "outValue": "Alarm",
+                                "shift": 3,
+                                "uri": "/alarms/##BMS_ID##:rack_humidifier"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 5,
+                                "uri": "/faults/##BMS_ID##:inner_communication_ccan"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "SBMU lost all CCAN data",
+                                "outValue": "Fault",
+                                "shift": 5,
+                                "uri": "/faults/##BMS_ID##:inner_communication_ccan"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 6,
+                                "uri": "/faults/##BMS_ID##:inner_communication_scan"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "SBMU lost SCAN data",
+                                "outValue": "Fault",
+                                "shift": 6,
+                                "uri": "/faults/##BMS_ID##:inner_communication_scan"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 7,
+                                "uri": "/faults/##BMS_ID##:inner_communication_mcan"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "SBMU lost MBMU MCAN data",
+                                "outValue": "Fault",
+                                "shift": 7,
+                                "uri": "/faults/##BMS_ID##:inner_communication_mcan"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "All TMS packets received",
+                                "outValue": "Normal",
+                                "shift": 8,
+                                "uri": "/alarms/##BMS_ID##:inner_communication_ccan_tms"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "SBMU lost any TMS CCAN data",
+                                "outValue": "Alarm",
+                                "shift": 8,
+                                "uri": "/alarms/##BMS_ID##:inner_communication_ccan_tms"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 10,
+                                "uri": "/faults/##BMS_ID##:inner_communication_ccan_tms_racks_hv_on"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "SBMU lost any TMS CCAN data",
+                                "note3": "AND",
+                                "note4": "Racks HV on",
+                                "outValue": "Fault",
+                                "shift": 10,
+                                "uri": "/faults/##BMS_ID##:inner_communication_ccan_tms_racks_hv_on"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 11,
+                                "uri": "/faults/##BMS_ID##:balancing_circuit"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Cell balance circuit short fault set",
+                                "outValue": "Fault",
+                                "shift": 11,
+                                "uri": "/faults/##BMS_ID##:balancing_circuit"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "SOC＞15%",
+                                "outValue": "Normal",
+                                "shift": 13,
+                                "uri": "/alarms/##BMS_ID##:soc_low_level_1"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "SOC＜10%",
+                                "outValue": "Alarm",
+                                "shift": 13,
+                                "uri": "/alarms/##BMS_ID##:soc_low_level_1"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "SOC＞15%",
+                                "outValue": "Normal",
+                                "shift": 14,
+                                "uri": "/alarms/##BMS_ID##:soc_low_level_2"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "SOC＜5% ",
+                                "outValue": "Alarm",
+                                "shift": 14,
+                                "uri": "/alarms/##BMS_ID##:soc_low_level_2"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 15,
+                                "uri": "/faults/##BMS_ID##:hv_circuit_open"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Rack Internal Voltage < 100V before contactor closing",
+                                "note3": "OR",
+                                "note4": "The Total Current > number of high-voltage lines * 30A AND The Current of a Single Rack < 10A AND The main contactor is closed",
+                                "outValue": "Fault",
+                                "shift": 15,
+                                "uri": "/faults/##BMS_ID##:hv_circuit_open"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "enable": "/config/##BMS_ID##:enum_opt",
+                                "outValue": true,
+                                "uri": "/components/##BMS_ID##:mbmu_rack_warning_7@ifChanged",
+                                "useAv": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##BMS_ID##:enable",
+            "ifChanged": false,
+            "value": 0
+        },
+        "mbmu_rack_warning_8": {
+            "actions": {
+                "onSet": [
+                    {
+                        "enum": [
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "No level 3 fault warning on all",
+                                "note3": "TMSs",
+                                "outValue": "Normal",
+                                "shift": 0,
+                                "uri": "/alarms/##BMS_ID##:distributed_tms"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Level 3 fault on TMS",
+                                "outValue": "Alarm",
+                                "shift": 0,
+                                "uri": "/alarms/##BMS_ID##:distributed_tms"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 1,
+                                "uri": "/faults/##BMS_ID##:distributed_tms_mode_conflict"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "The request mode does not match the feedback mode AND ",
+                                "note3": "No CCAN TMS communication fault",
+                                "outValue": "Fault",
+                                "shift": 1,
+                                "uri": "/faults/##BMS_ID##:distributed_tms_mode_conflict"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 2,
+                                "uri": "/faults/##BMS_ID##:distributed_tms"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Level 1 or 2 fault on TMS",
+                                "outValue": "Fault",
+                                "shift": 2,
+                                "uri": "/faults/##BMS_ID##:distributed_tms"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 3,
+                                "uri": "/faults/##BMS_ID##:precharging_failed_twice"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Pre-charge twice at a time. Pre-charging contactor voltage > 10V after closing",
+                                "outValue": "Fault",
+                                "shift": 3,
+                                "uri": "/faults/##BMS_ID##:precharging_failed_twice"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 9,
+                                "uri": "/faults/##BMS_ID##:positive_and_negative_hv_reversed_connection"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "HV+ and HV- reversed connection fault",
+                                "outValue": "Fault",
+                                "shift": 9,
+                                "uri": "/faults/##BMS_ID##:positive_and_negative_hv_reversed_connection"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "enable": "/config/##BMS_ID##:enum_opt",
+                                "outValue": true,
+                                "uri": "/components/##BMS_ID##:mbmu_rack_warning_8@ifChanged",
+                                "useAv": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##BMS_ID##:enable",
+            "ifChanged": false,
+            "value": 0
+        },
+        "mbmu_rack_warning_9": {
+            "actions": {
+                "onSet": [
+                    {
+                        "enum": [
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 0,
+                                "uri": "/faults/##BMS_ID##:thermal_runaway_caused_fire"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Thermal runaway fire fault set",
+                                "outValue": "Fault",
+                                "shift": 0,
+                                "uri": "/faults/##BMS_ID##:thermal_runaway_caused_fire"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 5,
+                                "uri": "/faults/##BMS_ID##:hv_circuit_fuse_open_circuit"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Total current > HV online number * 30 A ",
+                                "note3": "AND ",
+                                "note4": "Single rack current < 10 A AND ",
+                                "note5": "Main contactor closed",
+                                "outValue": "Fault",
+                                "shift": 5,
+                                "uri": "/faults/##BMS_ID##:hv_circuit_fuse_open_circuit"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "enable": "/config/##BMS_ID##:enum_opt",
+                                "outValue": true,
+                                "uri": "/components/##BMS_ID##:mbmu_rack_warning_9@ifChanged",
+                                "useAv": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##BMS_ID##:enable",
+            "ifChanged": false,
+            "value": 0
+        },
+        "mbmu_warning_1": {
+            "actions": {
+                "onSet": [
+                    {
+                        "enum": [
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "R＞1500Ω/V",
+                                "outValue": "Normal",
+                                "shift": 0,
+                                "uri": "/alarms/##BMS_ID##:insulation"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "R ≤ 1000Ω/V",
+                                "outValue": "Alarm",
+                                "shift": 0,
+                                "uri": "/alarms/##BMS_ID##:insulation"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 1,
+                                "uri": "/faults/##BMS_ID##:insulation"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "R ≤ 100Ω/V",
+                                "outValue": "Fault",
+                                "shift": 1,
+                                "uri": "/faults/##BMS_ID##:insulation"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 2,
+                                "uri": "/faults/##BMS_ID##:invalid_insulation"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Insulation failure fault",
+                                "outValue": "Fault",
+                                "shift": 2,
+                                "uri": "/faults/##BMS_ID##:invalid_insulation"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 3,
+                                "uri": "/faults/##BMS_ID##:min_closed_hv_racks"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "The number of HV closed racks in the system < The minimum number of operating racks (No judgment is made during the process of connecting HV contactor and disconnecting HV contactor)",
+                                "outValue": "Fault",
+                                "shift": 3,
+                                "uri": "/faults/##BMS_ID##:min_closed_hv_racks"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "All SBMU packets received",
+                                "note3": "",
+                                "outValue": "Normal",
+                                "shift": 6,
+                                "uri": "/alarms/##BMS_ID##:sbmu_communication_lost"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "MCAN - communication loss of any SBMU data",
+                                "outValue": "Alarm",
+                                "shift": 6,
+                                "uri": "/alarms/##BMS_ID##:sbmu_communication_lost"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 7,
+                                "uri": "/faults/##BMS_ID##:sbmu_communication_lost"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "MCAN - communication loss of any SBMU data",
+                                "outValue": "Fault",
+                                "shift": 7,
+                                "uri": "/faults/##BMS_ID##:sbmu_communication_lost"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 8,
+                                "uri": "/faults/##BMS_ID##:ems_communication_lost"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions: ACAN-PCS heartbeat signal lost",
+                                "note2": "",
+                                "outValue": "Fault",
+                                "shift": 8,
+                                "uri": "/faults/##BMS_ID##:ems_communication_lost"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 9,
+                                "uri": "/faults/##BMS_ID##:imm_communication_lost"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "MCAN-IMM communication data lost",
+                                "outValue": "Fault",
+                                "shift": 9,
+                                "uri": "/faults/##BMS_ID##:imm_communication_lost"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "One frame of valid packet received",
+                                "outValue": "Normal",
+                                "shift": 10,
+                                "uri": "/alarms/##BMS_ID##:air_conditioner_communication_lost"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Communication loss of air conditioner",
+                                "note3": "",
+                                "outValue": "Alarm",
+                                "shift": 10,
+                                "uri": "/alarms/##BMS_ID##:air_conditioner_communication_lost"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 11,
+                                "uri": "/faults/##BMS_ID##:centralized_tms_communication"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Communication loss of TMS message with MBMU for thermal management interaction control in any case, while high voltage is online in the electrical rack",
+                                "outValue": "Fault",
+                                "shift": 11,
+                                "uri": "/faults/##BMS_ID##:centralized_tms_communication"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "All TMS messages for thermal management interaction ",
+                                "note3": "control with MBMU restored",
+                                "outValue": "Normal",
+                                "shift": 12,
+                                "uri": "/alarms/##BMS_ID##:centralized_tms_communication"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "TMS message loss for thermal management interaction control with MBMU in any case",
+                                "outValue": "Alarm",
+                                "shift": 12,
+                                "uri": "/alarms/##BMS_ID##:centralized_tms_communication"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 13,
+                                "uri": "/faults/##BMS_ID##:centralized_tms_level_2"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "TMS reports a Level 2 fault for thermal management interaction control with MBMU in any case",
+                                "outValue": "Fault",
+                                "shift": 13,
+                                "uri": "/faults/##BMS_ID##:centralized_tms_level_2"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "All TMS requests and feedback modes are consistent, and there are no communication loss faults for the centralized",
+                                "note3": "liquid-cooling unit",
+                                "outValue": "Normal",
+                                "shift": 14,
+                                "uri": "/alarms/##BMS_ID##:centralized_tms_mode_conflict"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Inconsistent request mode",
+                                "note3": "and feedback mode for",
+                                "note4": "thermal management interaction control with",
+                                "note5": "MBMU in any case, with",
+                                "note6": "no communication loss",
+                                "note7": "fault for the centralized",
+                                "note8": "liquid-cooling unit",
+                                "outValue": "Alarm",
+                                "shift": 14,
+                                "uri": "/alarms/##BMS_ID##:centralized_tms_mode_conflict"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 15,
+                                "uri": "/faults/##BMS_ID##:centralized_tms_level_1"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "TMS reports a Level 1 fault for thermal management interaction control with MBMU in any case",
+                                "outValue": "Fault",
+                                "shift": 15,
+                                "uri": "/faults/##BMS_ID##:centralized_tms_level_1"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "enable": "/config/##BMS_ID##:enum_opt",
+                                "outValue": true,
+                                "uri": "/components/##BMS_ID##:mbmu_warning_1@ifChanged",
+                                "useAv": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##BMS_ID##:enable",
+            "ifChanged": false,
+            "value": 0
+        },
+        "mbmu_warning_2": {
+            "actions": {
+                "onSet": [
+                    {
+                        "enum": [
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 0,
+                                "uri": "/faults/##BMS_ID##:spd_failure"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "No alarm when connected, alarm when disconnected",
+                                "outValue": "Fault",
+                                "shift": 0,
+                                "uri": "/faults/##BMS_ID##:spd_failure"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "DC-DC dry contact closed ",
+                                "outValue": "Normal",
+                                "shift": 1,
+                                "uri": "/alarms/##BMS_ID##:aux_power_dc_dc_failure"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "DC-DC dry contact open and AC-DC dry contact closed ",
+                                "outValue": "Alarm",
+                                "shift": 1,
+                                "uri": "/alarms/##BMS_ID##:aux_power_dc_dc_failure"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "DC-DC dry contact closed ",
+                                "outValue": "Normal",
+                                "shift": 2,
+                                "uri": "/alarms/##BMS_ID##:aux_power_ac_dc_failure"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "DC-DC dry contact closed and AC-DC dry contact open",
+                                "outValue": "Alarm",
+                                "shift": 2,
+                                "uri": "/alarms/##BMS_ID##:aux_power_ac_dc_failure"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 3,
+                                "uri": "/faults/##BMS_ID##:aux_power_failure"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "AC-DC dry contact disconnected and DC-DC dry contact disconnected for 2 seconds",
+                                "note3": "OR ",
+                                "note4": "AC-DC dry contact disconnected for 10 minutes",
+                                "note5": "",
+                                "outValue": "Fault",
+                                "shift": 3,
+                                "uri": "/faults/##BMS_ID##:aux_power_failure"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 4,
+                                "uri": "/faults/##BMS_ID##:mbmu_fire_system_level_1"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Fire system fault level 1 dry contact open",
+                                "note3": "",
+                                "outValue": "Fault",
+                                "shift": 4,
+                                "uri": "/faults/##BMS_ID##:mbmu_fire_system_level_1"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 5,
+                                "uri": "/faults/##BMS_ID##:mbmu_fire_system_level_2"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Fire system fault level 2 dry contact open",
+                                "outValue": "Fault",
+                                "shift": 5,
+                                "uri": "/faults/##BMS_ID##:mbmu_fire_system_level_2"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 6,
+                                "uri": "/faults/##BMS_ID##:mbmu_fire_system_failure"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Fire system failure warning dry contact open",
+                                "outValue": "Fault",
+                                "shift": 6,
+                                "uri": "/faults/##BMS_ID##:mbmu_fire_system_failure"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 7,
+                                "uri": "/faults/##BMS_ID##:e_stop"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "E-STOP dry contact open",
+                                "outValue": "Fault",
+                                "shift": 7,
+                                "uri": "/faults/##BMS_ID##:e_stop"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 8,
+                                "uri": "/faults/##BMS_ID##:client_e_stop"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Client E-STOP dry contact open",
+                                "outValue": "Fault",
+                                "shift": 8,
+                                "uri": "/faults/##BMS_ID##:client_e_stop"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 9,
+                                "uri": "/faults/##BMS_ID##:electrical_rack_door"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Electrical rack door dry contact open",
+                                "outValue": "Fault",
+                                "shift": 9,
+                                "uri": "/faults/##BMS_ID##:electrical_rack_door"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 10,
+                                "uri": "/faults/##BMS_ID##:electrical_rack_fan"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Electrical rack fan dry contact open",
+                                "outValue": "Fault",
+                                "shift": 10,
+                                "uri": "/faults/##BMS_ID##:electrical_rack_fan"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "Explosion-proof fan body warning dry contact closed",
+                                "note3": "",
+                                "outValue": "Normal",
+                                "shift": 11,
+                                "uri": "/alarms/##BMS_ID##:smoke_exhaust_ventilation_body"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Smoke exhaust ventilation body warning dry contact open",
+                                "outValue": "Alarm",
+                                "shift": 11,
+                                "uri": "/alarms/##BMS_ID##:smoke_exhaust_ventilation_body"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 12,
+                                "uri": "/faults/##BMS_ID##:smoke_exhaust_ventilation_state"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Smoke exhaust ventilation fault dry contact open",
+                                "note3": "",
+                                "outValue": "Fault",
+                                "shift": 12,
+                                "uri": "/faults/##BMS_ID##:smoke_exhaust_ventilation_state"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "Humidifier 1 fault dry contact close",
+                                "outValue": "Normal",
+                                "shift": 13,
+                                "uri": "/alarms/##BMS_ID##:humidifier_1_failure"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Humidifier 1 fault dry contact open",
+                                "outValue": "Alarm",
+                                "shift": 13,
+                                "uri": "/alarms/##BMS_ID##:humidifier_1_failure"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "enable": "/config/##BMS_ID##:enum_opt",
+                                "outValue": true,
+                                "uri": "/components/##BMS_ID##:mbmu_warning_2@ifChanged",
+                                "useAv": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##BMS_ID##:enable",
+            "ifChanged": false,
+            "value": 0
+        },
+        "mbmu_warning_3": {
+            "actions": {
+                "onSet": [
+                    {
+                        "enum": [
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "Humidifier 2 fault dry contact close",
+                                "outValue": "Normal",
+                                "shift": 0,
+                                "uri": "/alarms/##BMS_ID##:humidifier_2_failure"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Humidifier 2 fault dry contact open",
+                                "outValue": "Alarm",
+                                "shift": 0,
+                                "uri": "/alarms/##BMS_ID##:humidifier_2_failure"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "enable": "/config/##BMS_ID##:enum_opt",
+                                "outValue": true,
+                                "uri": "/components/##BMS_ID##:mbmu_warning_3@ifChanged",
+                                "useAv": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##BMS_ID##:enable",
+            "ifChanged": false,
+            "value": 0
+        },
+        "mbmu_warning_4": {
+            "actions": {
+                "onSet": [
+                    {
+                        "enum": [
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 3,
+                                "uri": "/faults/##BMS_ID##:mbmu_24v_power_supply_voltage_abnormal"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "Power Supply Voltage < 18V",
+                                "note3": "OR",
+                                "note4": "Power Supply Voltage > 30V",
+                                "note5": "OR",
+                                "note6": "Invalid sampling voltage value",
+                                "outValue": "Fault",
+                                "shift": 3,
+                                "uri": "/faults/##BMS_ID##:mbmu_24v_power_supply_voltage_abnormal"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "N/A",
+                                "outValue": "Normal",
+                                "shift": 4,
+                                "uri": "/faults/##BMS_ID##:slave_mbmu_communication_lost"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "All messages lost from MBMU in any case",
+                                "outValue": "Fault",
+                                "shift": 4,
+                                "uri": "/faults/##BMS_ID##:slave_mbmu_communication_lost"
+                            },
+                            {
+                                "inValue": 0,
+                                "mask": 1,
+                                "note1": "Fault Recovery Conditions:",
+                                "note2": "All TMS units for thermal management interaction control with MBMU do not report a Level 3 fault",
+                                "outValue": "Normal",
+                                "shift": 7,
+                                "uri": "/alarms/##BMS_ID##:centralized_tms_level_3"
+                            },
+                            {
+                                "inValue": 1,
+                                "mask": 1,
+                                "note1": "Fault Setting Conditions:",
+                                "note2": "TMS reports a Level 3 fault for thermal management interaction control with MBMU in any case",
+                                "outValue": "Alarm",
+                                "shift": 7,
+                                "uri": "/alarms/##BMS_ID##:centralized_tms_level_3"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "enable": "/config/##BMS_ID##:enum_opt",
+                                "outValue": true,
+                                "uri": "/components/##BMS_ID##:mbmu_warning_4@ifChanged",
+                                "useAv": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##BMS_ID##:enable",
+            "ifChanged": false,
+            "value": 0
+        },
+        "min_allowed_discharge_voltage": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/limits/##BMS_ID##:DischargeVoltageLimit"
+                            },
+                            {
+                                "enable": "/config/##BMS_ID##:enum_opt",
+                                "outValue": true,
+                                "uri": "/components/##BMS_ID##:min_allowed_discharge_voltage@ifChanged",
+                                "useAv": true
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "note": "For PSM",
+                                "uri": "/status/##BMS_ID##:DischargeVoltageLimit"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##BMS_ID##:enable",
+            "ifChanged": false,
+            "value": 0
+        },
+        "sys_soc_maintenance_required_st": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": 0,
+                                "outValue": "Normal",
+                                "uri": "/alarms/##BMS_ID##:system_soc_maintenance_required"
+                            },
+                            {
+                                "inValue": 1,
+                                "outValue": "Request Maintenance",
+                                "uri": "/alarms/##BMS_ID##:system_soc_maintenance_required"
+                            },
+                            {
+                                "enable": "/config/##BMS_ID##:enum_opt",
+                                "outValue": true,
+                                "uri": "/components/##BMS_ID##:sys_soc_maintenance_required_st@ifChanged",
+                                "useAv": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##BMS_ID##:enable",
+            "ifChanged": false,
+            "value": 0
+        },
+        "tms_2_cooling_mode_protection": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": 0,
+                                "outValue": "Normal",
+                                "uri": "/alarms/##BMS_ID##:tms_2_cooling_mode_protection"
+                            },
+                            {
+                                "inValue": 1,
+                                "outValue": "Cooling Protection with Ambient Temperature above 55 C or below -40 C",
+                                "uri": "/alarms/##BMS_ID##:tms_2_cooling_mode_protection"
+                            },
+                            {
+                                "enable": "/config/##BMS_ID##:enum_opt",
+                                "outValue": true,
+                                "uri": "/components/##BMS_ID##:tms_2_cooling_mode_protection@ifChanged",
+                                "useAv": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##BMS_ID##:enable",
+            "ifChanged": false,
+            "value": 0
+        }
+    },
+    "/sched/##BMS_ID##": {
+        "checkInputs_##BMS_ID##": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "outValue": false,
+                                "uri": "/components/##BMS_ID##:battery_system_auxiliary_power_supply_state@ifChanged"
+                            },
+                            {
+                                "outValue": false,
+                                "uri": "/components/##BMS_ID##:bms_power_on@ifChanged"
+                            },
+                            {
+                                "outValue": false,
+                                "uri": "/components/##BMS_ID##:bms_status@ifChanged"
+                            },
+                            {
+                                "outValue": false,
+                                "uri": "/components/##BMS_ID##:max_allowed_charge_voltage@ifChanged"
+                            },
+                            {
+                                "outValue": false,
+                                "uri": "/components/##BMS_ID##:mbmu_rack_warning_1@ifChanged"
+                            },
+                            {
+                                "outValue": false,
+                                "uri": "/components/##BMS_ID##:mbmu_rack_warning_10@ifChanged"
+                            },
+                            {
+                                "outValue": false,
+                                "uri": "/components/##BMS_ID##:mbmu_rack_warning_2@ifChanged"
+                            },
+                            {
+                                "outValue": false,
+                                "uri": "/components/##BMS_ID##:mbmu_rack_warning_3@ifChanged"
+                            },
+                            {
+                                "outValue": false,
+                                "uri": "/components/##BMS_ID##:mbmu_rack_warning_4@ifChanged"
+                            },
+                            {
+                                "outValue": false,
+                                "uri": "/components/##BMS_ID##:mbmu_rack_warning_5@ifChanged"
+                            },
+                            {
+                                "outValue": false,
+                                "uri": "/components/##BMS_ID##:mbmu_rack_warning_6@ifChanged"
+                            },
+                            {
+                                "outValue": false,
+                                "uri": "/components/##BMS_ID##:mbmu_rack_warning_7@ifChanged"
+                            },
+                            {
+                                "outValue": false,
+                                "uri": "/components/##BMS_ID##:mbmu_rack_warning_8@ifChanged"
+                            },
+                            {
+                                "outValue": false,
+                                "uri": "/components/##BMS_ID##:mbmu_rack_warning_9@ifChanged"
+                            },
+                            {
+                                "outValue": false,
+                                "uri": "/components/##BMS_ID##:mbmu_warning_1@ifChanged"
+                            },
+                            {
+                                "outValue": false,
+                                "uri": "/components/##BMS_ID##:mbmu_warning_2@ifChanged"
+                            },
+                            {
+                                "outValue": false,
+                                "uri": "/components/##BMS_ID##:mbmu_warning_3@ifChanged"
+                            },
+                            {
+                                "outValue": false,
+                                "uri": "/components/##BMS_ID##:mbmu_warning_4@ifChanged"
+                            },
+                            {
+                                "outValue": false,
+                                "uri": "/components/##BMS_ID##:min_allowed_discharge_voltage@ifChanged"
+                            },
+                            {
+                                "outValue": false,
+                                "uri": "/components/##BMS_ID##:sys_soc_maintenance_required_st@ifChanged"
+                            },
+                            {
+                                "outValue": false,
+                                "uri": "/components/##BMS_ID##:tms_2_cooling_mode_protection@ifChanged"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##BMS_ID##:enable",
+            "note": "Sets ifChanged to false to process inputs for various interface variables with actions regardless of value change",
+            "value": 0
+        }
+    },
+    "/vlinks/##BMS_ID##": {
+        "avg_cell_temperature": {
+            "default": 0,
+            "value": "/components/##BMS_ID##:avg_cell_temperature",
+            "vlink": "/status/##BMS_ID##:AvgCellTemp"
+        },
+        "avg_cell_voltage": {
+            "default": 0,
+            "value": "/components/##BMS_ID##:avg_cell_voltage",
+            "vlink": "/status/##BMS_ID##:AvgCellVoltage"
+        },
+        "bms_heartbeat": {
+            "default": 0,
+            "value": "/components/##BMS_ID##:bms_heartbeat",
+            "vlink": "/status/##BMS_ID##:HeartbeatRead"
+        },
+        "charge_soe": {
+            "default": 0,
+            "value": "/components/##BMS_ID##:charge_soe",
+            "vlink": "/status/##BMS_ID##:ChargeSOE"
+        },
+        "discharge_soe": {
+            "default": 0,
+            "value": "/components/##BMS_ID##:discharge_soe",
+            "vlink": "/status/##BMS_ID##:DischargeSOE"
+        },
+        "ems_heartbeat": {
+            "default": 0,
+            "value": "/components/##BMS_ID##:ems_heartbeat",
+            "vlink": "/status/##BMS_ID##:EMSHeartbeat"
+        },
+        "max_allowed_charge_voltage": {
+            "default": 0,
+            "value": "/components/##BMS_ID##:max_allowed_charge_voltage",
+            "vlink": "/limits/##BMS_ID##:ChargeVoltageLimit"
+        },
+        "max_cell_temperature": {
+            "default": 0,
+            "value": "/components/##BMS_ID##:max_cell_temperature",
+            "vlink": "/status/##BMS_ID##:MaxCellTemp"
+        },
+        "max_cell_voltage": {
+            "default": 0,
+            "value": "/components/##BMS_ID##:max_cell_voltage",
+            "vlink": "/status/##BMS_ID##:MaxCellVoltage"
+        },
+        "max_charge_current_allowed": {
+            "default": 0,
+            "value": "/components/##BMS_ID##:max_charge_current_allowed",
+            "vlink": "/limits/##BMS_ID##:ChargeCurrentLimit"
+        },
+        "max_charge_power_allowed": {
+            "default": 0,
+            "value": "/components/##BMS_ID##:max_charge_power_allowed",
+            "vlink": "/limits/##BMS_ID##:ChargePowerLimit"
+        },
+        "max_discharge_current_allowed": {
+            "default": 0,
+            "value": "/components/##BMS_ID##:max_discharge_current_allowed",
+            "vlink": "/limits/##BMS_ID##:DischargeCurrentLimit"
+        },
+        "max_discharge_power_allowed": {
+            "default": 0,
+            "value": "/components/##BMS_ID##:max_discharge_power_allowed",
+            "vlink": "/limits/##BMS_ID##:DischargePowerLimit"
+        },
+        "mbmu_1_ambient_avg_temperature": {
+            "default": 0,
+            "value": "/components/##BMS_ID##:mbmu_1_ambient_avg_temperature",
+            "vlink": "/status/##BMS_ID##:MBMU1AmbientAverageTemperature"
+        },
+        "mbmu_1_ambient_humidity": {
+            "default": 0,
+            "value": "/components/##BMS_ID##:mbmu_1_ambient_humidity",
+            "vlink": "/status/##BMS_ID##:MBMU1AmbientHumidity"
+        },
+        "min_allowed_discharge_voltage": {
+            "default": 0,
+            "value": "/components/##BMS_ID##:min_allowed_discharge_voltage",
+            "vlink": "/limits/##BMS_ID##:DischargeVoltageLimit"
+        },
+        "min_cell_temperature": {
+            "default": 0,
+            "value": "/components/##BMS_ID##:min_cell_temperature",
+            "vlink": "/status/##BMS_ID##:MinCellTemp"
+        },
+        "min_cell_voltage": {
+            "default": 0,
+            "value": "/components/##BMS_ID##:min_cell_voltage",
+            "vlink": "/status/##BMS_ID##:MinCellVoltage"
+        },
+        "number_of_hv_connected_racks": {
+            "default": 0,
+            "value": "/components/##BMS_ID##:number_of_hv_connected_racks",
+            "vlink": "/status/##BMS_ID##:NumRacksOnline"
+        },
+        "state_of_charge": {
+            "default": 0,
+            "value": "/components/##BMS_ID##:state_of_charge",
+            "vlink": "/status/##BMS_ID##:SOC"
+        },
+        "state_of_health": {
+            "default": 0,
+            "value": "/components/##BMS_ID##:state_of_health",
+            "vlink": "/status/##BMS_ID##:SOH"
+        },
+        "system_current": {
+            "default": 0,
+            "value": "/components/##BMS_ID##:system_current",
+            "vlink": "/status/##BMS_ID##:DCCurrent"
+        },
+        "system_power": {
+            "default": 0,
+            "value": "/components/##BMS_ID##:system_power",
+            "vlink": "/status/##BMS_ID##:DCPower"
+        },
+        "system_remaining_charge_energy": {
+            "default": 0,
+            "value": "/components/##BMS_ID##:system_remaining_charge_energy",
+            "vlink": "/status/##BMS_ID##:ChargeableEnergy"
+        },
+        "system_remaining_discharge_energy": {
+            "default": 0,
+            "value": "/components/##BMS_ID##:system_remaining_discharge_energy",
+            "vlink": "/status/##BMS_ID##:DischargeableEnergy"
+        },
+        "system_voltage": {
+            "default": 0,
+            "value": "/components/##BMS_ID##:system_voltage",
+            "vlink": "/status/##BMS_ID##:DCVoltage"
+        },
+        "tms_2_environment_temperature": {
+            "default": 0,
+            "value": "/components/##BMS_ID##:tms_2_environment_temperature",
+            "vlink": "/status/##BMS_ID##:TMS2EnvironmentTemperature"
+        },
+        "tms_2_inlet_rack_outlet_temperature": {
+            "default": 0,
+            "value": "/components/##BMS_ID##:tms_2_inlet_rack_outlet_temperature",
+            "vlink": "/status/##BMS_ID##:TMS2InletTemperature"
+        },
+        "tms_2_outlet_rack_inlet_temperature": {
+            "default": 0,
+            "value": "/components/##BMS_ID##:tms_2_outlet_rack_inlet_temperature",
+            "vlink": "/status/##BMS_ID##:TMS2OutletTemperature"
+        }
+    }
+}

@@ -1,0 +1,88 @@
+{
+    "/assets/##BMS_ID##/##RACK_ID##": {
+        "battery_subsystem_outside_voltage" : {
+            "value": 0.0,
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/control/actions_ess_bwf_##BMS_ID##_##RACK_ID##_LPFilter/LowPassFilter_1:input"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    },
+    "/actions/ess": {
+        "bwf_##BMS_ID##_##RACK_ID##": {
+            "value": 0,
+            "enable": true,
+            "every": 1,
+            "CutoffFrequency": 0.05,
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "func": "LPFilter"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    },
+    "/control/actions_ess_bwf_##BMS_ID##_##RACK_ID##_LPFilter/LowPassFilter_1": {
+        "output" : {
+            "value": 0.0,
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/control/actions_ess_BatteryRackBalancing_##BMS_ID##/##RACK_ID##:voltage"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    },
+    "/controls/##BMS_ID##_##RACK_ID##": {},
+    "/schedule/wake_monitor/##BMS_ID##_##RACK_ID##": {},
+    "/status/##BMS_ID##_##RACK_ID##": {
+        "DCVoltage": {
+            "value": -1
+        },
+        "DCVoltageBeforeBusBar" : {
+            "value": -1.0,
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/control/actions_ess_bwf_##BMS_ID##_##RACK_ID##_LPFilter/LowPassFilter_1:input"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "soc": {
+            "value": -1,
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/control/actions_ess_BatteryRackBalancing_##BMS_ID##/##RACK_ID##:soc"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    }
+}

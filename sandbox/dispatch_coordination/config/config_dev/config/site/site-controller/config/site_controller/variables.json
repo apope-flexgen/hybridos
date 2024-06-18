@@ -2534,10 +2534,6 @@
                 "name": "Average State of Charge for All ESS",
                 "unit": "%"
             },
-            "soc_avg_controllable": {
-                "name": "Average State of Charge for Controllable Running ESS",
-                "unit": "%"
-            },
             "soc_avg_running": {
                 "name": "Average State of Charge for Running ESS",
                 "unit": "%"
@@ -2546,20 +2542,12 @@
                 "name": "Maximum State of Charge for All ESS",
                 "unit": "%"
             },
-            "soc_max_controllable": {
-                "name": "Maximum State of Charge for Controllable Running ESS",
-                "unit": "%"
-            },
             "soc_max_running": {
                 "name": "Maximum State of Charge for Running ESS",
                 "unit": "%"
             },
             "soc_min_all": {
                 "name": "Minimum State of Charge for All ESS",
-                "unit": "%"
-            },
-            "soc_min_controllable": {
-                "name": "Minimum State of Charge for Controllable Running ESS",
                 "unit": "%"
             },
             "soc_min_running": {

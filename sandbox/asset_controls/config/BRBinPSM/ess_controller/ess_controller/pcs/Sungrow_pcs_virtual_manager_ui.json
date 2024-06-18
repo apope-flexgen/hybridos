@@ -1,0 +1,16 @@
+{
+    "/assets/pcs/summary": {
+        "alarms": {
+            "options": [],
+            "value": 0
+        },
+        "faults": {
+            "options": [],
+            "value": 0
+        },
+        "maint_mode": {
+            "value": false
+        }
+    },
+    "/vlinks/pcs": {}
+}

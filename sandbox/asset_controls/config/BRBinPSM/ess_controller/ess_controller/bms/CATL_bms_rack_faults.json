@@ -1,0 +1,2195 @@
+{
+    "/alarms/##BMS_ID##_##RACK_ID##": {
+        "MonitorVarAlarm": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": []
+                    }
+                ]
+            },
+            "enabled": true,
+            "ifChanged": false,
+            "note1": "Contains last recently reported alarm from any monitoring variable",
+            "note2": "Useful for reporting alarm states to an external management system (e.g. Site Controller) or modifying the alarm message before it is reported on the UI",
+            "value": "Normal"
+        },
+        "battery_soc_maintenance_required": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Request Maintenance",
+                                "note": "Bit 0 - BMS Rack battery_soc_maintenance_required - Request Maintenance",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_alarms[0]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "big_temperature_difference_between_cells_level_1": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Alarm",
+                                "note": "Bit 1 - BMS Rack big_temperature_difference_between_cells_level_1 - Alarm",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_alarms[1]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "big_temperature_difference_between_cells_level_2": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Alarm",
+                                "note": "Bit 2 - BMS Rack big_temperature_difference_between_cells_level_2 - Alarm",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_alarms[2]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "big_temperature_difference_between_cells_level_3": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Alarm",
+                                "note": "Bit 3 - BMS Rack big_temperature_difference_between_cells_level_3 - Alarm",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_alarms[3]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "big_temperature_difference_between_rack": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Alarm",
+                                "note": "Bit 4 - BMS Rack big_temperature_difference_between_rack - Alarm",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_alarms[4]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "big_voltage_difference_between_cells": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Alarm",
+                                "note": "Bit 5 - BMS Rack big_voltage_difference_between_cells - Alarm",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_alarms[5]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "charge_overcurrent_level_1": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Alarm",
+                                "note": "Bit 6 - BMS Rack charge_overcurrent_level_1 - Alarm",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_alarms[6]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "charge_overcurrent_level_2": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Alarm",
+                                "note": "Bit 7 - BMS Rack charge_overcurrent_level_2 - Alarm",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_alarms[7]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "charge_overcurrent_level_3": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Alarm",
+                                "note": "Bit 8 - BMS Rack charge_overcurrent_level_3 - Alarm",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_alarms[8]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "clear_alarms": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note1": "When this variable is set to Clear, all alarm variables (defined in /alarms/##BMS_ID##_##RACK_ID##) will be reset to the normal state (defined in /config/##BMS_ID##_##RACK_ID##:NoAlarmMsg)",
+            "note2": "Also, all monitoring variables (defined in variable) will have their alarm/fault states reset",
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "discharge_overcurrent_level_1": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Alarm",
+                                "note": "Bit 9 - BMS Rack discharge_overcurrent_level_1 - Alarm",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_alarms[9]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "discharge_overcurrent_level_2": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Alarm",
+                                "note": "Bit 10 - BMS Rack discharge_overcurrent_level_2 - Alarm",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_alarms[10]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "discharge_overcurrent_level_3": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Alarm",
+                                "note": "Bit 11 - BMS Rack discharge_overcurrent_level_3 - Alarm",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_alarms[11]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "distributed_tms": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Alarm",
+                                "note": "Bit 12 - BMS Rack distributed_tms - Alarm",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_alarms[12]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "inner_communication_ccan_tms": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Alarm",
+                                "note": "Bit 13 - BMS Rack inner_communication_ccan_tms - Alarm",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_alarms[13]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "low_soc_overdischarge": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Alarm",
+                                "note": "Bit 14 - BMS Rack low_soc_overdischarge - Alarm",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_alarms[14]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "rack_humidifier": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Alarm",
+                                "note": "Bit 15 - BMS Rack rack_humidifier - Alarm",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_alarms[15]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "single_cell_overtemperature_level_1": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Alarm",
+                                "note": "Bit 16 - BMS Rack single_cell_overtemperature_level_1 - Alarm",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_alarms[16]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "single_cell_overtemperature_level_2": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Alarm",
+                                "note": "Bit 17 - BMS Rack single_cell_overtemperature_level_2 - Alarm",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_alarms[17]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "single_cell_overtemperature_level_3": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Alarm",
+                                "note": "Bit 18 - BMS Rack single_cell_overtemperature_level_3 - Alarm",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_alarms[18]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "single_cell_overvoltage_level_1": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Alarm",
+                                "note": "Bit 19 - BMS Rack single_cell_overvoltage_level_1 - Alarm",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_alarms[19]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "single_cell_overvoltage_level_2": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Alarm",
+                                "note": "Bit 20 - BMS Rack single_cell_overvoltage_level_2 - Alarm",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_alarms[20]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "single_cell_overvoltage_level_3": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Alarm",
+                                "note": "Bit 21 - BMS Rack single_cell_overvoltage_level_3 - Alarm",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_alarms[21]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "single_cell_undertemperature_level_1": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Alarm",
+                                "note": "Bit 22 - BMS Rack single_cell_undertemperature_level_1 - Alarm",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_alarms[22]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "single_cell_undertemperature_level_2": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Alarm",
+                                "note": "Bit 23 - BMS Rack single_cell_undertemperature_level_2 - Alarm",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_alarms[23]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "single_cell_undertemperature_level_3": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Alarm",
+                                "note": "Bit 24 - BMS Rack single_cell_undertemperature_level_3 - Alarm",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_alarms[24]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "single_cell_undervoltage_level_1": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Alarm",
+                                "note": "Bit 25 - BMS Rack single_cell_undervoltage_level_1 - Alarm",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_alarms[25]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "single_cell_undervoltage_level_2": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Alarm",
+                                "note": "Bit 26 - BMS Rack single_cell_undervoltage_level_2 - Alarm",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_alarms[26]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "single_cell_undervoltage_level_3": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Alarm",
+                                "note": "Bit 27 - BMS Rack single_cell_undervoltage_level_3 - Alarm",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_alarms[27]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "single_rack_overvoltage_level_1": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Alarm",
+                                "note": "Bit 28 - BMS Rack single_rack_overvoltage_level_1 - Alarm",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_alarms[28]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "single_rack_overvoltage_level_2": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Alarm",
+                                "note": "Bit 29 - BMS Rack single_rack_overvoltage_level_2 - Alarm",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_alarms[29]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "single_rack_undervoltage_level_1": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Alarm",
+                                "note": "Bit 30 - BMS Rack single_rack_undervoltage_level_1 - Alarm",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_alarms[30]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "single_rack_undervoltage_level_2": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Alarm",
+                                "note": "Bit 31 - BMS Rack single_rack_undervoltage_level_2 - Alarm",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_alarms[31]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "soc_low_level_1": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Alarm",
+                                "note": "Bit 0 - BMS Rack soc_low_level_1 - Alarm",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_alarms_2[0]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        },
+        "soc_low_level_2": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Alarm",
+                                "note": "Bit 1 - BMS Rack soc_low_level_2 - Alarm",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_alarms_2[1]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "alarm",
+            "value": "Normal"
+        }
+    },
+    "/faults/##BMS_ID##_##RACK_ID##": {
+        "MonitorVarFault": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": []
+                    }
+                ]
+            },
+            "enabled": true,
+            "ifChanged": false,
+            "note1": "Contains last recently reported fault from any monitoring variable",
+            "note2": "Useful for reporting fault states to an external management system (e.g. Site Controller) or modifying the fault message before it is reported on the UI",
+            "value": "Normal"
+        },
+        "aerosol_eruption_state": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 0 - BMS Rack aerosol_eruption_state - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_faults[0]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "balancing_circuit": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 1 - BMS Rack balancing_circuit - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_faults[1]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "battery_rack_door": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 2 - BMS Rack battery_rack_door - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_faults[2]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "charge_overcurrent_level_4": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 3 - BMS Rack charge_overcurrent_level_4 - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_faults[3]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "clear_faults": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note1": "When this variable is set to Clear, all fault variables (defined in /faults/##BMS_ID##_##RACK_ID##) will be reset to the normal state (defined in /config/##BMS_ID##_##RACK_ID##:NoFaultMsg)",
+            "note2": "Also, all monitoring variables (defined in variable) will have their alarm/fault states reset",
+            "type": "fault",
+            "value": "Normal"
+        },
+        "csc_24v_power_supply_voltage_abnormal": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 4 - BMS Rack csc_24v_power_supply_voltage_abnormal - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_faults[4]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "current_sensor_failed": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 5 - BMS Rack current_sensor_failed - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_faults[5]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "discharge_overcurrent_level_4": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 6 - BMS Rack discharge_overcurrent_level_4 - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_faults[6]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "distributed_tms": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 7 - BMS Rack distributed_tms - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_faults[7]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "distributed_tms_mode_conflict": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 8 - BMS Rack distributed_tms_mode_conflict - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_faults[8]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "hv_circuit_fuse_open_circuit": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 9 - BMS Rack hv_circuit_fuse_open_circuit - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_faults[9]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "hv_circuit_open_circuit": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 10 - BMS Rack hv_circuit_open_circuit - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_faults[10]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "hv_positive_and_negative_reversed_connection": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 11 - BMS Rack hv_positive_and_negative_reversed_connection - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_faults[11]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "inner_communication_ccan": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 12 - BMS Rack inner_communication_ccan - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_faults[12]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "inner_communication_ccan_tms": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 13 - BMS Rack inner_communication_ccan_tms - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_faults[13]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "inner_communication_mcan": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 14 - BMS Rack inner_communication_mcan - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_faults[14]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "inner_communication_scan": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 15 - BMS Rack inner_communication_scan - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_faults[15]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "invalid_cell_voltage": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 16 - BMS Rack invalid_cell_voltage - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_faults[16]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "low_soc_overdischarge": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 17 - BMS Rack low_soc_overdischarge - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_faults[17]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "main_control_box_fan": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 18 - BMS Rack main_control_box_fan - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_faults[18]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "main_negative_relay_open_circuit": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 19 - BMS Rack main_negative_relay_open_circuit - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_faults[19]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "main_negative_relay_sticking": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 20 - BMS Rack main_negative_relay_sticking - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_faults[20]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "main_positive_and_negative_relays_sticking": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 21 - BMS Rack main_positive_and_negative_relays_sticking - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_faults[21]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "main_positive_relay_open_circuit": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 22 - BMS Rack main_positive_relay_open_circuit - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_faults[22]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "main_positive_relay_sticking": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 23 - BMS Rack main_positive_relay_sticking - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_faults[23]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "msd": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 24 - BMS Rack msd - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_faults[24]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "multiple_cell_temperature_sampling_abnormal": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 25 - BMS Rack multiple_cell_temperature_sampling_abnormal - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_faults[25]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "precharging_failed_twice": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 26 - BMS Rack precharging_failed_twice - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_faults[26]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "rack_fire_system_gas_and_smoke_sensors_level_2": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 27 - BMS Rack rack_fire_system_gas_and_smoke_sensors_level_2 - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_faults[27]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "rack_fire_system_gas_sensor_level_1": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 28 - BMS Rack rack_fire_system_gas_sensor_level_1 - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_faults[28]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "rack_fire_system_smoke_sensor_level_1": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 29 - BMS Rack rack_fire_system_smoke_sensor_level_1 - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_faults[29]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "rack_fire_system_temperature_sensor_level_2": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 30 - BMS Rack rack_fire_system_temperature_sensor_level_2 - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_faults[30]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "rack_fuse": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 31 - BMS Rack rack_fuse - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_faults[31]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "rack_isolate_switch": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 0 - BMS Rack rack_isolate_switch - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_faults_2[0]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "sbmu_24v_power_supply_voltage_abnormal": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 1 - BMS Rack sbmu_24v_power_supply_voltage_abnormal - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_faults_2[1]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "single_cell_extreme_overvoltage": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 2 - BMS Rack single_cell_extreme_overvoltage - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_faults_2[2]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "single_cell_extreme_undervoltage": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 3 - BMS Rack single_cell_extreme_undervoltage - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_faults_2[3]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "single_cell_overcharge_replacement_required": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 4 - BMS Rack single_cell_overcharge_replacement_required - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_faults_2[4]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "single_cell_overdischarge_replacement_required": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 5 - BMS Rack single_cell_overdischarge_replacement_required - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_faults_2[5]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "single_cell_overtemperature_level_4": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 6 - BMS Rack single_cell_overtemperature_level_4 - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_faults_2[6]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "single_cell_temperature_sampling_abnormal": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 7 - BMS Rack single_cell_temperature_sampling_abnormal - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_faults_2[7]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        },
+        "thermal_runaway_caused_fire": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": "Fault",
+                                "note": "Bit 8 - BMS Rack thermal_runaway_caused_fire - Fault",
+                                "outValue": true,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_faults_2[8]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "type": "fault",
+            "value": "Normal"
+        }
+    },
+    "/schedule/wake_monitor/##BMS_ID##_##RACK_ID##": {
+        "/status/##BMS_ID##_##RACK_ID##:AnyFireFaultActive": {
+            "amap": "##BMS_ID##_##RACK_ID##",
+            "func": "CalculateVar"
+        },
+        "/status/##BMS_ID##_##RACK_ID##:TotalAlarmCnt": {
+            "amap": "##BMS_ID##_##RACK_ID##",
+            "func": "CalculateVar"
+        },
+        "/status/##BMS_ID##_##RACK_ID##:TotalFaultCnt": {
+            "amap": "##BMS_ID##_##RACK_ID##",
+            "func": "CalculateVar"
+        }
+    },
+    "/status/##BMS_ID##_##RACK_ID##": {
+        "AlarmCnt": 0,
+        "AnyFireFaultActive": {
+            "enable": "/config/##BMS_ID##_##RACK_ID##:enable",
+            "expression": "{1}",
+            "numVars": 1,
+            "useExpr": true,
+            "value": false,
+            "variable1": "/status/##BMS_ID##_##RACK_ID##:FireFaultActive"
+        },
+        "ClearFaultsDone": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "outValue": 0,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_alarms"
+                            },
+                            {
+                                "outValue": 0,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_alarms_2"
+                            },
+                            {
+                                "outValue": 0,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_faults"
+                            },
+                            {
+                                "outValue": 0,
+                                "uri": "/site/ess:bms_##BMS_ID##_##RACK_ID##_vendor_faults_2"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "ifChanged": false,
+            "note": "When this variable is set, the alarm/fault bitfields will be set to 0 to clear all bits",
+            "value": false
+        },
+        "FaultCnt": 0,
+        "FaultShutdown": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##_##RACK_ID##",
+                                "func": "LogInfo"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": true,
+                                "outValue": true,
+                                "uri": "/status/##BMS_ID##:FaultShutdown"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "ifChanged": true,
+            "note": "When the BMS Rack faults, the fault shutdown event will be propagated to its parent",
+            "value": false
+        },
+        "FireFaultActive": false,
+        "TotalAlarmCnt": {
+            "enable": "/config/##BMS_ID##_##RACK_ID##:enable",
+            "expression": "{1}",
+            "numVars": 1,
+            "useExpr": true,
+            "value": 0,
+            "variable1": "/status/##BMS_ID##_##RACK_ID##:AlarmCnt"
+        },
+        "TotalFaultCnt": {
+            "enable": "/config/##BMS_ID##_##RACK_ID##:enable",
+            "expression": "{1}",
+            "numVars": 1,
+            "useExpr": true,
+            "value": 0,
+            "variable1": "/status/##BMS_ID##_##RACK_ID##:FaultCnt"
+        }
+    }
+}

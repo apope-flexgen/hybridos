@@ -2,9 +2,9 @@
 package main
 
 import (
+	"fims"
 	"fmt"
 
-	fims "github.com/flexgen-power/hybridos/fims/go_fims"
 	"github.com/flexgen-power/hybridos/go_flexgen/mux"
 )
 
