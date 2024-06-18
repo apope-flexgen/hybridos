@@ -1,0 +1,486 @@
+{
+    "fileInfo": {
+        "sourceFileName": "pcs_ess-controller_pge_modbus.xlsx",
+        "sourceFileCreatedBy": "Jimmy Nguyen",
+        "sourceFileLastModifiedBy": "Claire Levinson",
+        "outputFileName": "pcs_ess-controller_pge_modbus_server.json",
+        "outputFileType": "server"
+    },
+    "system": {
+        "name": "PCS_1_Modbus",
+        "connection name": "PCS_1_Modbus",
+        "id": "PCS_1_Modbus",
+        "protocol": "Modbus TCP",
+        "ip_address": "0.0.0.0",
+        "port": 502,
+        "standard version": 0.1
+    },
+    "registers": {
+        "holding_registers": [
+            {
+                "name": "Control Mode setting",
+                "id": "control_mode_setting",
+                "uri": "/components/pcs_1_control",
+                "offset": 10000
+            },
+            {
+                "name": "Operation mode setting",
+                "id": "operation_mode_setting",
+                "uri": "/components/pcs_1_control",
+                "offset": 10001
+            },
+            {
+                "name": "Switching machine",
+                "id": "switching_machine",
+                "uri": "/components/pcs_1_control",
+                "offset": 10002
+            },
+            {
+                "name": "Active power Setting",
+                "id": "active_power_setting",
+                "uri": "/components/pcs_1_control",
+                "offset": 10003,
+                "scale": 10,
+                "signed": true
+            },
+            {
+                "name": "Reactive power setting",
+                "id": "reactive_power_setting",
+                "uri": "/components/pcs_1_control",
+                "offset": 10004,
+                "scale": 10,
+                "signed": true
+            }
+        ],
+        "input_registers": [
+            {
+                "name": "Ac voltage A phase RMS value",
+                "id": "ac_voltage_a_phase_rms_value",
+                "uri": "/components/pcs_1_info",
+                "scale": 10,
+                "offset": 20000
+            },
+            {
+                "name": "Ac voltage B phase RMS value",
+                "id": "ac_voltage_b_phase_rms_value",
+                "uri": "/components/pcs_1_info",
+                "scale": 10,
+                "offset": 20001
+            },
+            {
+                "name": "Ac voltage C phase RMS value",
+                "id": "ac_voltage_c_phase_rms_value",
+                "uri": "/components/pcs_1_info",
+                "scale": 10,
+                "offset": 20002
+            },
+            {
+                "name": "Ac current A phase RMS value",
+                "id": "ac_current_a_phase_rms_value",
+                "uri": "/components/pcs_1_info",
+                "scale": 10,
+                "offset": 20003
+            },
+            {
+                "name": "Ac current B phase RMS value",
+                "id": "ac_current_b_phase_rms_value",
+                "uri": "/components/pcs_1_info",
+                "scale": 10,
+                "offset": 20004
+            },
+            {
+                "name": "Ac current C phase RMS value",
+                "id": "ac_current_c_phase_rms_value",
+                "uri": "/components/pcs_1_info",
+                "scale": 10,
+                "offset": 20005
+            },
+            {
+                "name": "Grid frequency",
+                "id": "grid_frequency",
+                "uri": "/components/pcs_1_info",
+                "scale": 10,
+                "offset": 20006
+            },
+            {
+                "name": "Active power",
+                "id": "active_power",
+                "uri": "/components/pcs_1_info",
+                "scale": 10,
+                "offset": 20007,
+                "signed": true
+            },
+            {
+                "name": "Reactive power",
+                "id": "reactive_power",
+                "uri": "/components/pcs_1_info",
+                "scale": 10,
+                "offset": 20008,
+                "signed": true
+            },
+            {
+                "name": "Power factor",
+                "id": "power_factor",
+                "uri": "/components/pcs_1_info",
+                "scale": 100,
+                "offset": 20009,
+                "signed": true
+            },
+            {
+                "name": "Bus voltage value",
+                "id": "bus_voltage_value",
+                "uri": "/components/pcs_1_info",
+                "scale": 10,
+                "offset": 20010
+            },
+            {
+                "name": "Bus current value",
+                "id": "bus_current_value",
+                "uri": "/components/pcs_1_info",
+                "scale": 10,
+                "offset": 20011,
+                "signed": true
+            },
+            {
+                "name": "Busbar power",
+                "id": "busbar_power",
+                "uri": "/components/pcs_1_info",
+                "scale": 10,
+                "offset": 20012,
+                "signed": true
+            },
+            {
+                "name": "IGBT temperature A phase",
+                "id": "igbt_temperature_a_phase",
+                "uri": "/components/pcs_1_info",
+                "offset": 20013,
+                "signed": true
+            },
+            {
+                "name": "IGBT Temperature B phase",
+                "id": "igbt_temperature_b_phase",
+                "uri": "/components/pcs_1_info",
+                "offset": 20014,
+                "signed": true
+            },
+            {
+                "name": "IGBT temperature C phase",
+                "id": "igbt_temperature_c_phase",
+                "uri": "/components/pcs_1_info",
+                "offset": 20015,
+                "signed": true
+            },
+            {
+                "name": "Rated power of equipment",
+                "id": "rated_power_of_equipment",
+                "uri": "/components/pcs_1_info",
+                "scale": 10,
+                "offset": 20016
+            },
+            {
+                "name": "Heartbeat",
+                "id": "heartbeat",
+                "uri": "/components/pcs_1_info",
+                "offset": 20017
+            },
+            {
+                "name": "Dc voltage",
+                "id": "dc_voltage",
+                "uri": "/components/pcs_1_info",
+                "scale": 10,
+                "offset": 20018
+            },
+            {
+                "name": "Dc current",
+                "id": "dc_current",
+                "uri": "/components/pcs_1_info",
+                "scale": 10,
+                "offset": 20019,
+                "signed": true
+            },
+            {
+                "name": "Dc power",
+                "id": "dc_power",
+                "uri": "/components/pcs_1_info",
+                "scale": 10,
+                "offset": 20020,
+                "signed": true
+            },
+            {
+                "name": "Rechargeable power limit",
+                "id": "rechargeable_power_limit",
+                "uri": "/components/pcs_1_info",
+                "scale": 10,
+                "offset": 20022
+            },
+            {
+                "name": "Redischargeable power limit",
+                "id": "redischargeable_power_limit",
+                "uri": "/components/pcs_1_info",
+                "scale": 10,
+                "offset": 20023
+            },
+            {
+                "name": "Control mode",
+                "id": "control_mode",
+                "uri": "/components/pcs_1_info",
+                "offset": 20024
+            },
+            {
+                "name": "Operation mode",
+                "id": "operation_mode",
+                "uri": "/components/pcs_1_info",
+                "offset": 20025
+            },
+            {
+                "name": "PCS status value",
+                "id": "pcs_status_value",
+                "uri": "/components/pcs_1_info",
+                "offset": 20026
+            },
+            {
+                "name": "System failure latch register 0",
+                "id": "system_failure_latch_register_0",
+                "uri": "/components/pcs_1_info",
+                "offset": 20027
+            },
+            {
+                "name": "System failure latch register 1",
+                "id": "system_failure_latch_register_1",
+                "uri": "/components/pcs_1_info",
+                "offset": 20028
+            },
+            {
+                "name": "System failure latch register 2",
+                "id": "system_failure_latch_register_2",
+                "uri": "/components/pcs_1_info",
+                "offset": 20029
+            },
+            {
+                "name": "System failure latch register 3",
+                "id": "system_failure_latch_register_3",
+                "uri": "/components/pcs_1_info",
+                "offset": 20030
+            },
+            {
+                "name": "System failure latch register 4",
+                "id": "system_failure_latch_register_4",
+                "uri": "/components/pcs_1_info",
+                "offset": 20031
+            },
+            {
+                "name": "System failure latch register 5",
+                "id": "system_failure_latch_register_5",
+                "uri": "/components/pcs_1_info",
+                "offset": 20032
+            },
+            {
+                "name": "System failure latch register 6",
+                "id": "system_failure_latch_register_6",
+                "uri": "/components/pcs_1_info",
+                "offset": 20033
+            },
+            {
+                "name": "System failure latch register 7",
+                "id": "system_failure_latch_register_7",
+                "uri": "/components/pcs_1_info",
+                "offset": 20034
+            },
+            {
+                "name": "System failure latch register 8",
+                "id": "system_failure_latch_register_8",
+                "uri": "/components/pcs_1_info",
+                "offset": 20035
+            },
+            {
+                "name": "System failure latch register 9",
+                "id": "system_failure_latch_register_9",
+                "uri": "/components/pcs_1_info",
+                "offset": 20036
+            },
+            {
+                "name": "System failure latch register 10",
+                "id": "system_failure_latch_register_10",
+                "uri": "/components/pcs_1_info",
+                "offset": 20037
+            },
+            {
+                "name": "System failure latch register 11",
+                "id": "system_failure_latch_register_11",
+                "uri": "/components/pcs_1_info",
+                "offset": 20038
+            },
+            {
+                "name": "System failure latch register 12",
+                "id": "system_failure_latch_register_12",
+                "uri": "/components/pcs_1_info",
+                "offset": 20039
+            },
+            {
+                "name": "System failure latch register 13",
+                "id": "system_failure_latch_register_13",
+                "uri": "/components/pcs_1_info",
+                "offset": 20040
+            },
+            {
+                "name": "System failure latch register 14",
+                "id": "system_failure_latch_register_14",
+                "uri": "/components/pcs_1_info",
+                "offset": 20041
+            },
+            {
+                "name": "System failure latch register 15",
+                "id": "system_failure_latch_register_15",
+                "uri": "/components/pcs_1_info",
+                "offset": 20042
+            },
+            {
+                "name": "IO input status register",
+                "id": "io_input_status_register",
+                "uri": "/components/pcs_1_info",
+                "offset": 20043
+            },
+            {
+                "name": "IO output status register",
+                "id": "io_output_status_register",
+                "uri": "/components/pcs_1_info",
+                "offset": 20044
+            },
+            {
+                "name": "IGBT_A Left 23 sampling points",
+                "id": "igbt_a_left_23_sampling_points",
+                "uri": "/components/pcs_1_info",
+                "offset": 20053,
+                "signed": true
+            },
+            {
+                "name": "IGBT_A Left 14 sampling points",
+                "id": "igbt_a_left_14_sampling_points",
+                "uri": "/components/pcs_1_info",
+                "offset": 20054,
+                "signed": true
+            },
+            {
+                "name": "IGBT_A right 23 sampling points",
+                "id": "igbt_a_right_23_sampling_points",
+                "uri": "/components/pcs_1_info",
+                "offset": 20055,
+                "signed": true
+            },
+            {
+                "name": "IGBT_A Right 14 sampling points",
+                "id": "igbt_a_right_14_sampling_points",
+                "uri": "/components/pcs_1_info",
+                "offset": 20056,
+                "signed": true
+            },
+            {
+                "name": "IGBT_B Left 23 sampling points",
+                "id": "igbt_b_left_23_sampling_points",
+                "uri": "/components/pcs_1_info",
+                "offset": 20057,
+                "signed": true
+            },
+            {
+                "name": "IGBT_B Left 14 sampling points",
+                "id": "igbt_b_left_14_sampling_points",
+                "uri": "/components/pcs_1_info",
+                "offset": 20058,
+                "signed": true
+            },
+            {
+                "name": "IGBT_B Right 23 sampling points",
+                "id": "igbt_b_right_23_sampling_points",
+                "uri": "/components/pcs_1_info",
+                "offset": 20059,
+                "signed": true
+            },
+            {
+                "name": "IGBT_B Right 14 sampling points",
+                "id": "igbt_b_right_14_sampling_points",
+                "uri": "/components/pcs_1_info",
+                "offset": 20060,
+                "signed": true
+            },
+            {
+                "name": "IGBT_C Left 23 sampling points",
+                "id": "igbt_c_left_23_sampling_points",
+                "uri": "/components/pcs_1_info",
+                "offset": 20061,
+                "signed": true
+            },
+            {
+                "name": "IGBT_C Left 14 sampling points",
+                "id": "igbt_c_left_14_sampling_points",
+                "uri": "/components/pcs_1_info",
+                "offset": 20062,
+                "signed": true
+            },
+            {
+                "name": "IGBT_C right 23 sampling points",
+                "id": "igbt_c_right_23_sampling_points",
+                "uri": "/components/pcs_1_info",
+                "offset": 20063,
+                "signed": true
+            },
+            {
+                "name": "IGBT_C Right 14 sampling points",
+                "id": "igbt_c_right_14_sampling_points",
+                "uri": "/components/pcs_1_info",
+                "offset": 20064,
+                "signed": true
+            },
+            {
+                "name": "Fan 1 is faulty",
+                "id": "fan_1_is_faulty",
+                "uri": "/components/pcs_1_info",
+                "offset": 20065
+            },
+            {
+                "name": "Fan 2 Fault word",
+                "id": "fan_2_fault_word",
+                "uri": "/components/pcs_1_info",
+                "offset": 20066
+            },
+            {
+                "name": "Communication status between PCS and sub-devices",
+                "id": "communication_status_between_pcs_and_sub_devices",
+                "uri": "/components/pcs_1_info",
+                "offset": 20067
+            },
+            {
+                "name": "Composite percentage change",
+                "id": "composite_percentage_change",
+                "uri": "/components/pcs_1_info",
+                "offset": 20068
+            },
+            {
+                "name": "Cause 0 of the change",
+                "id": "cause_0_of_the_change",
+                "uri": "/components/pcs_1_info",
+                "offset": 20069
+            },
+            {
+                "name": "Cause 1 of the change",
+                "id": "cause_1_of_the_change",
+                "uri": "/components/pcs_1_info",
+                "offset": 20070
+            },
+            {
+                "name": "Transformer condition",
+                "id": "transformer_condition",
+                "uri": "/components/pcs_1_info",
+                "offset": 20071
+            },
+            {
+                "name": "Transformer oil temperature",
+                "id": "transformer_oil_temperature",
+                "uri": "/components/pcs_1_info",
+                "offset": 20072,
+                "signed": true
+            }
+        ],
+        "discrete_inputs": [],
+        "coils": []
+    }
+}
