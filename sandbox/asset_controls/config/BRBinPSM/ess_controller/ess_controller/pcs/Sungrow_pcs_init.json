@@ -1,0 +1,59 @@
+{
+    "/config/load": {
+        "Sungrow_pcs_init": {
+            "aname": "pcs",
+            "file": "Sungrow_pcs_init",
+            "new_options": [
+                {
+                    "amname": "pcs",
+                    "from": 1,
+                    "pname": "ess",
+                    "tmpls": [
+                        "Sungrow_pcs_virtual_manager",
+                        "Sungrow_pcs_virtual_manager_controls",
+                        "Sungrow_pcs_virtual_manager_faults",
+                        "Sungrow_pcs_virtual_manager_client_interface",
+                        "Sungrow_pcs_virtual_manager_server_interface",
+                        "Sungrow_pcs_virtual_manager_ui"
+                    ],
+                    "to": 1
+                },
+                {
+                    "amname": "##PCS_ID##",
+                    "from": 1,
+                    "pname": "pcs",
+                    "reps": [
+                        {
+                            "replace": "##PCS_ID##",
+                            "with": "pcs_{:01d}"
+                        },
+                        {
+                            "replace": "##PCS_NUM##",
+                            "with": "{:01d}"
+                        },
+                        {
+                            "replace": "##BMS_ID##",
+                            "with": "bms_{:01d}"
+                        },
+                        {
+                            "replace": "##ESS_ID##",
+                            "with": "ess_{:01d}"
+                        }
+                    ],
+                    "tmpls": [
+                        "Sungrow_pcs_manager",
+                        "Sungrow_pcs_manager_controls",
+                        "Sungrow_pcs_manager_faults",
+                        "Sungrow_pcs_manager_client_interface",
+                        "Sungrow_pcs_manager_server_interface",
+                        "Sungrow_pcs_manager_ui"
+                    ],
+                    "to": 1
+                }
+            ],
+            "note": "Loads Sungrow_pcs_init first. Then, configs defined in new_options, if any, are loaded next",
+            "pname": "ess",
+            "value": false
+        }
+    }
+}

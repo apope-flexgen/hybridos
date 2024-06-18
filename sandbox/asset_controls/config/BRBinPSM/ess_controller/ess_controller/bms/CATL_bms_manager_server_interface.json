@@ -1,0 +1,608 @@
+{
+    "/site/ess": {
+        "bms_##BMS_ID##_avg_cell_temperature": {
+            "name": "BMS Average Cell Temperature",
+            "scale": 100,
+            "signed": true,
+            "size": 1,
+            "type": "status",
+            "units": "°C",
+            "value": 0
+        },
+        "bms_##BMS_ID##_avg_cell_voltage": {
+            "name": "BMS Average Cell Voltage",
+            "scale": 100,
+            "size": 1,
+            "type": "status",
+            "units": "V",
+            "value": 0
+        },
+        "bms_##BMS_ID##_bms_heartbeat": {
+            "name": "BMS Heartbeat",
+            "scale": 1,
+            "size": 1,
+            "type": "status",
+            "value": 0
+        },
+        "bms_##BMS_ID##_bms_power_on": {
+            "name": "MBMU Power On Status",
+            "size": 1,
+            "type": "status",
+            "value": 0
+        },
+        "bms_##BMS_ID##_cell_temp_delta": {
+            "name": "BMS Cell Temperature Delta",
+            "scale": 100,
+            "signed": true,
+            "size": 1,
+            "type": "status",
+            "units": "°C",
+            "value": 0
+        },
+        "bms_##BMS_ID##_cell_voltage_delta": {
+            "name": "BMS Cell Voltage Delta",
+            "scale": 100,
+            "size": 1,
+            "type": "status",
+            "units": "V",
+            "value": 0
+        },
+        "bms_##BMS_ID##_charge_soe": {
+            "name": "BMS Charge SOE",
+            "scale": 10,
+            "size": 1,
+            "type": "status",
+            "units": "%",
+            "value": 0
+        },
+        "bms_##BMS_ID##_comms_ok": {
+            "name": "BMS Comms OK",
+            "size": 1,
+            "type": "status",
+            "value": 0
+        },
+        "bms_##BMS_ID##_control_alarms": {
+            "bit0": "BMS ClearFaults - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+            "bit1": "BMS CloseContactors - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+            "bit2": "BMS OpenContactors - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+            "bit3": "BMS VerifyCloseContactors - Command was sent, but the expected result was not observed before timeout",
+            "bit4": "BMS VerifyOpenContactors - Command was sent, but the expected result was not observed before timeout",
+            "name": "BMS Control Alarms",
+            "type": "bitfield",
+            "value": 0
+        },
+        "bms_##BMS_ID##_dc_charging": {
+            "name": "BMS DC Charging",
+            "size": 1,
+            "type": "status",
+            "value": 0
+        },
+        "bms_##BMS_ID##_dc_contactors_closed": {
+            "name": "BMS DC Contactors Closed",
+            "size": 1,
+            "type": "status",
+            "value": 0
+        },
+        "bms_##BMS_ID##_dc_discharging": {
+            "name": "BMS DC Discharging",
+            "scale": 1,
+            "size": 1,
+            "type": "status",
+            "value": 0
+        },
+        "bms_##BMS_ID##_discharge_soe": {
+            "name": "BMS Discharge SOE",
+            "scale": 10,
+            "size": 1,
+            "type": "status",
+            "units": "%",
+            "value": 0
+        },
+        "bms_##BMS_ID##_ems_heartbeat": {
+            "name": "BMS EMS Heartbeat",
+            "scale": 1,
+            "size": 1,
+            "type": "status",
+            "value": 0
+        },
+        "bms_##BMS_ID##_max_allowed_charge_voltage": {
+            "name": "BMS Max Charge Voltage Limit",
+            "scale": 100,
+            "size": 1,
+            "type": "status",
+            "units": "V",
+            "value": 0
+        },
+        "bms_##BMS_ID##_max_cell_temperature": {
+            "name": "BMS Max Cell Temperature",
+            "scale": 100,
+            "signed": true,
+            "size": 1,
+            "type": "status",
+            "units": "°C",
+            "value": 0
+        },
+        "bms_##BMS_ID##_max_cell_voltage": {
+            "name": "BMS Max Cell Voltage",
+            "scale": 100,
+            "size": 1,
+            "type": "status",
+            "units": "V",
+            "value": 0
+        },
+        "bms_##BMS_ID##_max_charge_current_allowed": {
+            "name": "BMS Max Charge Current Limit",
+            "scale": 100,
+            "signed": true,
+            "size": 1,
+            "type": "status",
+            "units": "A",
+            "value": 0
+        },
+        "bms_##BMS_ID##_max_charge_power_allowed": {
+            "name": "BMS Max Charge Power Limit",
+            "scale": 100,
+            "signed": true,
+            "size": 1,
+            "type": "status",
+            "units": "kW",
+            "value": 0
+        },
+        "bms_##BMS_ID##_max_discharge_current_allowed": {
+            "name": "BMS Max Discharge Current Limit",
+            "scale": 100,
+            "signed": true,
+            "size": 1,
+            "type": "status",
+            "units": "A",
+            "value": 0
+        },
+        "bms_##BMS_ID##_max_discharge_power_allowed": {
+            "name": "BMS Max Discharge Power Limit",
+            "scale": 100,
+            "signed": true,
+            "size": 1,
+            "type": "status",
+            "units": "kW",
+            "value": 0
+        },
+        "bms_##BMS_ID##_min_allowed_discharge_voltage": {
+            "name": "BMS Min Discharge Voltage Limit",
+            "scale": 100,
+            "size": 1,
+            "type": "status",
+            "units": "V",
+            "value": 0
+        },
+        "bms_##BMS_ID##_min_cell_temperature": {
+            "name": "BMS Min Cell Temperature",
+            "scale": 100,
+            "signed": true,
+            "size": 1,
+            "type": "status",
+            "units": "°C",
+            "value": 0
+        },
+        "bms_##BMS_ID##_min_cell_voltage": {
+            "name": "BMS Min Cell Voltage",
+            "scale": 100,
+            "size": 1,
+            "type": "status",
+            "units": "V",
+            "value": 0
+        },
+        "bms_##BMS_ID##_monitor_alarms": {
+            "bit0": "BMS CellTempDelta - Max Threshold Exceeded",
+            "bit1": "BMS CellVoltageDelta - Max Threshold Exceeded",
+            "bit10": "BMS NumRacksOnline - Min Threshold Exceeded",
+            "bit11": "BMS SOC - Max Threshold Exceeded",
+            "bit12": "BMS SOC - Min Threshold Exceeded",
+            "bit13": "BMS SOH - Min Threshold Exceeded",
+            "bit2": "BMS DCCurrent - Max Threshold Exceeded",
+            "bit3": "BMS DCCurrent - Min Threshold Exceeded",
+            "bit4": "BMS DCVoltage - Max Threshold Exceeded",
+            "bit5": "BMS DCVoltage - Min Threshold Exceeded",
+            "bit6": "BMS MaxCellTemp - Max Threshold Exceeded",
+            "bit7": "BMS MaxCellVoltage - Max Threshold Exceeded",
+            "bit8": "BMS MinCellTemp - Min Threshold Exceeded",
+            "bit9": "BMS MinCellVoltage - Min Threshold Exceeded",
+            "name": "BMS Monitor Alarms",
+            "type": "bitfield",
+            "value": 0
+        },
+        "bms_##BMS_ID##_monitor_faults": {
+            "bit0": "BMS CellTempDelta - Max Threshold Exceeded",
+            "bit1": "BMS CellVoltageDelta - Max Threshold Exceeded",
+            "bit10": "BMS NumRacksOnline - Min Threshold Exceeded",
+            "bit11": "BMS SOC - Max Threshold Exceeded",
+            "bit12": "BMS SOC - Min Threshold Exceeded",
+            "bit13": "BMS SOH - Min Threshold Exceeded",
+            "bit2": "BMS DCCurrent - Max Threshold Exceeded",
+            "bit3": "BMS DCCurrent - Min Threshold Exceeded",
+            "bit4": "BMS DCVoltage - Max Threshold Exceeded",
+            "bit5": "BMS DCVoltage - Min Threshold Exceeded",
+            "bit6": "BMS MaxCellTemp - Max Threshold Exceeded",
+            "bit7": "BMS MaxCellVoltage - Max Threshold Exceeded",
+            "bit8": "BMS MinCellTemp - Min Threshold Exceeded",
+            "bit9": "BMS MinCellVoltage - Min Threshold Exceeded",
+            "name": "BMS Monitor Faults",
+            "type": "bitfield",
+            "value": 0
+        },
+        "bms_##BMS_ID##_num_racks_available": {
+            "name": "BMS Number of Racks Available",
+            "scale": 1,
+            "size": 1,
+            "type": "status",
+            "value": 0
+        },
+        "bms_##BMS_ID##_number_of_hv_connected_racks": {
+            "name": "BMS Number of Racks Online",
+            "scale": 1,
+            "size": 1,
+            "type": "status",
+            "value": 0
+        },
+        "bms_##BMS_ID##_state_of_charge": {
+            "name": "BMS State of Charge",
+            "scale": 10,
+            "size": 1,
+            "type": "status",
+            "units": "%",
+            "value": 0
+        },
+        "bms_##BMS_ID##_state_of_health": {
+            "name": "BMS State of Health",
+            "scale": 10,
+            "size": 1,
+            "type": "status",
+            "units": "%",
+            "value": 0
+        },
+        "bms_##BMS_ID##_status": {
+            "name": "BMS Status",
+            "size": 1,
+            "type": "status",
+            "value": 0
+        },
+        "bms_##BMS_ID##_system_current": {
+            "name": "BMS DC Current",
+            "scale": 100,
+            "signed": true,
+            "size": 1,
+            "type": "status",
+            "units": "A",
+            "value": 0
+        },
+        "bms_##BMS_ID##_system_power": {
+            "name": "BMS DC Power",
+            "scale": 100,
+            "signed": true,
+            "size": 1,
+            "type": "status",
+            "units": "kW",
+            "value": 0
+        },
+        "bms_##BMS_ID##_system_remaining_charge_energy": {
+            "name": "BMS Chargeable Energy",
+            "scale": 100,
+            "size": 1,
+            "type": "status",
+            "units": "kWh",
+            "value": 0
+        },
+        "bms_##BMS_ID##_system_remaining_discharge_energy": {
+            "name": "BMS Dischargeable Energy",
+            "scale": 100,
+            "size": 1,
+            "type": "status",
+            "units": "kWh",
+            "value": 0
+        },
+        "bms_##BMS_ID##_system_voltage": {
+            "name": "BMS DC Voltage",
+            "scale": 100,
+            "signed": true,
+            "size": 1,
+            "type": "status",
+            "units": "V",
+            "value": 0
+        },
+        "bms_##BMS_ID##_vendor_alarms": {
+            "bit0": "BMS air_conditioner_communication_lost - Alarm",
+            "bit1": "BMS aux_power_ac_dc_failure - Alarm",
+            "bit10": "BMS centralized_tms_mode_conflict - Alarm",
+            "bit11": "BMS charge_overcurrent_level_1 - Alarm",
+            "bit12": "BMS charge_overcurrent_level_2 - Alarm",
+            "bit13": "BMS charge_overcurrent_level_3 - Alarm",
+            "bit14": "BMS discharge_overcurrent_level_1 - Alarm",
+            "bit15": "BMS discharge_overcurrent_level_2 - Alarm",
+            "bit16": "BMS discharge_overcurrent_level_3 - Alarm",
+            "bit17": "BMS distributed_tms - Alarm",
+            "bit18": "BMS humidifier_1_failure - Alarm",
+            "bit19": "BMS humidifier_2_failure - Alarm",
+            "bit2": "BMS aux_power_dc_dc_failure - Alarm",
+            "bit20": "BMS inner_communication_ccan_tms - Alarm",
+            "bit21": "BMS insulation - Alarm",
+            "bit22": "BMS low_soc_overdischarge - Alarm",
+            "bit23": "BMS rack_humidifier - Alarm",
+            "bit24": "BMS sbmu_communication_lost - Alarm",
+            "bit25": "BMS single_cell_overtemperature_level_1 - Alarm",
+            "bit26": "BMS single_cell_overtemperature_level_2 - Alarm",
+            "bit27": "BMS single_cell_overtemperature_level_3 - Alarm",
+            "bit28": "BMS single_cell_overvoltage_warning_level_1 - Alarm",
+            "bit29": "BMS single_cell_overvoltage_warning_level_2 - Alarm",
+            "bit3": "BMS big_temperature_difference_between_cells_level_1 - Alarm",
+            "bit30": "BMS single_cell_overvoltage_warning_level_3 - Alarm",
+            "bit31": "BMS single_cell_undertemperature_level_1 - Alarm",
+            "bit4": "BMS big_temperature_difference_between_cells_level_2 - Alarm",
+            "bit5": "BMS big_temperature_difference_between_cells_level_3 - Alarm",
+            "bit6": "BMS big_temperature_difference_between_racks - Alarm",
+            "bit7": "BMS big_voltage_difference_between_cells - Alarm",
+            "bit8": "BMS centralized_tms_communication - Alarm",
+            "bit9": "BMS centralized_tms_level_3 - Alarm",
+            "name": "BMS Vendor Alarms",
+            "type": "bitfield",
+            "value": 0
+        },
+        "bms_##BMS_ID##_vendor_alarms_2": {
+            "bit0": "BMS single_cell_undertemperature_level_2 - Alarm",
+            "bit1": "BMS single_cell_undertemperature_level_3 - Alarm",
+            "bit10": "BMS soc_low_level_1 - Alarm",
+            "bit11": "BMS soc_low_level_2 - Alarm",
+            "bit12": "BMS system_soc_maintenance_required - Request Maintenance",
+            "bit13": "BMS tms_2_cooling_mode_protection - Cooling Protection with Ambient Temperature above 55 C or below -40 C",
+            "bit2": "BMS single_cell_undervoltage_level_1 - Alarm",
+            "bit3": "BMS single_cell_undervoltage_level_2 - Alarm",
+            "bit4": "BMS single_cell_undervoltage_level_3 - Alarm",
+            "bit5": "BMS single_rack_overvoltage_level_1 - Alarm",
+            "bit6": "BMS single_rack_overvoltage_level_2 - Alarm",
+            "bit7": "BMS single_rack_undervoltage_level_1 - Alarm",
+            "bit8": "BMS single_rack_undervoltage_level_2 - Alarm",
+            "bit9": "BMS smoke_exhaust_ventilation_body - Alarm",
+            "name": "BMS Vendor Alarms",
+            "type": "bitfield",
+            "value": 0
+        },
+        "bms_##BMS_ID##_vendor_faults": {
+            "bit0": "BMS aerosol_eruption_state - Fault",
+            "bit1": "BMS aux_power_failure - Fault",
+            "bit10": "BMS csc_24v_power_supply_voltage_abnormal - Fault",
+            "bit11": "BMS current_sensor_failed - Fault",
+            "bit12": "BMS discharge_overcurrent_level_4 - Fault",
+            "bit13": "BMS distributed_tms - Fault",
+            "bit14": "BMS distributed_tms_mode_conflict - Fault",
+            "bit15": "BMS e_stop - Fault",
+            "bit16": "BMS electrical_rack_door - Fault",
+            "bit17": "BMS electrical_rack_fan - Fault",
+            "bit18": "BMS ems_communication_lost - Fault",
+            "bit19": "BMS hv_circuit_fuse_open_circuit - Fault",
+            "bit2": "BMS auxiliary_power_supply_state - Aux Power Lost",
+            "bit20": "BMS hv_circuit_open - Fault",
+            "bit21": "BMS imm_communication_lost - Fault",
+            "bit22": "BMS inner_communication_ccan - Fault",
+            "bit23": "BMS inner_communication_ccan_tms_racks_hv_on - Fault",
+            "bit24": "BMS inner_communication_mcan - Fault",
+            "bit25": "BMS inner_communication_scan - Fault",
+            "bit26": "BMS insulation - Fault",
+            "bit27": "BMS invalid_cell_voltage - Fault",
+            "bit28": "BMS invalid_insulation - Fault",
+            "bit29": "BMS low_soc_overdischarge - Fault",
+            "bit3": "BMS balancing_circuit - Fault",
+            "bit30": "BMS main_control_box_fan - Fault",
+            "bit31": "BMS main_negative_relay_open_circuit - Fault",
+            "bit4": "BMS battery_rack_door - Fault",
+            "bit5": "BMS centralized_tms_communication - Fault",
+            "bit6": "BMS centralized_tms_level_1 - Fault",
+            "bit7": "BMS centralized_tms_level_2 - Fault",
+            "bit8": "BMS charge_overcurrent_level_4 - Fault",
+            "bit9": "BMS client_e_stop - Fault",
+            "name": "BMS Vendor Faults",
+            "type": "bitfield",
+            "value": 0
+        },
+        "bms_##BMS_ID##_vendor_faults_2": {
+            "bit0": "BMS main_negative_relay_sticking - Fault",
+            "bit1": "BMS main_positive_and_negative_relays_sticking - Fault",
+            "bit10": "BMS positive_and_negative_hv_reversed_connection - Fault",
+            "bit11": "BMS precharging_failed_twice - Fault",
+            "bit12": "BMS rack_fire_system_gas_and_smoke_sensors_level_2 - Fault",
+            "bit13": "BMS rack_fire_system_gas_detector_level_1 - Fault",
+            "bit14": "BMS rack_fire_system_smoke_detector_level_1 - Fault",
+            "bit15": "BMS rack_fire_system_temperature_detector_level_2 - Fault",
+            "bit16": "BMS rack_fuse - Fault",
+            "bit17": "BMS rack_isolate_switch - Fault",
+            "bit18": "BMS sbmu_24v_power_supply_voltage_abnormal - Fault",
+            "bit19": "BMS sbmu_communication_lost - Fault",
+            "bit2": "BMS main_positive_relay_open_circuit - Fault",
+            "bit20": "BMS single_cell_extreme_overvoltage - Fault",
+            "bit21": "BMS single_cell_extreme_undervoltage - Fault",
+            "bit22": "BMS single_cell_overcharge_replacement_required - Fault",
+            "bit23": "BMS single_cell_overdischarge_replacement_required - Fault",
+            "bit24": "BMS single_cell_overtemperature_level_4 - Fault",
+            "bit25": "BMS single_temperature_sampling_abnormal - Fault",
+            "bit26": "BMS slave_mbmu_communication_lost - Fault",
+            "bit27": "BMS smoke_exhaust_ventilation_state - Fault",
+            "bit28": "BMS spd_failure - Fault",
+            "bit29": "BMS temperature_sampling_abnormal_in_multiple_cells - Fault",
+            "bit3": "BMS main_positive_relay_sticking - Fault",
+            "bit30": "BMS thermal_runaway_caused_fire - Fault",
+            "bit4": "BMS mbmu_24v_power_supply_voltage_abnormal - Fault",
+            "bit5": "BMS mbmu_fire_system_failure - Fault",
+            "bit6": "BMS mbmu_fire_system_level_1 - Fault",
+            "bit7": "BMS mbmu_fire_system_level_2 - Fault",
+            "bit8": "BMS min_closed_hv_racks - Fault",
+            "bit9": "BMS msd - Fault",
+            "name": "BMS Vendor Faults",
+            "type": "bitfield",
+            "value": 0
+        }
+    },
+    "/vlinks/##BMS_ID##": {
+        "site_bms_##BMS_ID##_avg_cell_temperature": {
+            "default": 0,
+            "value": "/site/ess:bms_##BMS_ID##_avg_cell_temperature",
+            "vlink": "/status/##BMS_ID##:AvgCellTemp"
+        },
+        "site_bms_##BMS_ID##_avg_cell_voltage": {
+            "default": 0,
+            "value": "/site/ess:bms_##BMS_ID##_avg_cell_voltage",
+            "vlink": "/status/##BMS_ID##:AvgCellVoltage"
+        },
+        "site_bms_##BMS_ID##_bms_heartbeat": {
+            "default": 0,
+            "value": "/site/ess:bms_##BMS_ID##_bms_heartbeat",
+            "vlink": "/status/##BMS_ID##:HeartbeatRead"
+        },
+        "site_bms_##BMS_ID##_bms_power_on": {
+            "default": 0,
+            "value": "/site/ess:bms_##BMS_ID##_bms_power_on",
+            "vlink": "/status/##BMS_ID##:PowerOn"
+        },
+        "site_bms_##BMS_ID##_cell_temp_delta": {
+            "default": 0,
+            "value": "/site/ess:bms_##BMS_ID##_cell_temp_delta",
+            "vlink": "/status/##BMS_ID##:CellTempDelta"
+        },
+        "site_bms_##BMS_ID##_cell_voltage_delta": {
+            "default": 0,
+            "value": "/site/ess:bms_##BMS_ID##_cell_voltage_delta",
+            "vlink": "/status/##BMS_ID##:CellVoltageDelta"
+        },
+        "site_bms_##BMS_ID##_charge_soe": {
+            "default": 0,
+            "value": "/site/ess:bms_##BMS_ID##_charge_soe",
+            "vlink": "/status/##BMS_ID##:ChargeSOE"
+        },
+        "site_bms_##BMS_ID##_comms_ok": {
+            "default": 0,
+            "value": "/site/ess:bms_##BMS_ID##_comms_ok",
+            "vlink": "/status/##BMS_ID##:CommsOK"
+        },
+        "site_bms_##BMS_ID##_dc_charging": {
+            "default": 0,
+            "value": "/site/ess:bms_##BMS_ID##_dc_charging",
+            "vlink": "/status/##BMS_ID##:DCCharging"
+        },
+        "site_bms_##BMS_ID##_dc_contactors_closed": {
+            "default": 0,
+            "value": "/site/ess:bms_##BMS_ID##_dc_contactors_closed",
+            "vlink": "/status/##BMS_ID##:DCClosed"
+        },
+        "site_bms_##BMS_ID##_dc_discharging": {
+            "default": 0,
+            "value": "/site/ess:bms_##BMS_ID##_dc_discharging",
+            "vlink": "/status/##BMS_ID##:DCDischarging"
+        },
+        "site_bms_##BMS_ID##_discharge_soe": {
+            "default": 0,
+            "value": "/site/ess:bms_##BMS_ID##_discharge_soe",
+            "vlink": "/status/##BMS_ID##:DischargeSOE"
+        },
+        "site_bms_##BMS_ID##_ems_heartbeat": {
+            "default": 0,
+            "value": "/site/ess:bms_##BMS_ID##_ems_heartbeat",
+            "vlink": "/status/##BMS_ID##:EMSHeartbeat"
+        },
+        "site_bms_##BMS_ID##_max_allowed_charge_voltage": {
+            "default": 0,
+            "value": "/site/ess:bms_##BMS_ID##_max_allowed_charge_voltage",
+            "vlink": "/limits/##BMS_ID##:ChargeVoltageLimit"
+        },
+        "site_bms_##BMS_ID##_max_cell_temperature": {
+            "default": 0,
+            "value": "/site/ess:bms_##BMS_ID##_max_cell_temperature",
+            "vlink": "/status/##BMS_ID##:MaxCellTemp"
+        },
+        "site_bms_##BMS_ID##_max_cell_voltage": {
+            "default": 0,
+            "value": "/site/ess:bms_##BMS_ID##_max_cell_voltage",
+            "vlink": "/status/##BMS_ID##:MaxCellVoltage"
+        },
+        "site_bms_##BMS_ID##_max_charge_current_allowed": {
+            "default": 0,
+            "value": "/site/ess:bms_##BMS_ID##_max_charge_current_allowed",
+            "vlink": "/limits/##BMS_ID##:ChargeCurrentLimit"
+        },
+        "site_bms_##BMS_ID##_max_charge_power_allowed": {
+            "default": 0,
+            "value": "/site/ess:bms_##BMS_ID##_max_charge_power_allowed",
+            "vlink": "/limits/##BMS_ID##:ChargePowerLimit"
+        },
+        "site_bms_##BMS_ID##_max_discharge_current_allowed": {
+            "default": 0,
+            "value": "/site/ess:bms_##BMS_ID##_max_discharge_current_allowed",
+            "vlink": "/limits/##BMS_ID##:DischargeCurrentLimit"
+        },
+        "site_bms_##BMS_ID##_max_discharge_power_allowed": {
+            "default": 0,
+            "value": "/site/ess:bms_##BMS_ID##_max_discharge_power_allowed",
+            "vlink": "/limits/##BMS_ID##:DischargePowerLimit"
+        },
+        "site_bms_##BMS_ID##_min_allowed_discharge_voltage": {
+            "default": 0,
+            "value": "/site/ess:bms_##BMS_ID##_min_allowed_discharge_voltage",
+            "vlink": "/limits/##BMS_ID##:DischargeVoltageLimit"
+        },
+        "site_bms_##BMS_ID##_min_cell_temperature": {
+            "default": 0,
+            "value": "/site/ess:bms_##BMS_ID##_min_cell_temperature",
+            "vlink": "/status/##BMS_ID##:MinCellTemp"
+        },
+        "site_bms_##BMS_ID##_min_cell_voltage": {
+            "default": 0,
+            "value": "/site/ess:bms_##BMS_ID##_min_cell_voltage",
+            "vlink": "/status/##BMS_ID##:MinCellVoltage"
+        },
+        "site_bms_##BMS_ID##_num_racks_available": {
+            "default": 0,
+            "value": "/site/ess:bms_##BMS_ID##_num_racks_available",
+            "vlink": "/status/##BMS_ID##:NumRacksTotal"
+        },
+        "site_bms_##BMS_ID##_number_of_hv_connected_racks": {
+            "default": 0,
+            "value": "/site/ess:bms_##BMS_ID##_number_of_hv_connected_racks",
+            "vlink": "/status/##BMS_ID##:NumRacksOnline"
+        },
+        "site_bms_##BMS_ID##_state_of_charge": {
+            "default": 0,
+            "value": "/site/ess:bms_##BMS_ID##_state_of_charge",
+            "vlink": "/status/##BMS_ID##:SOC"
+        },
+        "site_bms_##BMS_ID##_state_of_health": {
+            "default": 0,
+            "value": "/site/ess:bms_##BMS_ID##_state_of_health",
+            "vlink": "/status/##BMS_ID##:SOH"
+        },
+        "site_bms_##BMS_ID##_status": {
+            "default": 0,
+            "value": "/site/ess:bms_##BMS_ID##_status",
+            "vlink": "/status/##BMS_ID##:Status"
+        },
+        "site_bms_##BMS_ID##_system_current": {
+            "default": 0,
+            "value": "/site/ess:bms_##BMS_ID##_system_current",
+            "vlink": "/status/##BMS_ID##:DCCurrent"
+        },
+        "site_bms_##BMS_ID##_system_power": {
+            "default": 0,
+            "value": "/site/ess:bms_##BMS_ID##_system_power",
+            "vlink": "/status/##BMS_ID##:DCPower"
+        },
+        "site_bms_##BMS_ID##_system_remaining_charge_energy": {
+            "default": 0,
+            "value": "/site/ess:bms_##BMS_ID##_system_remaining_charge_energy",
+            "vlink": "/status/##BMS_ID##:ChargeableEnergy"
+        },
+        "site_bms_##BMS_ID##_system_remaining_discharge_energy": {
+            "default": 0,
+            "value": "/site/ess:bms_##BMS_ID##_system_remaining_discharge_energy",
+            "vlink": "/status/##BMS_ID##:DischargeableEnergy"
+        },
+        "site_bms_##BMS_ID##_system_voltage": {
+            "default": 0,
+            "value": "/site/ess:bms_##BMS_ID##_system_voltage",
+            "vlink": "/status/##BMS_ID##:DCVoltage"
+        }
+    }
+}

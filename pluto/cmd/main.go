@@ -37,13 +37,28 @@ func main() {
 	}()
 
 	// Parse the command line arguments.
-	args, err := cli.Parse(os.Args[1:])
+	args, err := cli.Parse(os.Args[1:]...)
 	if err != nil {
-		log.Fatalf("Parsing cli args: %v.", err)
+		log.Fatalf("Error parsing cli args: %v.", err)
 	}
 
 	// Execute pluto.
 	if err := Run(ctx, args); err != nil {
-		log.Fatalf("Running pluto: %v", err)
+		log.Fatalf("Runtime error: %v", err)
 	}
+}
+
+// Entry point of our program.
+func Run(ctx context.Context, args *cli.Config) error {
+
+	// Handle commands.
+	if args.Hello {
+		cli.Hello()
+	}
+
+	// Start server here.
+
+	// Start pluto business logic here.
+
+	return nil
 }

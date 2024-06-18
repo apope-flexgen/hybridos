@@ -1,0 +1,505 @@
+{
+    
+   
+    "/control/actions_ess_BatteryRackBalancing_##BMS_ID##/BatteryBalancing": {
+        "StateVariable": {
+            "value": 0,
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/status/ess/##BMS_ID##:StateVariable"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "CloseContactorReq": {
+            "value": false,
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/assets/bms/##BMS_ID##:close_contactors"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "OpenContactorReq": {
+            "value": false,
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/assets/bms/##BMS_ID##:open_contactors"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "PcsStartReq": {
+            "value": false,
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/assets/pcs/pcs_1:start"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "PcsStopReq": {
+            "value": false,
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/assets/pcs/pcs_1:stop"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    },
+    "/controls/ess/##BMS_ID##": {
+        "BatteryBalancingStartCmd": {
+            "value": false,
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/control/actions_ess_BatteryRackBalancing_##BMS_ID##/BatteryBalancing:StartCmd"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "BatteryBalancingStopCmd": {
+            "value": false,
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/control/actions_ess_BatteryRackBalancing_##BMS_ID##/BatteryBalancing:StopCmd"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    },
+    "/controls/##BMS_ID##": {
+        "ClearFaults": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##",
+                                "func": "HandleCmd"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "checkCmdTimeout": 3,
+            "cmdVar": "/components/##BMS_ID##:clear_fault_command",
+            "useExpr": false,
+            "value": 1
+        },
+        "CloseContactors": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##",
+                                "func": "HandleCmd"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "checkCmdTimeout": 3,
+            "cmdVar": "/components/##BMS_ID##:ems_command_to_bms_relay",
+            "expression": "{2} == Stop and not {3}",
+            "note": "Close DC contactors command to send to BMS if DC contactors are open, the PCS is in Stop, and the BMS does not have any faults",
+            "numVars": 3,
+            "sendCmdTimeout": 3,
+            "useExpr": true,
+            "value": 2,
+            "variable1": "/status/##BMS_ID##:DCClosed",
+            "variable2": "/status/##PCS_ID##:SystemState",
+            "variable3": "/status/##BMS_ID##:IsFaulted"
+        },
+        "CloseContactorsEnable": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/assets/bms/##BMS_ID##:close_contactors@enabled"
+                            },
+                            {
+                                "uri": "/status/##BMS_ID##:CloseContactorsEnabled"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##BMS_ID##:enable",
+            "expression": "{2} and not {3}",
+            "note": "Enable Close Contactors UI control if DC Contactors are opened, the BMS is not faulted, and the BMS is in maintenance mode",
+            "numVars": 3,
+            "useExpr": true,
+            "value": false,
+            "variable1": "/status/##BMS_ID##:DCClosed",
+            "variable2": "/assets/bms/##BMS_ID##:maint_mode",
+            "variable3": "/status/##BMS_ID##:IsFaulted"
+        },
+        "OpenContactors": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##",
+                                "func": "HandleCmd"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "checkCmdTimeout": 3,
+            "cmdVar": "/components/##BMS_ID##:ems_command_to_bms_relay",
+            "expression": "{1} and ({2} == Stop or {2} == Fault)",
+            "note": "Open DC contactors command to send to BMS if DC contactors are closed and the PCS is in Stop or Fault",
+            "numVars": 2,
+            "sendCmdTimeout": 3,
+            "useExpr": true,
+            "value": 3,
+            "variable1": "/status/##BMS_ID##:DCClosed",
+            "variable2": "/status/##PCS_ID##:SystemState"
+        },
+        "OpenContactorsEnable": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "uri": "/assets/bms/##BMS_ID##:open_contactors@enabled"
+                            },
+                            {
+                                "uri": "/status/##BMS_ID##:OpenContactorsEnabled"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##BMS_ID##:enable",
+            "expression": "{1} and not {2} and {3}",
+            "note": "Enable Open Contactors UI control if DC Contactors are closed and the BMS is in maintenance mode",
+            "numVars": 3,
+            "useExpr": true,
+            "value": false,
+            "variable1": "/status/##BMS_ID##:DCClosed",
+            "variable2": "/status/##PCS_ID##:DCClosed",
+            "variable3": "/assets/bms/##BMS_ID##:maint_mode"
+        },
+        "VerifyCloseContactors": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##",
+                                "func": "HandleCmd"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enableAlert": false,
+            "expression": "{1}",
+            "numVars": 1,
+            "sendCmdTimeout": 75,
+            "useExpr": true,
+            "value": 0,
+            "variable1": "/status/##BMS_ID##:DCClosed"
+        },
+        "VerifyOpenContactors": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##BMS_ID##",
+                                "func": "HandleCmd"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enableAlert": false,
+            "expression": "not {1}",
+            "numVars": 1,
+            "sendCmdTimeout": 10,
+            "useExpr": true,
+            "value": 0,
+            "variable1": "/status/##BMS_ID##:DCClosed"
+        }
+    },
+    "/schedule/wake_monitor/##BMS_ID##": {
+        "/controls/##BMS_ID##:ClearFaults": {
+            "amap": "##BMS_ID##",
+            "func": "HandleCmd"
+        },
+        "/controls/##BMS_ID##:CloseContactors": {
+            "amap": "##BMS_ID##",
+            "func": "HandleCmd"
+        },
+        "/controls/##BMS_ID##:CloseContactorsEnable": {
+            "amap": "##BMS_ID##",
+            "func": "CalculateVar"
+        },
+        "/controls/##BMS_ID##:OpenContactors": {
+            "amap": "##BMS_ID##",
+            "func": "HandleCmd"
+        },
+        "/controls/##BMS_ID##:OpenContactorsEnable": {
+            "amap": "##BMS_ID##",
+            "func": "CalculateVar"
+        },
+        "/controls/##BMS_ID##:VerifyCloseContactors": {
+            "amap": "##BMS_ID##",
+            "func": "HandleCmd"
+        },
+        "/controls/##BMS_ID##:VerifyOpenContactors": {
+            "amap": "##BMS_ID##",
+            "func": "HandleCmd"
+        }
+    },
+    "/status/##BMS_ID##": {
+        "ClearFaultsSuccess": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": false,
+                                "outValue": "BMS ClearFaults - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "uri": "/alarms/##BMS_ID##:ClearFaults"
+                            },
+                            {
+                                "outValue": "Clear",
+                                "uri": "/faults/##BMS_ID##:clear_faults"
+                            },
+                            {
+                                "outValue": "Clear",
+                                "uri": "/alarms/##BMS_ID##:clear_alarms"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##BMS_ID##:enable",
+            "ifChanged": false,
+            "note": "When this variable is set, /faults/##BMS_ID##:clear_faults and /alarms/##BMS_ID##:clear_alarms will be set to Clear",
+            "value": false
+        },
+        "CloseContactorsSuccess": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": true,
+                                "outValue": true,
+                                "uri": "/controls/##BMS_ID##:VerifyCloseContactors@triggerCmd"
+                            },
+                            {
+                                "inValue": true,
+                                "outValue": 0,
+                                "uri": "/controls/##BMS_ID##:VerifyCloseContactors"
+                            },
+                            {
+                                "inValue": false,
+                                "outValue": "BMS CloseContactors - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "uri": "/alarms/##BMS_ID##:CloseContactors"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##BMS_ID##:enable",
+            "ifChanged": false,
+            "note": "If the close contactors command has been successfully sent to the BMS, verify that DC contactors are closed. Otherwise, send an alarm",
+            "value": false
+        },
+        "OpenContactorsSuccess": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": true,
+                                "outValue": true,
+                                "uri": "/controls/##BMS_ID##:VerifyOpenContactors@triggerCmd"
+                            },
+                            {
+                                "inValue": true,
+                                "outValue": 0,
+                                "uri": "/controls/##BMS_ID##:VerifyOpenContactors"
+                            },
+                            {
+                                "inValue": false,
+                                "outValue": "BMS OpenContactors - Preconditions were not met or failed to verify command was sent. View ESS Events page for more details",
+                                "uri": "/alarms/##BMS_ID##:OpenContactors"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##BMS_ID##:enable",
+            "ifChanged": false,
+            "note": "If the open contactors command has been successfully sent to the BMS, verify that DC contactors are opened. Otherwise, send an alarm",
+            "value": false
+        },
+        "VerifyCloseContactorsSuccess": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": false,
+                                "outValue": "BMS VerifyCloseContactors - Command was sent, but the expected result was not observed before timeout",
+                                "uri": "/alarms/##BMS_ID##:VerifyCloseContactors"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##BMS_ID##:enable",
+            "ifChanged": false,
+            "note": "If the BMS failed to close contactors after an elasped time, send an alarm",
+            "value": false
+        },
+        "VerifyOpenContactorsSuccess": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": false,
+                                "outValue": "BMS VerifyOpenContactors - Command was sent, but the expected result was not observed before timeout",
+                                "uri": "/alarms/##BMS_ID##:VerifyOpenContactors"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##BMS_ID##:enable",
+            "ifChanged": false,
+            "note": "If the BMS failed to open contactors after an elasped time, send an alarm",
+            "value": false
+        }
+    },
+    "/system/commands": {
+        "ForwardCommand_ClearFaults_from_bms": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "bms",
+                                "func": "SchedItemOpts"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/bms:enable",
+            "note": "Forwards ClearFaults command to bms(s)",
+            "options": [
+                {
+                    "uri": "/controls/##BMS_ID##:ClearFaults@triggerCmd",
+                    "value": true
+                },
+                {
+                    "uri": "/controls/##BMS_ID##:ClearFaults",
+                    "value": 1
+                }
+            ],
+            "value": false
+        },
+        "ForwardCommand_CloseContactors_from_bms": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "bms",
+                                "func": "SchedItemOpts"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/bms:enable",
+            "note": "Forwards CloseContactors command to bms(s)",
+            "options": [
+                {
+                    "uri": "/controls/##BMS_ID##:CloseContactors@triggerCmd",
+                    "value": true
+                },
+                {
+                    "uri": "/controls/##BMS_ID##:CloseContactors",
+                    "value": 2
+                }
+            ],
+            "value": false
+        },
+        "ForwardCommand_OpenContactors_from_bms": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "bms",
+                                "func": "SchedItemOpts"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/bms:enable",
+            "note": "Forwards OpenContactors command to bms(s)",
+            "options": [
+                {
+                    "uri": "/controls/##BMS_ID##:OpenContactors@triggerCmd",
+                    "value": true
+                },
+                {
+                    "uri": "/controls/##BMS_ID##:OpenContactors",
+                    "value": 3
+                }
+            ],
+            "value": false
+        }
+    }
+}

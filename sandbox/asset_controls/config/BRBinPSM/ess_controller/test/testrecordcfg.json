@@ -1,0 +1,132 @@
+{
+    "command_columns": [
+        {
+            "column": "tmp",
+            "command_uri": "/dummy/uri"
+        }
+    ],
+    "feedback_columns": [
+        {
+            "feedback_column": "Rack_1_voltage_filtered",
+            "feedback_uri": "/control/actions_ess_bwf_bms_1_rack_1_LPFilter/LowPassFilter_1/output"
+        },
+        {
+            "feedback_column": "Rack_1_voltage_unfiltered",
+            "feedback_uri": "/control/actions_ess_bwf_bms_1_rack_1_LPFilter/LowPassFilter_1/input"
+        },
+        {
+            "feedback_column": "Rack_2_voltage_filtered",
+            "feedback_uri": "/control/actions_ess_bwf_bms_1_rack_2_LPFilter/LowPassFilter_1/output"
+        },
+        {
+            "feedback_column": "Rack_2_voltage_unfiltered",
+            "feedback_uri": "/control/actions_ess_bwf_bms_1_rack_2_LPFilter/LowPassFilter_1/input"
+        },
+        {
+            "feedback_column": "Rack_3_voltage_filtered",
+            "feedback_uri": "/control/actions_ess_bwf_bms_1_rack_3_LPFilter/LowPassFilter_1/output"
+        },
+        {
+            "feedback_column": "Rack_3_voltage_unfiltered",
+            "feedback_uri": "/control/actions_ess_bwf_bms_1_rack_3_LPFilter/LowPassFilter_1/input"
+        },
+        {
+            "feedback_column": "Rack_4_voltage_filtered",
+            "feedback_uri": "/control/actions_ess_bwf_bms_1_rack_4_LPFilter/LowPassFilter_1/output"
+        },
+        {
+            "feedback_column": "Rack_4_voltage_unfiltered",
+            "feedback_uri": "/control/actions_ess_bwf_bms_1_rack_4_LPFilter/LowPassFilter_1/input"
+        },
+        {
+            "feedback_column": "Rack_5_voltage_filtered",
+            "feedback_uri": "/control/actions_ess_bwf_bms_1_rack_5_LPFilter/LowPassFilter_1/output"
+        },
+        {
+            "feedback_column": "Rack_5_voltage_unfiltered",
+            "feedback_uri": "/control/actions_ess_bwf_bms_1_rack_5_LPFilter/LowPassFilter_1/input"
+        },
+        {
+            "feedback_column": "rack_1_current",
+            "feedback_uri": "/status/bms_1_rack_1/DCCurrent"
+        },
+        {
+            "feedback_column": "rack_2_current",
+            "feedback_uri": "/status/bms_1_rack_2/DCCurrent"
+        },
+        {
+            "feedback_column": "rack_3_current",
+            "feedback_uri": "/status/bms_1_rack_3/DCCurrent"
+        },
+        {
+            "feedback_column": "rack_4_current",
+            "feedback_uri": "/status/bms_1_rack_4/DCCurrent"
+        },
+        {
+            "feedback_column": "rack_5_current",
+            "feedback_uri": "/status/bms_1_rack_5/DCCurrent"
+        },
+        {
+            "feedback_column": "Pcs_1_power_command",
+            "feedback_uri": "/control/actions_ess_BatteryRackBalancing_bms_1/BatteryBalancing/PCmd"
+        },
+        {
+            "feedback_column": "Pcs_1_system_state",
+            "feedback_uri": "/status/pcs/SystemState"
+        },
+        {
+            "feedback_column": "Pcs_1_active_power",
+            "feedback_uri": "/status/pcs_1/ActivePower"
+        },
+        {
+            "feedback_column": "Rack_1_cont_status",
+            "feedback_uri": "/status/bms_1_rack_1/DCClosed"
+        },
+        {
+            "feedback_column": "Rack_2_cont_status",
+            "feedback_uri": "/status/bms_1_rack_2/DCClosed"
+        },  {
+            "feedback_column": "Rack_3_cont_status",
+            "feedback_uri": "/status/bms_1_rack_3/DCClosed"
+        },
+        {
+            "feedback_column": "Rack_4_cont_status",
+            "feedback_uri": "/status/bms_1_rack_4/DCClosed"
+        },
+        {
+            "feedback_column": "Rack_5_cont_status",
+            "feedback_uri": "/status/bms_1_rack_5/DCClosed"
+        },
+        {
+            "feedback_column": "Rack_1_soc",
+            "feedback_uri": "/status/bms_1_rack_1/SOC"
+        },
+        {
+            "feedback_column": "Rack_2_soc",
+            "feedback_uri": "/status/bms_1_rack_2/SOC"
+        },
+        {
+            "feedback_column": "Rack_3_soc",
+            "feedback_uri": "/status/bms_1_rack_3/SOC"
+        },
+        {
+            "feedback_column": "Rack_4_soc",
+            "feedback_uri": "/status/bms_1_rack_4/SOC"
+        },
+        {
+            "feedback_column": "Rack_5_soc",
+            "feedback_uri": "/status/bms_1_rack_5/SOC"
+        }
+    ],
+    "feedback_file": "Labtest_alliant_finaltest.csv",
+    "playback_period": 1,
+    "R0_Init": {
+        "value": 0.5,
+        "uri": "/control/e_kf_av_EKF/EKF_1/InitialR0"
+    },
+    "SOC_Init": {
+        "value": 0.93,
+        "uri": "/control/e_kf_av_EKF/EKF_1/InitialSOC"
+    },
+    "Fims_Timeout": 0.02
+}

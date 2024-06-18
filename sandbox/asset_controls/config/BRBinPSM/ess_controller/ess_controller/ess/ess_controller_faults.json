@@ -1,0 +1,120 @@
+{
+    "/alarms/ess": {
+        "clear_alarms": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "ess",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note1": "When this variable is set to Clear, all alarm variables (defined in /alarms/ess) will be reset to the normal state (defined in /config/ess:NoAlarmMsg)",
+            "note2": "Also, all monitoring variables (defined in variable) will have their alarm/fault states reset",
+            "numVars": 1,
+            "type": "alarm",
+            "value": "Normal",
+            "variable1": "heartbeat_to_ess"
+        }
+    },
+    "/faults/ess": {
+        "clear_faults": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "ess",
+                                "func": "process_sys_alarm"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": true,
+            "note1": "When this variable is set to Clear, all fault variables (defined in /faults/ess) will be reset to the normal state (defined in /config/ess:NoFaultMsg)",
+            "note2": "Also, all monitoring variables (defined in variable) will have their alarm/fault states reset",
+            "numVars": 1,
+            "type": "fault",
+            "value": "Normal",
+            "variable1": "heartbeat_to_ess"
+        }
+    },
+    "/schedule/wake_monitor/ess": {
+        "/status/ess:IsAlarming": {
+            "amap": "ess",
+            "func": "CalculateVar"
+        },
+        "/status/ess:IsFaulted": {
+            "amap": "ess",
+            "func": "CalculateVar"
+        }
+    },
+    "/status/ess": {
+        "AlarmCnt": 0,
+        "FaultCnt": 0,
+        "FaultShutdown": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "ess",
+                                "func": "LogInfo"
+                            }
+                        ]
+                    },
+                    {
+                        "remap": [
+                            {
+                                "inValue": true,
+                                "outValue": 0,
+                                "uri": "/controls/pcs:ActivePowerSetpoint"
+                            },
+                            {
+                                "inValue": true,
+                                "outValue": 0,
+                                "uri": "/controls/pcs:ReactivePowerSetpoint"
+                            },
+                            {
+                                "inValue": true,
+                                "outValue": true,
+                                "uri": "/controls/pcs:Stop@triggerCmd"
+                            },
+                            {
+                                "inValue": true,
+                                "outValue": 206,
+                                "uri": "/controls/pcs:Stop"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "ifChanged": true,
+            "value": false
+        },
+        "IsAlarming": {
+            "expression": "{1} or {2} or {3} > 0",
+            "numVars": 3,
+            "useExpr": true,
+            "value": false,
+            "variable1": "/status/bms:IsAlarming",
+            "variable2": "/status/pcs:IsAlarming",
+            "variable3": "/status/ess:AlarmCnt"
+        },
+        "IsFaulted": {
+            "expression": "{1} or {2} or {3} > 0",
+            "numVars": 3,
+            "useExpr": true,
+            "value": false,
+            "variable1": "/status/bms:IsFaulted",
+            "variable2": "/status/pcs:IsFaulted",
+            "variable3": "/status/ess:FaultCnt"
+        }
+    }
+}

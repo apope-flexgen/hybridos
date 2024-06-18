@@ -1,0 +1,110 @@
+{
+    "authentication": {
+        "permissions": [
+            {
+                "roleOrUsername": "observer",
+                "access": [
+                    "/login readWrite",
+                    "/storageConfig read",
+                    "/dashboard read",
+                    "/events read",
+                    "/assets/ess read",
+                    "/assets/bms read",
+                    "/assets/pcs read",
+                    "/assets/ess/summary read",
+                    "/assets/bms/summary read",
+                    "/assets/pcs/summary read",
+                    "connection read",
+                    "disconnect read",
+                    "updatePropertyValue function read",
+                    "readusers function read"
+                ]
+            },
+            {
+                "roleOrUsername": "user",
+                "access": [
+                    "/login readWrite",
+                    "/storageConfig readWrite",
+                    "/dashboard readWrite",
+                    "/events readWrite",
+                    "/assets/ess readWrite",
+                    "/assets/bms readWrite",
+                    "/assets/pcs readWrite",
+                    "/assets/ess/summary readWrite",
+                    "/assets/bms/summary readWrite",
+                    "/assets/pcs/summary readWrite",
+                    "connection readWrite",
+                    "disconnect readWrite",
+                    "updatePropertyValue function readWrite",
+                    "readusers function read"
+                ]
+            },
+            {
+                "roleOrUsername": "admin",
+                "access": [
+                    "/login readWrite",
+                    "/storageConfig readWrite",
+                    "/dashboard readWrite",
+                    "/events readWrite",
+                    "/assets/ess readWrite",
+                    "/assets/bms readWrite",
+                    "/assets/pcs readWrite",
+                    "/assets/ess/summary readWrite",
+                    "/assets/bms/summary readWrite",
+                    "/assets/pcs/summary readWrite",
+                    "/administration/useradministration readWrite",
+                    "connection readWrite",
+                    "disconnect readWrite",
+                    "updatePropertyValue function readWrite",
+                    "createuser function readWrite",
+                    "edituser function readWrite",
+                    "removeuser function readWrite",
+                    "readusers function readWrite",
+                    "message readWrite"
+                ]
+            },
+            {
+                "roleOrUsername": "rest",
+                "access": []
+            },
+            {
+                "roleOrUsername": "resetreadwrite",
+                "access": []
+            },
+            {
+                "roleOrUsername": "developer",
+                "access": [
+                    "/login readWrite",
+                    "/storageConfig readWrite",
+                    "/dashboard readWrite",
+                    "/events readWrite",
+                    "/assets/ess readWrite",
+                    "/assets/bms readWrite",
+                    "/assets/pcs readWrite",
+                    "/assets/ess/summary readWrite",
+                    "/assets/bms/summary readWrite",
+                    "/assets/pcs/summary readWrite",
+                    "/administration/useradministration readWrite",
+                    "/inspector readWrite",
+                    "/components readWrite",
+                    "/fims readWrite",
+                    "/charts readWrite",
+                    "/inspector/components readWrite",
+                    "/inspector/fims readWrite",
+                    "/inspector/charts readWrite",
+                    "/inspector/dbiDownload readWrite",
+                    "/dbi readWrite",
+                    "/storage/storage/inspector/ readWrite",
+                    "connection readWrite",
+                    "disconnect readWrite",
+                    "updatePropertyValue function readWrite",
+                    "createuser function readWrite",
+                    "edituser function readWrite",
+                    "removeuser function readWrite",
+                    "readusers function readWrite",
+                    "message readWrite"
+                ]
+            }
+        ]
+    }
+}

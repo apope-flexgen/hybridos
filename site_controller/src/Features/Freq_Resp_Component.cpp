@@ -347,7 +347,7 @@ bool Freq_Resp_Component::parse_json_config(cJSON* JSON_config, bool* p_flag, In
  * @param JSON_body JSON containing the SET's value.
  * @param variable_id ID of the target variable to be edited.
  */
-void Freq_Resp_Component::handle_fims_set(const cJSON* JSON_body, const char* variable_id, float target_frequency_value) {
+void Freq_Resp_Component::handle_fims_set(const cJSON* JSON_body, const char* variable_id) {
     // extract value
     float body_float = JSON_body->valuedouble;
     int body_int = JSON_body->valueint;
@@ -406,45 +406,11 @@ void Freq_Resp_Component::handle_fims_set(const cJSON* JSON_body, const char* va
         return;
     }
 
-    // Flags to check status (under/over frequency) determined by the intialize_state is kept as the variable is altered
-    bool in_range_flag = false;
-    bool droop_in_range_flag = false;
-    bool trigger_in_range_flag = false;
-    float upper_bound = 100;
-    if (is_underfrequency_component) {
-        // 0-60; 60 being arbitrary target frequency (Hz) value
-        in_range_flag = (body_float <= target_frequency_value) && (body_float >= 0);
-        droop_in_range_flag = body_float < trigger_freq_hz.value.value_float;
-        trigger_in_range_flag = (body_float > droop_freq_hz.value.value_float) &&
-                                (body_float < target_frequency_value);  // separate flag in the case that trigger_freq_hz is altered after droop_freq_hz is set
-    } else {
-        // 60-100
-        in_range_flag = (body_float < upper_bound) && (body_float > target_frequency_value);
-        droop_in_range_flag = body_float > trigger_freq_hz.value.value_float;
-        trigger_in_range_flag = (body_float < droop_freq_hz.value.value_float) && (body_float < target_frequency_value);
-    }
-    if (in_range_flag && trigger_in_range_flag && trigger_freq_hz.set_fims_float(variable_id, body_float)) {
-        return;
-    }
-    if (in_range_flag && droop_in_range_flag && droop_freq_hz.set_fims_float(variable_id, body_float)) {
-        return;
-    }
-    if (in_range_flag && recovery_freq_hz.set_fims_float(variable_id, body_float)) {
-        return;
-    }
-    if (in_range_flag && instant_recovery_freq_hz.set_fims_float(variable_id, body_float)) {
-        return;
-    }
-
     // optional variable sets
     if (cooldown_slew_rate_kw.configured) {
         if (cooldown_slew_rate_kw.set_fims_float(variable_id, body_float)) {
             return;
         }
-    }
-
-    if (!in_range_flag || !trigger_in_range_flag || !droop_in_range_flag) {
-        FPS_ERROR_LOG("The value for the FIMS SET with endpoint %s was out of range.", variable_id);
     }
 
     FPS_ERROR_LOG("FIMS SET with endpoint %s did not match any frequency response component endpoints.", variable_id);

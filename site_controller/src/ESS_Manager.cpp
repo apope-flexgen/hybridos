@@ -45,15 +45,11 @@ ESS_Manager::ESS_Manager() : Type_Manager(ESS_TYPE_ID) {
     essTargetActivePowerkW = 0.0;
     essTargetReactivePowerkVAR = 0.0;
 
-    controllableEssMinSoc = 0.0;
+    controllableEssMinSoc = 100.0;
     controllableEssAvgSoc = 0.0;
     controllableEssMaxSoc = 0.0;
 
-    runningEssMinSoc = 0.0;
-    runningEssAvgSoc = 0.0;
-    runningEssMaxSoc = 0.0;
-
-    parsedEssMinSoc = 0.0;
+    parsedEssMinSoc = 100.0;
     parsedEssAvgSoc = 0;
     parsedEssMaxSoc = 0;
 
@@ -160,27 +156,15 @@ float ESS_Manager::get_asset_reactive_power_setpoint(int essIndex) {
     return pEss[essIndex]->get_reactive_power_setpoint_control();
 }
 
-float ESS_Manager::get_running_ess_soc_max(void) {
-    return runningEssMaxSoc;
-}
-
-float ESS_Manager::get_running_ess_soc_min(void) {
-    return runningEssMinSoc;
-}
-
-float ESS_Manager::get_running_ess_soc_avg(void) {
-    return runningEssAvgSoc;
-}
-
-float ESS_Manager::get_controllable_ess_soc_min(void) {
-    return controllableEssMinSoc;
-}
-
-float ESS_Manager::get_controllable_ess_soc_max(void) {
+float ESS_Manager::get_ess_soc_max(void) {
     return controllableEssMaxSoc;
 }
 
-float ESS_Manager::get_controllable_ess_soc_avg(void) {
+float ESS_Manager::get_ess_soc_min(void) {
+    return controllableEssMinSoc;
+}
+
+float ESS_Manager::get_ess_soc_avg(void) {
     return controllableEssAvgSoc;
 }
 
@@ -379,15 +363,13 @@ bool ESS_Manager::aggregate_ess_data(void) {
     numEssStandby = 0;
     num_in_local_mode = 0;
 
-    parsedEssMinSoc = 101;
-    controllableEssMinSoc = 101;
-    runningEssMinSoc = 101;
     parsedEssMaxSoc = 0.0;
     controllableEssMaxSoc = 0.0;
-    runningEssMaxSoc = 0.0;
     parsedEssAvgSoc = 0.0;
     controllableEssAvgSoc = 0.0;
-    runningEssAvgSoc = 0.0;
+
+    float parsedEssMinSocAgg = 100;
+    float controllableEssMinSocAgg = 100;
 
     essTotalNameplateActivePower = 0.0;
     essTotalNameplateReactivePower = 0.0;
@@ -421,8 +403,9 @@ bool ESS_Manager::aggregate_ess_data(void) {
         if (i == 0)
             grid_forming_voltage_slew = pEss[i]->get_voltage_slew_setpoint();
 
-        parsedEssMinSoc = std::min(parsedEssMinSoc, pEss[i]->get_soc());
-        parsedEssMaxSoc = std::max(parsedEssMaxSoc, pEss[i]->get_soc());
+        // aggregate SOC values
+        parsedEssMinSocAgg = (pEss[i]->get_soc() < parsedEssMinSocAgg) ? pEss[i]->get_soc() : parsedEssMinSocAgg;
+        parsedEssMaxSoc = (pEss[i]->get_soc() > parsedEssMaxSoc) ? pEss[i]->get_soc() : parsedEssMaxSoc;
         parsedEssAvgSoc += pEss[i]->get_soc();
 
         // aggregate nameplate values
@@ -434,13 +417,8 @@ bool ESS_Manager::aggregate_ess_data(void) {
         if (pEss[i]->is_available())
             numAvail++;
 
-        if (pEss[i]->is_running()) {
+        if (pEss[i]->is_running())
             numRunning++;
-
-            runningEssMinSoc = std::min(runningEssMinSoc, pEss[i]->get_soc());
-            runningEssMaxSoc = std::max(runningEssMaxSoc, pEss[i]->get_soc());
-            runningEssAvgSoc += pEss[i]->get_soc();
-        }
 
         if (pEss[i]->is_available() && !pEss[i]->is_running())
             numEssStartable++;
@@ -451,8 +429,8 @@ bool ESS_Manager::aggregate_ess_data(void) {
         if (pEss[i]->is_controllable()) {
             numEssControllable++;
 
-            controllableEssMinSoc = std::min(controllableEssMinSoc, pEss[i]->get_soc());
-            controllableEssMaxSoc = std::max(controllableEssMaxSoc, pEss[i]->get_soc());
+            controllableEssMinSocAgg = (pEss[i]->get_soc() < controllableEssMinSocAgg) ? pEss[i]->get_soc() : controllableEssMinSocAgg;
+            controllableEssMaxSoc = (pEss[i]->get_soc() > controllableEssMaxSoc) ? pEss[i]->get_soc() : controllableEssMaxSoc;
             controllableEssAvgSoc += pEss[i]->get_soc();
 
             essTotalActivePowerkW += pEss[i]->get_active_power();
@@ -487,18 +465,14 @@ bool ESS_Manager::aggregate_ess_data(void) {
             num_in_local_mode++;
     }
 
-    // update ess default soc minimum
-    controllableEssMinSoc = (controllableEssMinSoc == 101) ? 0 : controllableEssMinSoc;
-    parsedEssMinSoc = (parsedEssMinSoc == 101) ? 0 : parsedEssMinSoc;
-    runningEssMinSoc = (runningEssMinSoc == 101) ? 0 : runningEssMinSoc;
-
-    FPS_DEBUG_LOG("ESS_Manager::aggregate_ess_data essTotalActivePowerkW: %f essTotalMaxPotentialActivePower: %f essTotalMinPotentialActivePower: %f\n", essTotalActivePowerkW,
-                  essTotalMaxPotentialActivePower, essTotalMinPotentialActivePower);
+    FPS_DEBUG_LOG("ESS_Manager::aggregate_ess_data essTotalActivePowerkW: %f essTotalMaxPotentialActivePower: %f essTotalMinPotentialActivePower: %f\n", essTotalActivePowerkW, essTotalMaxPotentialActivePower, essTotalMinPotentialActivePower);
 
     // assign all values used by asset manager and asset
     parsedEssAvgSoc = (numParsed != 0) ? (parsedEssAvgSoc / (float)numParsed) : 0;
     controllableEssAvgSoc = (numEssControllable != 0) ? (controllableEssAvgSoc / (float)numEssControllable) : 0;
-    runningEssAvgSoc = (numRunning != 0) ? (runningEssAvgSoc / (float)numRunning) : 0;
+
+    controllableEssMinSoc = controllableEssMinSocAgg;
+    parsedEssMinSoc = parsedEssMinSocAgg;
 
     return false;
 }
@@ -516,6 +490,7 @@ void ESS_Manager::generate_asset_type_summary_json(fmt::memory_buffer& buf, cons
     bufJSON_AddNumberCheckVar(buf, "ess_total_active_power", essTotalActivePowerkW, var);
     bufJSON_AddNumberCheckVar(buf, "ess_total_reactive_power", essTotalReactivePowerkVAR, var);
     bufJSON_AddNumberCheckVar(buf, "ess_total_apparent_power", essTotalApparentPowerkVA, var);
+    bufJSON_AddNumberCheckVar(buf, "ess_average_soc", controllableEssAvgSoc, var);
     bufJSON_AddNumberCheckVar(buf, "ess_chargeable_power", essTotalChargeablePowerkW, var);
     bufJSON_AddNumberCheckVar(buf, "ess_dischargeable_power", essTotalDischargeablePowerkW, var);
     bufJSON_AddNumberCheckVar(buf, "ess_chargeable_energy", essTotalChargeableEnergykWh, var);
@@ -527,19 +502,6 @@ void ESS_Manager::generate_asset_type_summary_json(fmt::memory_buffer& buf, cons
     // Marked for deprecation
     bufJSON_AddNumberCheckVar(buf, "ess_total_alarms", get_num_active_alarms(), var);
     bufJSON_AddNumberCheckVar(buf, "ess_total_faults", get_num_active_faults(), var);
-
-    // SOC variables added
-    bufJSON_AddNumberCheckVar(buf, "soc_min_all", get_all_ess_soc_min(), var);
-    bufJSON_AddNumberCheckVar(buf, "soc_max_all", get_all_ess_soc_max(), var);
-    bufJSON_AddNumberCheckVar(buf, "soc_avg_all", get_all_ess_soc_avg(), var);
-    bufJSON_AddNumberCheckVar(buf, "soc_min_running", get_running_ess_soc_min(), var);
-    bufJSON_AddNumberCheckVar(buf, "soc_max_running", get_running_ess_soc_max(), var);
-    bufJSON_AddNumberCheckVar(buf, "soc_avg_running", get_running_ess_soc_avg(), var);
-
-    // controllable SOC variables added
-    bufJSON_AddNumberCheckVar(buf, "soc_min_controllable", get_controllable_ess_soc_min(), var);
-    bufJSON_AddNumberCheckVar(buf, "soc_max_controllable", get_controllable_ess_soc_max(), var);
-    bufJSON_AddNumberCheckVar(buf, "soc_avg_controllable", get_controllable_ess_soc_avg(), var);
 
     if (var == NULL) {
         bufJSON_EndObjectNoComma(buf);  // } summary
@@ -600,9 +562,7 @@ void ESS_Manager::calculate_ess_reactive_power(void) {
     // There is reactive power that can be handled by available
     for (int i = 0; i < numParsed; i++) {
         if (pEss[i]->is_controllable()) {
-            float weightedShare = (pEss[i]->get_potential_reactive_power() == 0)
-                                      ? 0
-                                      : essTargetReactivePowerkVAR / (essTotalPotentialReactivePower / pEss[i]->get_potential_reactive_power());
+            float weightedShare = (pEss[i]->get_potential_reactive_power() == 0) ? 0 : essTargetReactivePowerkVAR / (essTotalPotentialReactivePower / pEss[i]->get_potential_reactive_power());
             if (pEss[i]->get_reactive_power_setpoint() != weightedShare) {
                 pEss[i]->set_reactive_power_setpoint(weightedShare);
             }
@@ -822,8 +782,7 @@ Config_Validation_Result ESS_Manager::configure_type_manager(Type_Configurator* 
     cJSON* object = cJSON_HasObjectItem(essRoot, "soc_balancing_factor") ? cJSON_GetObjectItem(essRoot, "soc_balancing_factor") : NULL;
     if (object == NULL) {
         validation_result.is_valid_config = false;
-        validation_result.ERROR_details.push_back(
-            Result_Details(fmt::format("{}: failed to find soc_balancing_factor in config.", configurator->p_manager->get_asset_type_id())));
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to find soc_balancing_factor in config.", configurator->p_manager->get_asset_type_id())));
     }
     socBalancingFactor = (float)object->valuedouble;
 

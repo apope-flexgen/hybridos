@@ -38,7 +38,7 @@ public:
 
     bool initialize_state(float grid_target_freq_hz);
     bool parse_json_config(cJSON* JSON_config, bool* p_flag, Input_Source_List* inputs, const Fims_Object& defaults, std::vector<Fims_Object*>& multiple_inputs);
-    void handle_fims_set(const cJSON* JSON_body, const char* variable_id, float target_frequency_value);
+    void handle_fims_set(const cJSON* JSON_body, const char* variable_id);
     void get_feature_vars(std::vector<Fims_Object*>& var_list);
     void clear_outputs();
 
@@ -50,7 +50,7 @@ protected:
     float prev_active_cmd_kw;
     Fims_Object inactive_cmd_kw;
     Fims_Object trigger_freq_hz;
-    Fims_Object force_start;  // a boolean input that a user can use to manually start the response
+    Fims_Object force_start; // a boolean input that a user can use to manually start the response
     Fims_Object trigger_duration_sec;
     Fims_Object droop_freq_hz;
     Fims_Object droop_limit_flag;
