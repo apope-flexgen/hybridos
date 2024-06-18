@@ -2,7 +2,7 @@
     "pcs": [
         {
             "vars": {
-                "id": "pcs_##PCS_ID##",
+                "id": "pcs_1",
                 "ctrlword1": 21930,
                 "ctrlword2": 4369,
                 "ctrlword1cfg":[
@@ -42,10 +42,6 @@
                         ]
                     }
                 ]
-            },
-            "reps": {
-                "list": ["1", "2"],
-                "token": "##PCS_ID##"
             }
         }
     ]
