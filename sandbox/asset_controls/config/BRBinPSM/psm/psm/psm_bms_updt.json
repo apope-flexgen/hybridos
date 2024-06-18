@@ -2,17 +2,29 @@
     "bms": [
         {
             "vars": {
-                "id": "bms_##BMS_ID##",
-                "NumSbmus": 11,
+                "id": "bms_1",
+                "NumSbmus": 5,
                 "Sbmu": [
-                    {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}
+                    {}, {}, {}, {}, {}
                 ],
                 "disablefault": true,
-                "ctrlword1": 2
-            },
-            "reps": {
-                "list": ["1a", "1b"],
-                "token": "##BMS_ID##"
+                "ctrlword1": 2,
+                "ctrlword1cfg":[
+                    {
+                        "value": 2,
+                        "controls": [
+                            { "field": "oncmd"              , "value": true  },
+                            { "field": "offcmd"              , "value": false  }
+                        ]
+                    },
+                    {
+                        "value": 3,
+                        "controls": [
+                            { "field": "offcmd"              , "value": true  },
+                            { "field": "oncmd"              , "value": false  }
+                        ]
+                    }
+                ]
             }
         }
     ]

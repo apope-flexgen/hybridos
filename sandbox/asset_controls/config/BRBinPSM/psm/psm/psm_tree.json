@@ -16,17 +16,7 @@
                             "asset_type": "PCS",
                             "children":[
                                 {
-                                    "id": "bms_1a",
-                                    "asset_type": "BMS"
-                                }
-                            ]
-                        },
-                        {
-                            "id": "pcs_2",
-                            "asset_type": "PCS",
-                            "children":[
-                                {
-                                    "id": "bms_1b",
+                                    "id": "bms_1",
                                     "asset_type": "BMS"
                                 }
                             ]
