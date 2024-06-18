@@ -1,0 +1,19 @@
+{
+    "bms": [
+        {
+            "vars": {
+                "id": "bms_##BMS_ID##",
+                "NumSbmus": 11,
+                "Sbmu": [
+                    {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}
+                ],
+                "disablefault": true,
+                "ctrlword1": 2
+            },
+            "reps": {
+                "list": ["1a", "1b"],
+                "token": "##BMS_ID##"
+            }
+        }
+    ]
+}

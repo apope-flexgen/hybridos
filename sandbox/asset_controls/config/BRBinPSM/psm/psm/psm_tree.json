@@ -1,0 +1,40 @@
+{
+    "root":{
+        "id": "grid",
+        "asset_type": "GRID",
+        "children":[
+            {
+                "id": "psm_feeder_1",
+                "asset_type": "FEED",
+                "children": [
+                  {
+                    "id": "psm_pcs",
+                    "asset_type": "FEED",
+                    "children": [
+                        {
+                            "id": "pcs_1",
+                            "asset_type": "PCS",
+                            "children":[
+                                {
+                                    "id": "bms_1a",
+                                    "asset_type": "BMS"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "pcs_2",
+                            "asset_type": "PCS",
+                            "children":[
+                                {
+                                    "id": "bms_1b",
+                                    "asset_type": "BMS"
+                                }
+                            ]
+                        }
+                    ]
+                  }
+                ]
+            }
+        ]
+    }
+}

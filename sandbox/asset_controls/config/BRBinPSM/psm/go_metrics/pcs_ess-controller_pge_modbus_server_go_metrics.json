@@ -1,0 +1,194 @@
+{
+    "echo": [
+        {
+            "uri": "/components/pcs_1_control",
+            "publishRate": 1000,
+            "inputs": [
+                {
+                    "uri": "/components/pcs_1",
+                    "registers": {
+                        "switching_machine": "ctrlword1",
+                        "operation_mode_setting": "ctrlword2",
+                        "active_power_setting": "pcmd",
+                        "reactive_power_setting": "qcmd"
+                    }
+                }
+            ],
+            "echo": {
+                "control_mode_setting": 0
+            }
+        },
+        {
+            "uri": "/components/pcs_1_info",
+            "publishRate": 1000,
+            "inputs": [
+                {
+                    "uri": "/components/pcs_1",
+                    "registers": {
+                        "ac_voltage_a_phase_rms_value": "vac",
+                        "ac_voltage_b_phase_rms_value": "vac",
+                        "ac_voltage_c_phase_rms_value": "vac",
+                        "ac_current_a_phase_rms_value": "iac",
+                        "ac_current_b_phase_rms_value": "iac",
+                        "ac_current_c_phase_rms_value": "iac",
+                        "heartbeat": "heart_heartbeat",
+                        "pcs_status_value": "status_0_value",
+                        "grid_frequency": "f",
+                        "power_factor": "pf",
+                        "active_power": "p",
+                        "reactive_power": "q",
+                        "dc_voltage": "vdc",
+                        "dc_current": "idc",
+                        "dc_power": "pdc"
+                    }
+                }
+            ],
+            "echo": {
+                "bus_voltage_value": 0,
+                "bus_current_value": 0,
+                "busbar_power": 0,
+                "igbt_temperature_a_phase": 0,
+                "igbt_temperature_b_phase": 0,
+                "igbt_temperature_c_phase": 0,
+                "rated_power_of_equipment": 1750,
+                "rechargeable_power_limit": 1750,
+                "redischargeable_power_limit": 1750,
+                "control_mode": 0,
+                "operation_mode": 4369,
+                "system_failure_latch_register_0": 0,
+                "system_failure_latch_register_1": 0,
+                "system_failure_latch_register_2": 0,
+                "system_failure_latch_register_3": 0,
+                "system_failure_latch_register_4": 0,
+                "system_failure_latch_register_5": 0,
+                "system_failure_latch_register_6": 0,
+                "system_failure_latch_register_7": 0,
+                "system_failure_latch_register_8": 0,
+                "system_failure_latch_register_9": 0,
+                "system_failure_latch_register_10": 0,
+                "system_failure_latch_register_11": 0,
+                "system_failure_latch_register_12": 0,
+                "system_failure_latch_register_13": 0,
+                "system_failure_latch_register_14": 0,
+                "system_failure_latch_register_15": 0,
+                "io_input_status_register": 0,
+                "io_output_status_register": 0,
+                "igbt_a_left_23_sampling_points": 0,
+                "igbt_a_left_14_sampling_points": 0,
+                "igbt_a_right_23_sampling_points": 0,
+                "igbt_a_right_14_sampling_points": 0,
+                "igbt_b_left_23_sampling_points": 0,
+                "igbt_b_left_14_sampling_points": 0,
+                "igbt_b_right_23_sampling_points": 0,
+                "igbt_b_right_14_sampling_points": 0,
+                "igbt_c_left_23_sampling_points": 0,
+                "igbt_c_left_14_sampling_points": 0,
+                "igbt_c_right_23_sampling_points": 0,
+                "igbt_c_right_14_sampling_points": 0,
+                "fan_1_is_faulty": 0,
+                "fan_2_fault_word": 0,
+                "communication_status_between_pcs_and_sub_devices": 0,
+                "composite_percentage_change": 0,
+                "cause_0_of_the_change": 0,
+                "cause_1_of_the_change": 0,
+                "transformer_condition": 0,
+                "transformer_oil_temperature": 0
+            }
+        },
+        {
+            "uri": "/components/pcs_2_control",
+            "publishRate": 1000,
+            "inputs": [
+                {
+                    "uri": "/components/pcs_2",
+                    "registers": {
+                        "switching_machine": "ctrlword1",
+                        "operation_mode_setting": "ctrlword2",
+                        "active_power_setting": "pcmd",
+                        "reactive_power_setting": "qcmd"
+                    }
+                }
+            ],
+            "echo": {
+                "control_mode_setting": 0
+            }
+        },
+        {
+            "uri": "/components/pcs_2_info",
+            "publishRate": 1000,
+            "inputs": [
+                {
+                    "uri": "/components/pcs_2",
+                    "registers": {
+                        "ac_voltage_a_phase_rms_value": "vac",
+                        "ac_voltage_b_phase_rms_value": "vac",
+                        "ac_voltage_c_phase_rms_value": "vac",
+                        "ac_current_a_phase_rms_value": "iac",
+                        "ac_current_b_phase_rms_value": "iac",
+                        "ac_current_c_phase_rms_value": "iac",
+                        "heartbeat": "heart_heartbeat",
+                        "pcs_status_value": "status_0_value",
+                        "grid_frequency": "f",
+                        "power_factor": "pf",
+                        "active_power": "p",
+                        "reactive_power": "q",
+                        "dc_voltage": "vdc",
+                        "dc_current": "idc",
+                        "dc_power": "pdc"
+                    }
+                }
+            ],
+            "echo": {
+                "bus_voltage_value": 0,
+                "bus_current_value": 0,
+                "busbar_power": 0,
+                "igbt_temperature_a_phase": 0,
+                "igbt_temperature_b_phase": 0,
+                "igbt_temperature_c_phase": 0,
+                "rated_power_of_equipment": 1750,
+                "rechargeable_power_limit": 1750,
+                "redischargeable_power_limit": 1750,
+                "control_mode": 0,
+                "operation_mode": 4369,
+                "system_failure_latch_register_0": 0,
+                "system_failure_latch_register_1": 0,
+                "system_failure_latch_register_2": 0,
+                "system_failure_latch_register_3": 0,
+                "system_failure_latch_register_4": 0,
+                "system_failure_latch_register_5": 0,
+                "system_failure_latch_register_6": 0,
+                "system_failure_latch_register_7": 0,
+                "system_failure_latch_register_8": 0,
+                "system_failure_latch_register_9": 0,
+                "system_failure_latch_register_10": 0,
+                "system_failure_latch_register_11": 0,
+                "system_failure_latch_register_12": 0,
+                "system_failure_latch_register_13": 0,
+                "system_failure_latch_register_14": 0,
+                "system_failure_latch_register_15": 0,
+                "io_input_status_register": 0,
+                "io_output_status_register": 0,
+                "igbt_a_left_23_sampling_points": 0,
+                "igbt_a_left_14_sampling_points": 0,
+                "igbt_a_right_23_sampling_points": 0,
+                "igbt_a_right_14_sampling_points": 0,
+                "igbt_b_left_23_sampling_points": 0,
+                "igbt_b_left_14_sampling_points": 0,
+                "igbt_b_right_23_sampling_points": 0,
+                "igbt_b_right_14_sampling_points": 0,
+                "igbt_c_left_23_sampling_points": 0,
+                "igbt_c_left_14_sampling_points": 0,
+                "igbt_c_right_23_sampling_points": 0,
+                "igbt_c_right_14_sampling_points": 0,
+                "fan_1_is_faulty": 0,
+                "fan_2_fault_word": 0,
+                "communication_status_between_pcs_and_sub_devices": 0,
+                "composite_percentage_change": 0,
+                "cause_0_of_the_change": 0,
+                "cause_1_of_the_change": 0,
+                "transformer_condition": 0,
+                "transformer_oil_temperature": 0
+            }
+        }
+    ]
+}

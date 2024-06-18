@@ -1,0 +1,52 @@
+{
+    "pcs": [
+        {
+            "vars": {
+                "id": "pcs_##PCS_ID##",
+                "ctrlword1": 21930,
+                "ctrlword2": 4369,
+                "ctrlword1cfg":[
+                    {
+                        "value": 43605,
+                        "controls": [
+                            { "field": "oncmd"              , "value": true  }
+                        ]
+                    },
+                    {
+                        "value": 21930,
+                        "controls": [
+                            { "field": "offcmd"              , "value": true  }
+                        ]
+                    }
+                ],
+                "ctrlword2cfg":[
+                    {
+                        "value": 4369,
+                        "controls": [
+                            { "field": "accontactorclosecmd"  , "value": true  },
+                            { "field": "dccontactorclosecmd"  , "value": true  }
+                        ]
+                    },
+                    {
+                        "value": 8738,
+                        "controls": [
+                            { "field": "accontactorclosecmd" , "value": true  },
+                            { "field": "dccontactoropencmd"  , "value": true  }
+                        ]
+                    },
+                    {
+                        "value": 13107,
+                        "controls": [
+                            { "field": "accontactorclosecmd"  , "value": true  },
+                            { "field": "dccontactorclosecmd"  , "value": true  }
+                        ]
+                    }
+                ]
+            },
+            "reps": {
+                "list": ["1", "2"],
+                "token": "##PCS_ID##"
+            }
+        }
+    ]
+}
