@@ -9,15 +9,15 @@
                     {
                         "value": 43605,
                         "controls": [
-                            { "field": "oncmd"              , "value": true  },
-                            { "field": "offcmd"              , "value": false  }
+                            { "field": "oncmd", "value": true  },
+                            { "field": "offcmd", "value": false  }
                         ]
                     },
                     {
                         "value": 21930,
                         "controls": [
-                            { "field": "offcmd"              , "value": true  },
-                            { "field": "oncmd"              , "value": false  }
+                            { "field": "offcmd", "value": true  },
+                            { "field": "oncmd", "value": false  }
                         ]
                     }
                 ],

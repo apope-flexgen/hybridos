@@ -13,15 +13,25 @@
                     {
                         "value": 2,
                         "controls": [
+<<<<<<< HEAD
                             { "field": "oncmd", "value": true  },
                             { "field": "offcmd", "value": false  }
+=======
+                            { "field": "oncmd"              , "value": true  },
+                            { "field": "offcmd"              , "value": false  }
+>>>>>>> f94f819c0fe7b17047aaab51bed3a35a8bb329c6
                         ]
                     },
                     {
                         "value": 3,
                         "controls": [
+<<<<<<< HEAD
                             { "field": "offcmd", "value": true  },
                             { "field": "oncmd", "value": false  }
+=======
+                            { "field": "offcmd"              , "value": true  },
+                            { "field": "oncmd"              , "value": false  }
+>>>>>>> f94f819c0fe7b17047aaab51bed3a35a8bb329c6
                         ]
                     }
                 ]
