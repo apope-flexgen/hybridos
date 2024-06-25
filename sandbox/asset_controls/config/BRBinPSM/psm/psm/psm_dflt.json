@@ -747,7 +747,7 @@
                     "field":"on" 
                 }, 
                 { 
-                    "value":0, 
+                    "value":8, 
                     "string":"Stopped", 
                     "field":"on", 
                     "invert":true 

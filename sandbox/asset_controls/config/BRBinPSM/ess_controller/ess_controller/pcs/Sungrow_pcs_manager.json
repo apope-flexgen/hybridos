@@ -376,7 +376,7 @@
             "ifChanged": true,
             "note1": "Contains the PCS's current state, which can be one of the following: Stop, Run, Fault, Standby",
             "note2": "Updates various PCS status variables depending on this variable's value",
-            "value": "INIT"
+            "value": "Stop"
         }
     },
     "/system/commands": {

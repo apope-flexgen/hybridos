@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Run this file with "dbi.sh /path/to/config/folder <name_of_module>"
-# Example: "scripts/dbi.sh config/project/config ess_controller"
-
 set -e
 
 fims_send="/usr/local/bin/fims_send"

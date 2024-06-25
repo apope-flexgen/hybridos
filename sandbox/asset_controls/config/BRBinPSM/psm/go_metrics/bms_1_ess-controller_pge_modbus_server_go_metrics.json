@@ -8,12 +8,13 @@
                     "uri": "/components/bms_1",
                     "registers": {
                         "heartbeat": "heart_heartbeat",
-                        "ems_command_to_bms_relay": "ctrlword1"
+                        "ems_command_to_bms_relay": "ctrlword1",
+                        "dc_contactor": "dccontactor"
                     }
                 }
             ],
             "echo": {
-                
+                "ems_command_to_bms_relay": 3
             }
         },
         {

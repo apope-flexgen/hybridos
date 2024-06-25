@@ -2675,8 +2675,13 @@
         },
         "bms_heartbeat": {
             "default": 0,
-            "value": "/components/##BMS_ID##:bms_heartbeat",
+            "value": "/components/##BMS_ID##_running_info:heartbeat",
             "vlink": "/status/##BMS_ID##:HeartbeatRead"
+        },
+        "dc_contactor": {
+            "default": false,
+            "value": "/components/##BMS_ID##_running_info:dc_contactor",
+            "vlink": "/status/##BMS_ID##:DCClosed"
         },
         "charge_soe": {
             "default": 0,
@@ -2790,7 +2795,7 @@
         },
         "system_voltage": {
             "default": 0,
-            "value": "/components/##BMS_ID##:system_voltage",
+            "value": "/components/##BMS_ID##:vdc_value",
             "vlink": "/status/##BMS_ID##:DCVoltage"
         },
         "tms_2_environment_temperature": {

@@ -8,7 +8,6 @@
                     {}, {}, {}, {}, {}
                 ],
                 "disablefault": true,
-                "ctrlword1": 2,
                 "ctrlword1cfg":[
                     {
                         "value": 2,

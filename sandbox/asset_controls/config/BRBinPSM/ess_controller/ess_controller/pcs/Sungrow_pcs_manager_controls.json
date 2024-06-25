@@ -540,7 +540,7 @@
                 ]
             },
             "checkCmdTimeout": 3,
-            "cmdVar": "/components/##PCS_ID##:start_or_stop_or_standby",
+            "cmdVar": "/components/##PCS_ID##_control:start_or_stop_or_standby",
             "expression": "{1} and ({2} == Stop or {2} == Run) and {3}",
             "note1": "Standby command to send to PCS if the PCS is in Stop or Run, the BMS DC contactors are closed, and the BMS current is within an acceptable level",
             "note2": "TODO: If needed, add <component_uri>:<name> to cmdVar",
@@ -591,7 +591,7 @@
                 ]
             },
             "checkCmdTimeout": 3,
-            "cmdVar": "/components/##PCS_ID##:start_or_stop_or_standby",
+            "cmdVar": "/components/##PCS_ID##_control:start_or_stop_or_standby",
             "expression": "({1} == Stop or {1} == Standby) and {2} and not {3}",
             "note1": "Start command to send to PCS if the PCS is in Stop or Standby, the BMS DC contactors are closed, and the PCS is not faulted",
             "note2": "TODO: If needed, add <component_uri>:<name> to cmdVar",
@@ -643,7 +643,7 @@
                 ]
             },
             "checkCmdTimeout": 3,
-            "cmdVar": "/components/##PCS_ID##:start_or_stop_or_standby",
+            "cmdVar": "/components/##PCS_ID##_control:start_or_stop_or_standby",
             "expression": "{1} and ({2} == Standby or {2} == Run) and {3}",
             "note1": "Stop command to send to PCS if the PCS is in Standby or Run, the BMS DC contactors are closed, and the BMS current is within an acceptable level",
             "note2": "TODO: If needed, add <component_uri>:<name> to cmdVar",

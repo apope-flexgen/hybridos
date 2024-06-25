@@ -3,45 +3,33 @@
         {
             "vars": {
                 "id": "pcs_1",
-                "ctrlword1": 21930,
-                "ctrlword2": 4369,
                 "ctrlword1cfg":[
                     {
-                        "value": 43605,
+                        "value": 207,
                         "controls": [
                             { "field": "oncmd", "value": true  },
                             { "field": "offcmd", "value": false  }
                         ]
                     },
                     {
-                        "value": 21930,
+                        "value": 206,
                         "controls": [
                             { "field": "offcmd", "value": true  },
                             { "field": "oncmd", "value": false  }
                         ]
                     }
                 ],
-                "ctrlword2cfg":[
+                "statuscfg": [
                     {
-                        "value": 4369,
-                        "controls": [
-                            { "field": "accontactorclosecmd"  , "value": true  },
-                            { "field": "dccontactorclosecmd"  , "value": true  }
-                        ]
+                        "value":1,
+                        "string":"Running",
+                        "field":"on"
                     },
                     {
-                        "value": 8738,
-                        "controls": [
-                            { "field": "accontactorclosecmd" , "value": true  },
-                            { "field": "dccontactoropencmd"  , "value": true  }
-                        ]
-                    },
-                    {
-                        "value": 13107,
-                        "controls": [
-                            { "field": "accontactorclosecmd"  , "value": true  },
-                            { "field": "dccontactorclosecmd"  , "value": true  }
-                        ]
+                        "value":8,
+                        "string":"Stopped",
+                        "field":"on",
+                        "invert":true
                     }
                 ]
             }

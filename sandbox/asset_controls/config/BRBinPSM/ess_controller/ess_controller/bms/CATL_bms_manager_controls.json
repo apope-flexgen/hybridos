@@ -136,7 +136,7 @@
                 ]
             },
             "checkCmdTimeout": 3,
-            "cmdVar": "/components/##BMS_ID##:ems_command_to_bms_relay",
+            "cmdVar": "/components/##BMS_ID##_running_info:ems_command_to_bms_relay",
             "expression": "{2} == Stop and not {3}",
             "note": "Close DC contactors command to send to BMS if DC contactors are open, the PCS is in Stop, and the BMS does not have any faults",
             "numVars": 3,
@@ -186,7 +186,7 @@
                 ]
             },
             "checkCmdTimeout": 3,
-            "cmdVar": "/components/##BMS_ID##:ems_command_to_bms_relay",
+            "cmdVar": "/components/##BMS_ID##_running_info:ems_command_to_bms_relay",
             "expression": "{1} and ({2} == Stop or {2} == Fault)",
             "note": "Open DC contactors command to send to BMS if DC contactors are closed and the PCS is in Stop or Fault",
             "numVars": 2,

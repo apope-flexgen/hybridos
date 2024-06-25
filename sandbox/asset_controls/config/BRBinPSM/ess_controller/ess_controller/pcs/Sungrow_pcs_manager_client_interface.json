@@ -1215,6 +1215,114 @@
             "value": 0
         }
     },
+    "/components/##PCS_ID##_info": {
+        "pcs_status_value": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "inValue": 5,
+                                "outValue": true,
+                                "uri": "/components/##PCS_ID##:status@ifChanged"
+                            },
+                            {
+                                "inValue": 1,
+                                "outValue": "Run",
+                                "uri": "/status/##PCS_ID##:SystemState"
+                            },
+                            {
+                                "inValue": 8,
+                                "outValue": "Stop",
+                                "uri": "/status/##PCS_ID##:SystemState"
+                            },
+                            {
+                                "inValue": 16,
+                                "outValue": "Standby",
+                                "uri": "/status/##PCS_ID##:SystemState"
+                            },
+                            {
+                                "inValue": 64,
+                                "outValue": "Standby",
+                                "uri": "/status/##PCS_ID##:SystemState"
+                            },
+                            {
+                                "inValue": 512,
+                                "outValue": "Fault",
+                                "uri": "/status/##PCS_ID##:SystemState"
+                            },
+                            {
+                                "inValue": 1024,
+                                "outValue": "Run",
+                                "uri": "/status/##PCS_ID##:SystemState"
+                            },
+                            {
+                                "inValue": 2048,
+                                "outValue": "Run",
+                                "uri": "/status/##PCS_ID##:SystemState"
+                            },
+                            {
+                                "inValue": 32768,
+                                "outValue": "Fault",
+                                "uri": "/status/##PCS_ID##:SystemState"
+                            },
+                            {
+                                "inValue": 1,
+                                "outValue": "Running",
+                                "uri": "/status/##PCS_ID##:Status"
+                            },
+                            {
+                                "inValue": 8,
+                                "outValue": "Key Stop",
+                                "uri": "/status/##PCS_ID##:Status"
+                            },
+                            {
+                                "inValue": 16,
+                                "outValue": "Standby",
+                                "uri": "/status/##PCS_ID##:Status"
+                            },
+                            {
+                                "inValue": 64,
+                                "outValue": "Start in Process",
+                                "uri": "/status/##PCS_ID##:Status"
+                            },
+                            {
+                                "inValue": 512,
+                                "outValue": "Fault Stop",
+                                "uri": "/status/##PCS_ID##:Status"
+                            },
+                            {
+                                "inValue": 1024,
+                                "outValue": "Alarm Running",
+                                "uri": "/status/##PCS_ID##:Status"
+                            },
+                            {
+                                "inValue": 2048,
+                                "outValue": "Derating Running",
+                                "uri": "/status/##PCS_ID##:Status"
+                            },
+                            {
+                                "inValue": 32768,
+                                "outValue": "DSP Communication Error",
+                                "uri": "/status/##PCS_ID##:Status"
+                            },
+                            {
+                                "enable": "/config/##PCS_ID##:enum_opt",
+                                "outValue": true,
+                                "uri": "/components/##PCS_ID##:work_state@ifChanged",
+                                "useAv": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##PCS_ID##:enable",
+            "ifChanged": false,
+            "note1": "TODO: if applicable, decode the variable's value to other variables using either remap (default) or enum action",
+            "note2": "Use enum if the variable's value contains bitfields. Otherwise, use remap",
+            "value": 0
+        }
+    },
     "/sched/##PCS_ID##": {
         "checkInputs_##PCS_ID##": {
             "actions": {
@@ -1301,7 +1409,7 @@
         "dc_voltage": {
             "default": 0,
             "note": "TODO: If needed, modify value: <components_uri>:<variable_name> or remove entire vlink variable",
-            "value": "/components/##PCS_ID##:dc_voltage",
+            "value": "/components/##PCS_ID##:vdc",
             "vlink": "/status/##PCS_ID##:DCVoltage"
         },
         "grid_frequency": {
@@ -1330,8 +1438,8 @@
         },
         "heartbeat_read": {
             "default": 0,
-            "value": "/components/##PCS_ID##:heartbeat_read",
-            "vlink": "/status/##PCS_ID##:HeartbeatRead"
+            "value": "/components/##PCS_ID##_info:heartbeat",
+            "vlink": "/status/pcs:HeartbeatRead"
         },
         "independent_converter_frequency": {
             "default": 0,

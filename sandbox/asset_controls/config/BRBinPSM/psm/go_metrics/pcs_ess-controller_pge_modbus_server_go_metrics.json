@@ -15,7 +15,41 @@
                 }
             ],
             "echo": {
-                "control_mode_setting": 0
+                "control_mode_setting": 0,
+                "start_or_stop_or_standby": 206
+            }
+        },
+        {
+            "uri": "/components/pcs_1_info",
+            "publishRate": 1000,
+            "inputs": [
+                {
+                    "uri": "/components/pcs_1",
+                    "registers": {
+                        "ac_voltage_a_phase_rms_value": "vac",
+                        "ac_voltage_b_phase_rms_value": "vac",
+                        "ac_voltage_c_phase_rms_value": "vac",
+                        "ac_current_a_phase_rms_value": "iac",
+                        "ac_current_b_phase_rms_value": "iac",
+                        "ac_current_c_phase_rms_value": "iac",
+                        "heartbeat": "heart_heartbeat",
+                        "pcs_status_value": "status_0_value",
+                        "grid_frequency": "f",
+                        "power_factor": "pf",
+                        "active_power": "p",
+                        "reactive_power": "q",
+                        "dc_voltage": "vdc",
+                        "dc_current": "idc",
+                        "dc_power": "pdc"
+                    }
+                }
+            ],
+            "echo": {
+                "bus_voltage_value": 0,
+                "bus_current_value": 0,
+                "busbar_power": 0,
+                "control_mode": 0,
+                "operation_mode": 4369
             }
         },
         {

@@ -528,7 +528,8 @@ int HandlePowerCmd(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims,
         debug = aV->getbParam("debug");
     }
 
-    auto relname = fmt::format("{}_{}", __func__, essch).c_str();
+    char* relname = nullptr;
+    asprintf(&relname, "{%s_%s", __func__, essch);
     assetVar* hpAv = amap[relname];
     if (!hpAv || (reload = hpAv->getiVal()) == 0)
     {
